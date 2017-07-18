@@ -32,6 +32,10 @@ CREATE TABLE `permission` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `permission` (`name`) VALUES
+('user_add'),
+('user_edit'),
+('user_delete');
 
 CREATE TABLE `role_permission` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -51,3 +55,7 @@ CREATE TABLE `user_role` (
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+

@@ -1,4 +1,4 @@
-package com.edu.biz.user.dao.specification;
+package com.edu.biz.security.dao.specification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.edu.biz.user.entity.User;
+import com.edu.biz.security.entity.User;
 
 public class UserSpecification implements Specification<User> {
 

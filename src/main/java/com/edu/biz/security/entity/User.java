@@ -1,6 +1,7 @@
-package com.edu.biz.user.entity;
+package com.edu.biz.security.entity;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -26,9 +27,9 @@ public class User extends BaseEntity implements UserDetails{
 	private String salt;
 	
 	@ManyToMany
-    @JoinTable(name="user_role",joinColumns=@JoinColumn(name="user_id"),
-    inverseJoinColumns=@JoinColumn(name="role_id"))
-	private Collection<Role> roles;
+    @JoinTable(name="user_role",joinColumns=@JoinColumn(name="user_id", referencedColumnName="id"),
+    inverseJoinColumns=@JoinColumn(name="role_id", referencedColumnName="id"))
+	private List<Role> roles;
 
 	public String getUsername() {
 		return username;
@@ -93,5 +94,13 @@ public class User extends BaseEntity implements UserDetails{
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 }

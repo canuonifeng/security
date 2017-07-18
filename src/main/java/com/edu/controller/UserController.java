@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.user.entity.User;
-import com.edu.biz.user.service.UserService;
+import com.edu.biz.security.entity.Role;
+import com.edu.biz.security.entity.User;
+import com.edu.biz.security.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
@@ -32,5 +33,14 @@ public class UserController {
 	public User add(@RequestBody User user) {
 		return userService.createUser(user);
 	}
-
+	
+	@RequestMapping(method = RequestMethod.PUT)
+	public User edit(@RequestBody User user) {
+		return userService.createUser(user);
+	}
+	
+//	@RequestMapping(method = RequestMethod.DELETE)
+//	public int delete(@RequestBody Long id) {
+//		return userService.deleteUser(id);
+//	}
 }

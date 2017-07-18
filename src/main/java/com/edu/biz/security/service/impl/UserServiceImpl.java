@@ -1,4 +1,4 @@
-package com.edu.biz.user.service.impl;
+package com.edu.biz.security.service.impl;
 
 import java.util.Map;
 
@@ -10,13 +10,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.edu.biz.user.dao.UserDao;
-import com.edu.biz.user.dao.specification.UserSpecification;
-import com.edu.biz.user.entity.User;
-import com.edu.biz.user.service.UserService;
+import com.edu.biz.base.BaseService;
+import com.edu.biz.security.dao.UserDao;
+import com.edu.biz.security.dao.specification.UserSpecification;
+import com.edu.biz.security.entity.User;
+import com.edu.biz.security.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
 
 	@Autowired
 	private UserDao userDao;

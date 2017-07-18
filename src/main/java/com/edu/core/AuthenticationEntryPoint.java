@@ -30,5 +30,5 @@ public class AuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
     public void afterPropertiesSet() throws Exception {
         setRealmName("MY_TEST_REALM");
         super.afterPropertiesSet();
-    }
+    }	
 }

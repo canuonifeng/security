@@ -1,11 +1,11 @@
-package com.edu.biz.user.service;
+package com.edu.biz.security.service;
 
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.edu.biz.user.entity.User;
+import com.edu.biz.security.entity.User;
 
 public interface UserService {
 	

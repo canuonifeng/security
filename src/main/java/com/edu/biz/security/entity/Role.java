@@ -1,6 +1,6 @@
-package com.edu.biz.user.entity;
+package com.edu.biz.security.entity;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -12,21 +12,23 @@ import com.edu.biz.base.BaseEntity;
 @Entity
 public class Role extends BaseEntity{
 	
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 	
     @ManyToMany
-    @JoinTable(name="user_role",joinColumns=@JoinColumn(name="role_id"),
-    inverseJoinColumns=@JoinColumn(name="user_id"))
-    private Collection<User> users;
+    @JoinTable(name="user_role",joinColumns=@JoinColumn(name="role_id", referencedColumnName="id"),
+    inverseJoinColumns=@JoinColumn(name="user_id", referencedColumnName="id"))
+    private List<User> users;
  
     @ManyToMany
     @JoinTable(
-        name = "roles_permission", 
+        name = "role_permission", 
         joinColumns = @JoinColumn(
           name = "role_id"), 
         inverseJoinColumns = @JoinColumn(
           name = "permission_id"))
-    private Collection<Permission> permissions;
+    private List<Permission> permissions;
 
 	public String getName() {
 		return name;
@@ -36,19 +38,19 @@ public class Role extends BaseEntity{
 		this.name = name;
 	}
 
-	public Collection<User> getUsers() {
+	public List<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(Collection<User> users) {
+	public void setUsers(List<User> users) {
 		this.users = users;
 	}
 
-	public Collection<Permission> getPermissions() {
+	public List<Permission> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(Collection<Permission> permissions) {
+	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
 	}  
 }
