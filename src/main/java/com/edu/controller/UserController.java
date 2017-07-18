@@ -1,6 +1,5 @@
 package com.edu.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +23,13 @@ public class UserController {
 	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public Page<User> pager(
+	public Page<User> pager(Map<String, String> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		Map<String, String> conditions = new HashMap<String, String>();
-		conditions.put("username", "test");
 		return userService.searchUsers(conditions, pageable);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public User add(@RequestBody User user) {
-		System.out.println(user);
 		return userService.createUser(user);
 	}
 

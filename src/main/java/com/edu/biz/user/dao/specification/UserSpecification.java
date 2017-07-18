@@ -27,7 +27,7 @@ public class UserSpecification implements Specification<User> {
 
 		if (null != conditions) {
 			if (conditions.containsKey("username")) {
-				cb.equal(root.get("username").as(String.class), conditions.get("username"));
+				list.add(cb.equal(root.get("username").as(String.class), this.conditions.get("username")));
 			}
 		}
 

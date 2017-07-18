@@ -12,3 +12,7 @@ CREATE TABLE `user` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `user` (`username`, `nickname`, `email`, `password`, `salt`, `created_time`, `updated_time`) VALUES
+('admin', 'test', 'test@aa', 'test', 'xxx', '2017-07-17 09:21:20', '2017-07-17 09:21:20');
+
+

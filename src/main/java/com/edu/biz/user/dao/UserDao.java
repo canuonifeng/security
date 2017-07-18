@@ -7,5 +7,7 @@ import com.edu.biz.user.entity.User;
 
 @Repository
 public interface UserDao extends BaseDao<User> {
+
+	public User getByUsername(String userName);
 	
 }

@@ -12,4 +12,6 @@ public interface UserService {
 	public Page<User> searchUsers(Map<String, String> conditions, Pageable pageable);
 
 	public User createUser(User user);
+	
+	public User getUserByUsername(String userName);
 }
