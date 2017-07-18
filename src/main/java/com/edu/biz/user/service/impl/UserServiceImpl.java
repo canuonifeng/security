@@ -5,6 +5,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.user.dao.UserDao;
@@ -13,7 +16,7 @@ import com.edu.biz.user.entity.User;
 import com.edu.biz.user.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	private UserDao userDao;
@@ -22,15 +25,15 @@ public class UserServiceImpl implements UserService {
 	public Page<User> searchUsers(Map<String, String> conditions, Pageable pageable) {
 		return userDao.findAll(new UserSpecification(conditions), pageable);
 	}
+	
+	@Override
+	public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+		return userDao.getByUsername(name);
+	}
 
 	@Override
 	public User createUser(User user) {
 		return userDao.save(user);
 	}
 
-	@Override
-	public User getUserByUsername(String userName) {
-		return userDao.getByUsername(userName);
-	}
-	
 }

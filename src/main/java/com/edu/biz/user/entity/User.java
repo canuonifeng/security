@@ -3,6 +3,9 @@ package com.edu.biz.user.entity;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +24,11 @@ public class User extends BaseEntity implements UserDetails{
 	private String nickname;
 	private String email;
 	private String salt;
+	
+	@ManyToMany
+    @JoinTable(name="user_role",joinColumns=@JoinColumn(name="user_id"),
+    inverseJoinColumns=@JoinColumn(name="role_id"))
+	private Collection<Role> roles;
 
 	public String getUsername() {
 		return username;
