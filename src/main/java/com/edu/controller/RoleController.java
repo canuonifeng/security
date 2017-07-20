@@ -1,6 +1,6 @@
 package com.edu.controller;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +16,7 @@ import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.service.RoleService;
 
 @RestController
-@RequestMapping("/api/role")
+@RequestMapping("/api")
 public class RoleController {
 	
 	@Autowired
@@ -43,7 +43,7 @@ public class RoleController {
 	}
 	
 	@RequestMapping(path = "/roles", method = RequestMethod.GET)
-	public Page<Role> pager(@RequestBody Role role, @PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		return roleService.searchRoles(new HashMap<String, String>(), pageable);
+	public Page<Role> pager(Map<String, String> conditions, @PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+		return roleService.searchRoles(conditions, pageable);
 	}
 }

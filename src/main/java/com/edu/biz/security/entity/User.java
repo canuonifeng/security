@@ -3,7 +3,9 @@ package com.edu.biz.security.entity;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -26,16 +28,22 @@ public class User extends BaseEntity implements UserDetails {
 
 	@NotEmpty(message = "用户名不能为空")
 	private String username;
+	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotEmpty(message = "密码不能为空")
 	private String password;
+	
 	private String nickname;
+	
 	private String email;
+	
 	@JsonIgnore
 	private String salt;
 
-	@ManyToMany
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@JoinTable(name = "user_role", 
+		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , 
+		inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
 	private List<Role> roles;
 
 	public String getUsername() {
@@ -46,7 +54,6 @@ public class User extends BaseEntity implements UserDetails {
 		this.username = username;
 	}
 
-	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}

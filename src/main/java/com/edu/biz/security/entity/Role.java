@@ -2,7 +2,9 @@ package com.edu.biz.security.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -16,18 +18,16 @@ public class Role extends BaseEntity{
 
 	private String name;
 	
-    @ManyToMany
-    @JoinTable(name="user_role",joinColumns=@JoinColumn(name="role_id", referencedColumnName="id"),
-    inverseJoinColumns=@JoinColumn(name="user_id", referencedColumnName="id"))
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<User> users;
  
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
         name = "role_permission", 
         joinColumns = @JoinColumn(
-          name = "role_id"), 
+          name = "role_id", referencedColumnName="id"), 
         inverseJoinColumns = @JoinColumn(
-          name = "permission_id"))
+          name = "permission_id", referencedColumnName="id"))
     private List<Permission> permissions;
 
 	public String getName() {
