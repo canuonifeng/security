@@ -10,6 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.Role;
@@ -37,8 +38,10 @@ public class RoleController {
 		return roleService.deleteRole(role.getId());
 	}
 	
-	@RequestMapping(path = "/role", method = RequestMethod.GET)
-	public Role get(@RequestBody Role role) {
+	@RequestMapping(path = "/role/{id}", method = RequestMethod.GET)
+	public Role get(@RequestParam Long id) {
+		Role role = new Role();
+		role.setId(id);
 		return roleService.getRole(role.getId());
 	}
 	
