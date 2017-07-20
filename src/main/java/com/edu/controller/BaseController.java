@@ -1,4 +1,4 @@
-package com.edu.biz.base;
+package com.edu.controller;
 
 public class BaseController<T> {
 	
