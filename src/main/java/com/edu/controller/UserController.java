@@ -2,6 +2,8 @@ package com.edu.controller;
 
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.UserService;
+
 
 @RestController
 @RequestMapping("/api/user")
@@ -30,7 +32,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public User add(@RequestBody User user) {
+	public User add(@Valid @RequestBody User user) {
 		return userService.createUser(user);
 	}
 	

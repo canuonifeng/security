@@ -9,26 +9,33 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity implements UserDetails{
-	
+public class User extends BaseEntity implements UserDetails {
+
 	private static final long serialVersionUID = 1L;
-	
+
+	@NotEmpty(message = "用户名不能为空")
 	private String username;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@NotEmpty(message = "密码不能为空")
 	private String password;
 	private String nickname;
 	private String email;
+	@JsonIgnore
 	private String salt;
-	
+
 	@ManyToMany
-    @JoinTable(name="user_role",joinColumns=@JoinColumn(name="user_id", referencedColumnName="id"),
-    inverseJoinColumns=@JoinColumn(name="role_id", referencedColumnName="id"))
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
 	private List<Role> roles;
 
 	public String getUsername() {
@@ -39,6 +46,7 @@ public class User extends BaseEntity implements UserDetails{
 		this.username = username;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
