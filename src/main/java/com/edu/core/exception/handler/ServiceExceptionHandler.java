@@ -5,17 +5,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.edu.core.exception.ServiceException;
 
 @ControllerAdvice
-public class ServiceExceptionHandler extends ResponseEntityExceptionHandler {
-	@ExceptionHandler(Throwable.class)
-    @ResponseBody
-    public ErrorInfo<String> serviceExceptionHandler(HttpServletRequest req, Throwable e) throws Exception {
+public class ServiceExceptionHandler  {
+
+	@ExceptionHandler(value = ServiceException.class)
+	@ResponseBody
+	public ErrorInfo<String> jsonErrorHandler(HttpServletRequest req, ServiceException e) {
 		ErrorInfo<String> err = new ErrorInfo<>();
-        err.setMessage("服务器异常");
-        err.setStatus("500");
-        err.setData(e.getMessage());
-        return err;
-    }
+		err.setMessage(e.getMessage());
+		err.setStatus(e.getCode());
+		err.setData(e.getMessage());
+		return err;
+	}
 }
