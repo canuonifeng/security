@@ -1,6 +1,5 @@
 package com.edu.biz.security.entity;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,8 +10,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -83,31 +80,6 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
 	}
 
 	public List<Role> getRoles() {

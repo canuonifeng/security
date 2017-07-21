@@ -1,5 +1,7 @@
 package com.edu.biz.security.dao.specification;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,7 +22,15 @@ public class RoleSpecification implements Specification<Role>{
 
 	@Override
 	public Predicate toPredicate(Root<Role> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Predicate> list = new ArrayList<Predicate>();
+
+		if (null != conditions) {
+			if (conditions.containsKey("name")) {
+				list.add(cb.equal(root.get("name").as(String.class), this.conditions.get("name")));
+			}
+		}
+
+		Predicate[] p = new Predicate[list.size()];
+		return cb.and(list.toArray(p));
 	}
 }

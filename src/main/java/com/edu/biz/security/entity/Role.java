@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
 
@@ -20,7 +21,7 @@ public class Role extends BaseEntity{
 	@ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
     private List<User> users;
  
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "role_permission", 
 		joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") , 
 		inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id") )
