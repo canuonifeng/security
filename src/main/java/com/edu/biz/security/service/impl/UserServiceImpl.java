@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.edu.biz.base.BaseService;
+import com.edu.biz.event.CreateUserEvent;
 import com.edu.biz.security.dao.UserDao;
 import com.edu.biz.security.dao.specification.UserSpecification;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.UserService;
+
 
 @Service
 @Validated
@@ -26,6 +29,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private ApplicationContext applicationContext;
 	
 	@Override
 	public Page<User> searchUsers(Map<String, String> conditions, Pageable pageable) {
@@ -43,7 +48,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		String password = this.makeSHA1(user.getPassword()+salt);
 		user.setSalt(salt);
 		user.setPassword(password);
-		return userDao.save(user);
+		user =  userDao.save(user);
+		applicationContext.publishEvent(new CreateUserEvent(user));
+		return user;
 	}
 	
 	private String makeSHA1(String str) {
