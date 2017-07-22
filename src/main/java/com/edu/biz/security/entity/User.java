@@ -1,5 +1,6 @@
 package com.edu.biz.security.entity;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -7,9 +8,12 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +32,7 @@ public class User extends BaseEntity {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotEmpty(message = "密码不能为空")
 	private String password;
-	
+
 	private String nickname;
 	
 	private String email;
@@ -41,6 +45,11 @@ public class User extends BaseEntity {
 		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , 
 		inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
 	private List<Role> roles;
+	
+	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
+	@JoinColumn(name="org_id")
+	private Organization org;
+	
 
 	public String getUsername() {
 		return username;
@@ -88,5 +97,34 @@ public class User extends BaseEntity {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	@Override
+	@JsonIgnore
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+//		Set<GrantedAuthority> authorities = new HashSet<>();
+//		this.getRoles().forEach(r -> authorities.add(new SimpleGrantedAuthority(r.getName())));
+//		return authorities;
+		return null;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }
