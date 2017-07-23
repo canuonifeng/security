@@ -2,8 +2,6 @@ package com.edu.biz.menu.dao;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
-
 import com.edu.biz.base.BaseDao;
 import com.edu.biz.menu.entity.Menu;
 
