@@ -1,6 +1,8 @@
 package com.edu.biz.security.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.edu.biz.base.BaseEntity;
 
@@ -8,6 +10,8 @@ import com.edu.biz.base.BaseEntity;
 public class Organization extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	
+	@ManyToOne
+	@JoinColumn(name="parent_id")
 	private Organization parent;
 	private String name;
 	private String code;
