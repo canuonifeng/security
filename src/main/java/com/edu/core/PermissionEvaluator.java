@@ -31,7 +31,7 @@ public class PermissionEvaluator implements org.springframework.security.access.
 		}
 		
 		Set<String> permissions = roleService.findByPermissionCodes(roleCodes);
-		return permissions.contains(targetDomainObject.toString()+"_"+permission.toString());
+		return permissions.contains(targetDomainObject.toString()+":"+permission.toString());
 	}
 
 	@Override

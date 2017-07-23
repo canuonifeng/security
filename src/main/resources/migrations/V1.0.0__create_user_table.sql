@@ -63,9 +63,9 @@ INSERT INTO `user` (`username`, `nickname`, `email`, `password`, `salt`, `create
 ('admin', 'test', 'test@aa', '56e88fcd763ee7a36c409ef6cf852aea', 'ujQAwILUUuVemyxz', '2017-07-17 09:21:20', '2017-07-17 09:21:20');
 
 INSERT INTO `permission` (`name`,`code`) VALUES
-('用户添加', 'user_add'),
-('用户修改', 'user_edit'),
-('用户删除', 'user_delete');
+('用户添加', 'user:add'),
+('用户修改', 'user:edit'),
+('用户删除', 'user:delete');
 
 INSERT INTO `role` (`name`,`code`) VALUES 
 ('超级管理员','ROLE_SUPER_ADMIN'),
