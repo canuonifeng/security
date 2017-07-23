@@ -10,6 +10,15 @@ public class Organization extends BaseEntity{
 	
 	private Organization parent;
 	private String name;
+	private String code;
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 
 	public Organization getParent() {
 		return parent;

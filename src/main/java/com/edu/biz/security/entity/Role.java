@@ -17,7 +17,16 @@ public class Role extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	private String name;
+	private String code;
 	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	@ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
     private List<User> users;
  

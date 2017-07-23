@@ -1,7 +1,5 @@
 package com.edu.biz.security.service.impl;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.util.Map;
 import java.util.Random;
 
@@ -58,6 +56,17 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			sb.append(base.charAt(number));
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public User updateUser(User user) {
+		return userDao.save(user);
+	}
+
+	@Override
+	public boolean deleteUser(Long id) {
+		userDao.delete(id);
+		return null == userDao.findOne(id);
 	}
 
 }

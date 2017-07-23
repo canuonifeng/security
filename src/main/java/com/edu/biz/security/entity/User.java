@@ -1,7 +1,9 @@
 package com.edu.biz.security.entity;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +15,7 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
@@ -40,7 +43,7 @@ public class User extends BaseEntity implements UserDetails {
 	@JsonIgnore
 	private String salt;
 
-	@ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
+	@ManyToMany(targetEntity=Role.class,fetch=FetchType.EAGER)
 	@JoinTable(name = "user_role", 
 		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , 
 		inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
@@ -102,10 +105,9 @@ public class User extends BaseEntity implements UserDetails {
 	@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-//		Set<GrantedAuthority> authorities = new HashSet<>();
-//		this.getRoles().forEach(r -> authorities.add(new SimpleGrantedAuthority(r.getName())));
-//		return authorities;
-		return null;
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		this.getRoles().forEach(r -> authorities.add(new SimpleGrantedAuthority(r.getCode())));
+		return authorities;
 	}
 
 	@Override

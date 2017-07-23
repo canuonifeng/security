@@ -13,13 +13,10 @@ CREATE TABLE `user` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `user` (`username`, `nickname`, `email`, `password`, `salt`, `created_time`, `updated_time`) VALUES
-('admin', 'test', 'test@aa', '56e88fcd763ee7a36c409ef6cf852aea', 'ujQAwILUUuVemyxz', '2017-07-17 09:21:20', '2017-07-17 09:21:20');
-
-
 CREATE TABLE `role` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(64) NOT NULL COMMENT '名称',
+  `code` varchar(64) NOT NULL COMMENT 'code',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
@@ -28,15 +25,11 @@ CREATE TABLE `role` (
 CREATE TABLE `permission` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(64) NOT NULL COMMENT '名称',
+  `code` varchar(64) NOT NULL COMMENT 'code',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO `permission` (`name`) VALUES
-('user_add'),
-('user_edit'),
-('user_delete');
 
 CREATE TABLE `role_permission` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -60,11 +53,28 @@ CREATE TABLE `organization` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `parent_id` int(10) UNSIGNED,
   `name` varchar(64) NOT NULL COMMENT '名称',
+  `code` varchar(64) NOT NULL COMMENT '',
   `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `user` (`username`, `nickname`, `email`, `password`, `salt`, `created_time`, `updated_time`) VALUES
+('admin', 'test', 'test@aa', '56e88fcd763ee7a36c409ef6cf852aea', 'ujQAwILUUuVemyxz', '2017-07-17 09:21:20', '2017-07-17 09:21:20');
 
+INSERT INTO `permission` (`name`,`code`) VALUES
+('用户添加', 'user_add'),
+('用户修改', 'user_edit'),
+('用户删除', 'user_delete');
 
+INSERT INTO `role` (`name`,`code`) VALUES 
+('超级管理员','ROLE_SUPER_ADMIN'),
+('账号管理员','ROLE_USER_MANAGER');
 
+INSERT INTO `user_role` (`user_id`,`role_id`) VALUES 
+(1, 1);
+
+INSERT INTO `role_permission` (`role_id`,`permission_id`) VALUES 
+(2, 1),
+(2, 2),
+(2, 3);

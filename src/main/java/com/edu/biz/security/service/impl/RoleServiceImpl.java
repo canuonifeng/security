@@ -1,6 +1,10 @@
 package com.edu.biz.security.service.impl;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.security.dao.RoleDao;
 import com.edu.biz.security.dao.specification.RoleSpecification;
+import com.edu.biz.security.entity.Permission;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.service.RoleService;
 
@@ -38,7 +43,20 @@ public class RoleServiceImpl extends BaseService implements RoleService{
 	}
 	
 	@Override
-	public Page<Role> searchRoles(Map<String, String> conditions, Pageable pageable) {
+	public Page<Role> searchRoles(Map<String, Object> conditions, Pageable pageable) {
 		return roleDao.findAll(new RoleSpecification(conditions), pageable);
+	}
+
+	@Override
+	public Set<String> findByPermissionCodes(Set<String> roleCodes) {
+		List<Role> roles = roleDao.findByCodeIn(roleCodes);
+		Set<String> permissionCodes = new HashSet<String>();
+		for (Role role : roles) {
+			List<Permission> permissions = role.getPermissions();
+			for (Permission permission : permissions) {
+				permissionCodes.add(permission.getName());
+			}
+		}
+		return permissionCodes;
 	}
 }
