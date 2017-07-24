@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.UserService;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -48,15 +51,17 @@ public class UserController {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('user', 'delete')")
+	@ApiOperation(value = "删除用户", notes = "根据url的id来指定删除对象")
+	@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long")
 	public boolean delete(@PathVariable Long id) {
 		return userService.deleteUser(id);
 	}
-	
+
 	@RequestMapping(path = "/permission", method = RequestMethod.GET)
 	@PreAuthorize("isAuthenticated()")
-	public Map<String, Object> findCurrentUserPermissionCodes(){
+	public Map<String, Object> findCurrentUserPermissionCodes() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(userService.isAdmin()) {
+		if (userService.isAdmin()) {
 			map.put("isAdmin", true);
 		} else {
 			map.put("isAdmin", false);
