@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,21 +25,25 @@ public class RoleController {
 	private RoleService roleService;
 	
 	@RequestMapping(method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('role', 'add')")
 	public Role add(@RequestBody Role role) {
 		return roleService.createRole(role);
 	}
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('role', 'edit')")
 	public Role edit(@PathVariable Long id, @RequestBody Role role) {
 		return roleService.updateRole(role);
 	}
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('role', 'delete')")
 	public boolean delete(@PathVariable Long id, @RequestBody Role role) {
 		return roleService.deleteRole(role.getId());
 	}
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('role', 'get')")
 	public Role get(@PathVariable Long id) {
 		Role role = new Role();
 		role.setId(id);
@@ -46,6 +51,7 @@ public class RoleController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('role', 'get')")
 	public Page<Role> pager(Map<String, Object> conditions, @PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return roleService.searchRoles(conditions, pageable);
 	}

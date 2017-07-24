@@ -28,7 +28,8 @@ public class UserController {
 	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public Page<User> pager(Map<String, String> conditions,
+	@PreAuthorize("hasPermission('user', 'get')")
+	public Page<User> pager(Map<String, Object> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return userService.searchUsers(conditions, pageable);
 	}

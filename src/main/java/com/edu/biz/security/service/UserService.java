@@ -9,7 +9,7 @@ import com.edu.biz.security.entity.User;
 
 public interface UserService {
 	
-	public Page<User> searchUsers(Map<String, String> conditions, Pageable pageable);
+	public Page<User> searchUsers(Map<String, Object> conditions, Pageable pageable);
 
 	public User createUser(User user);
 	

@@ -3,8 +3,9 @@
 * json返回值的过滤
 * validate
 * 异常捕获以及返回值处理
-
 * security 登入登出、密码加密、rememberMe、权限拦截
+
+* 安全
 * ThreadLocal，当前用户
 * 导入导出
 * 异步事件机制

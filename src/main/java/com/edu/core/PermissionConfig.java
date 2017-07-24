@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class ControllerSecurityConfiguration extends GlobalMethodSecurityConfiguration {
+public class PermissionConfig extends GlobalMethodSecurityConfiguration {
 	
 	private DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
 	

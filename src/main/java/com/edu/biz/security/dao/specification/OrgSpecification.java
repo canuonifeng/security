@@ -15,9 +15,9 @@ import com.edu.biz.security.entity.Organization;
 
 public class OrgSpecification implements Specification<Organization>{
 	
-	private Map<String, String> conditions;
+	private Map<String, Object> conditions;
 	
-	public OrgSpecification(Map<String, String> conditions) {
+	public OrgSpecification(Map<String, Object> conditions) {
 		this.conditions = conditions;
 	}
 

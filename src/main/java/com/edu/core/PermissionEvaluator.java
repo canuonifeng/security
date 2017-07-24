@@ -40,7 +40,4 @@ public class PermissionEvaluator implements org.springframework.security.access.
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	
-	
 }

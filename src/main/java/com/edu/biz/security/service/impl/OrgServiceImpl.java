@@ -40,7 +40,7 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
-	public Page<Organization> searchOrgs(Map<String, String> conditions, Pageable pageable) {
+	public Page<Organization> searchOrgs(Map<String, Object> conditions, Pageable pageable) {
 		return orgDao.findAll(new OrgSpecification(conditions), pageable);
 	}
 

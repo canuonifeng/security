@@ -27,7 +27,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	private UserDao userDao;
 
 	@Override
-	public Page<User> searchUsers(Map<String, String> conditions, Pageable pageable) {
+	public Page<User> searchUsers(Map<String, Object> conditions, Pageable pageable) {
 		return userDao.findAll(new UserSpecification(conditions), pageable);
 	}
 

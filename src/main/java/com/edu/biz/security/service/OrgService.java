@@ -17,6 +17,6 @@ public interface OrgService {
 
 	Organization getOrg(Long id);
 
-	Page<Organization> searchOrgs(Map<String, String> conditions, Pageable pageable);
+	Page<Organization> searchOrgs(Map<String, Object> conditions, Pageable pageable);
 
 }

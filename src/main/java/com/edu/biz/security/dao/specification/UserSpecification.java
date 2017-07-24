@@ -15,9 +15,9 @@ import com.edu.biz.security.entity.User;
 
 public class UserSpecification implements Specification<User> {
 
-	private Map<String, String> conditions;
+	private Map<String, Object> conditions;
 
-	public UserSpecification(Map<String, String> conditions) {
+	public UserSpecification(Map<String, Object> conditions) {
 		this.conditions = conditions;
 	}
 
