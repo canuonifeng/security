@@ -7,11 +7,11 @@ import javax.persistence.ManyToOne;
 import com.edu.biz.base.BaseEntity;
 
 @Entity
-public class Organization extends BaseEntity{
+public class Organization extends BaseEntity {
 	private static final long serialVersionUID = 1L;
-	
+
 	@ManyToOne
-	@JoinColumn(name="parent_id")
+	@JoinColumn(name = "parent_id")
 	private Organization parent;
 	private String name;
 	private String code;
@@ -39,5 +39,5 @@ public class Organization extends BaseEntity{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.UserService;
 
-
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -39,14 +38,14 @@ public class UserController {
 	public User add(@Valid @RequestBody User user) {
 		return userService.createUser(user);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	public User edit(@RequestBody User user) {
 		return userService.updateUser(user);
 	}
-	
-	@RequestMapping(path="/{id}", method = RequestMethod.DELETE)
+
+	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('user', 'delete')")
 	public boolean delete(@PathVariable Long id) {
 		return userService.deleteUser(id);

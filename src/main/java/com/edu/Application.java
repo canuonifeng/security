@@ -12,21 +12,21 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @EnableAutoConfiguration
 @EnableJpaAuditing
-@ComponentScan(basePackages={"com.edu"})
+@ComponentScan(basePackages = { "com.edu" })
 @EnableAsync
-public class Application extends AsyncConfigurerSupport{
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(Application.class, args);
-    }
-    
-    @Override
-    public Executor getAsyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(2);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("sync-thread");
-        executor.initialize();
-        return executor;
-    }
+public class Application extends AsyncConfigurerSupport {
+	public static void main(String[] args) throws Exception {
+		SpringApplication.run(Application.class, args);
+	}
+
+	@Override
+	public Executor getAsyncExecutor() {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(2);
+		executor.setMaxPoolSize(2);
+		executor.setQueueCapacity(500);
+		executor.setThreadNamePrefix("sync-thread");
+		executor.initialize();
+		return executor;
+	}
 }

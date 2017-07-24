@@ -11,14 +11,14 @@ import com.edu.biz.security.event.CreateUserEvent;
 
 @Component
 public class CreateUserListener implements ApplicationListener<CreateUserEvent> {
-	public final static Logger logger = LoggerFactory
-			.getLogger(CreateUserListener.class);
+	public final static Logger logger = LoggerFactory.getLogger(CreateUserListener.class);
+
 	@Async
 	@Override
 	public void onApplicationEvent(CreateUserEvent event) {
-	User user = (User) event.getSource();
-	logger.debug(user.getNickname()+" 用户被创建，"+user);
-		
+		User user = (User) event.getSource();
+		logger.debug(user.getNickname() + " 用户被创建，" + user);
+
 	}
 
 }

@@ -21,7 +21,6 @@ import com.edu.biz.security.entity.User;
 import com.edu.biz.security.event.CreateUserEvent;
 import com.edu.biz.security.service.UserService;
 
-
 @Service
 @Validated
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
@@ -31,7 +30,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	private ApplicationContext applicationContext;
-	
+
 	@Override
 	public Page<User> searchUsers(Map<String, Object> conditions, Pageable pageable) {
 		return userDao.findAll(new UserSpecification(conditions), pageable);
@@ -50,7 +49,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		String password = encoder.encodePassword(user.getPassword(), salt);
 		user.setSalt(salt);
 		user.setPassword(password);
-		user =  userDao.save(user);
+		user = userDao.save(user);
 		applicationContext.publishEvent(new CreateUserEvent(user));
 		return user;
 	}

@@ -21,7 +21,7 @@ public class MenuServiceImpl implements MenuService {
 
 	@Autowired
 	private MenuDao menuDao;
-	
+
 	@Autowired
 	private RoleService roleService;
 
@@ -29,21 +29,22 @@ public class MenuServiceImpl implements MenuService {
 	public List<Menu> findChildMenus(String code) {
 		Menu menu = menuDao.findByCode(code);
 		List<Menu> menus = menuDao.findByParentId(menu.getId());
-		
-		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
+		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication()
+				.getAuthorities();
 		Set<String> roleCodes = new HashSet<String>();
 		for (GrantedAuthority grantedAuthority : authorities) {
 			roleCodes.add(grantedAuthority.getAuthority());
 		}
 		Set<String> permissions = roleService.findByPermissionCodes(roleCodes);
-		
+
 		List<Menu> menuArray = new ArrayList<Menu>();
 		for (Menu item : menus) {
 			if (permissions.contains(item.getPermission().getCode())) {
 				menuArray.add(item);
 			}
 		}
-		
+
 		return menuArray;
 	}
 }

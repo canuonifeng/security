@@ -19,28 +19,28 @@ import com.edu.biz.security.service.OrgService;
 
 @RestController
 @RequestMapping("/api/org")
-public class OrgController extends BaseController<Organization>{
+public class OrgController extends BaseController<Organization> {
 	@Autowired
 	private OrgService orgService;
-	
+
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('org', 'add')")
 	public Organization add(@RequestBody Organization org) {
 		return orgService.createOrg(org);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('org', 'edit')")
 	public Organization edit(@PathVariable Long id, @RequestBody Organization org) {
 		return orgService.updateOrg(org);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('org', 'delete')")
 	public boolean delete(@PathVariable Long id, @RequestBody Organization org) {
 		return orgService.deleteOrg(org.getId());
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
 	public Organization get(@PathVariable Long id) {
@@ -48,10 +48,11 @@ public class OrgController extends BaseController<Organization>{
 		org.setId(id);
 		return orgService.getOrg(org.getId());
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
-	public Page<Organization> pager(Map<String, Object> conditions, @PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+	public Page<Organization> pager(Map<String, Object> conditions,
+			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return orgService.searchOrgs(conditions, pageable);
 	}
 }

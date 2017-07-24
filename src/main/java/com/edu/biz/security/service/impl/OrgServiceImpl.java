@@ -17,7 +17,7 @@ public class OrgServiceImpl implements OrgService {
 
 	@Autowired
 	private OrgDao orgDao;
-	
+
 	@Override
 	public Organization createOrg(Organization org) {
 		return orgDao.save(org);

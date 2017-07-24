@@ -1,8 +1,7 @@
 package com.edu.core.util;
 
 public class ThreadLocalUtil {
-	public final static Object get()
-	{
+	public final static Object get() {
 		return null;
 	}
 }

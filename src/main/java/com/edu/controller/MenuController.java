@@ -14,11 +14,11 @@ import com.edu.biz.menu.service.MenuService;
 
 @RestController
 @RequestMapping("/api/menu")
-public class MenuController extends BaseController<Menu>{
-	
+public class MenuController extends BaseController<Menu> {
+
 	@Autowired
 	private MenuService menuService;
-	
+
 	@RequestMapping(path = "/{code}", method = RequestMethod.GET)
 	@PreAuthorize("isAuthenticated()")
 	public List<Menu> findChildMenus(@PathVariable String code) {

@@ -31,28 +31,26 @@ public class User extends BaseEntity implements UserDetails {
 
 	@NotEmpty(message = "用户名不能为空")
 	private String username;
-	
+
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotEmpty(message = "密码不能为空")
 	private String password;
 
 	private String nickname;
-	
+
 	private String email;
-	
+
 	@JsonIgnore
 	private String salt;
 
-	@ManyToMany(targetEntity=Role.class, fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role", 
-		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , 
-		inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
+	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private List<Role> roles;
-	
+
 	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
-	@JoinColumn(name="org_id")
+	@JoinColumn(name = "org_id")
 	private Organization org;
-	
+
 	public String getUsername() {
 		return username;
 	}

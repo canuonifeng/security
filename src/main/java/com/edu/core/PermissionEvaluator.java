@@ -8,16 +8,16 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.edu.biz.security.service.RoleService;
 
-@Service
+@Component
 public class PermissionEvaluator implements org.springframework.security.access.PermissionEvaluator {
 
 	@Autowired
 	private RoleService roleService;
-	
+
 	@Override
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -25,13 +25,13 @@ public class PermissionEvaluator implements org.springframework.security.access.
 		for (GrantedAuthority grantedAuthority : authorities) {
 			roleCodes.add(grantedAuthority.getAuthority());
 		}
-		
-		if(roleCodes.contains("ROLE_SUPER_ADMIN")) {
+
+		if (roleCodes.contains("ROLE_SUPER_ADMIN")) {
 			return true;
 		}
-		
+
 		Set<String> permissions = roleService.findByPermissionCodes(roleCodes);
-		return permissions.contains(targetDomainObject.toString()+":"+permission.toString());
+		return permissions.contains(targetDomainObject.toString() + ":" + permission.toString());
 	}
 
 	@Override

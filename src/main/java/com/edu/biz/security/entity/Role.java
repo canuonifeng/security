@@ -12,32 +12,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
-public class Role extends BaseEntity{
-	
+public class Role extends BaseEntity {
+
 	private static final long serialVersionUID = 1L;
 
 	private String name;
 	private String code;
-	
+
 	@ManyToMany(mappedBy = "roles")
 	@JsonProperty(access = Access.WRITE_ONLY)
-    private List<User> users;
- 
-    @ManyToMany
-    @JoinTable(name = "role_permission", 
-		joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") , 
-		inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id") )
-    @JsonProperty(access = Access.WRITE_ONLY)
-    private List<Permission> permissions;
+	private List<User> users;
 
-    public String getCode() {
-    		return code;
-    }
-    
-    public void setCode(String code) {
-    		this.code = code;
-    }
-    
+	@ManyToMany
+	@JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private List<Permission> permissions;
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -60,5 +58,5 @@ public class Role extends BaseEntity{
 
 	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
-	}  
+	}
 }

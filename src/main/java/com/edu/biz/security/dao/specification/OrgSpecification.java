@@ -13,10 +13,10 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.security.entity.Organization;
 
-public class OrgSpecification implements Specification<Organization>{
-	
+public class OrgSpecification implements Specification<Organization> {
+
 	private Map<String, Object> conditions;
-	
+
 	public OrgSpecification(Map<String, Object> conditions) {
 		this.conditions = conditions;
 	}

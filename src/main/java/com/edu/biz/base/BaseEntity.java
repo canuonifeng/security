@@ -28,11 +28,11 @@ abstract public class BaseEntity implements Serializable {
 	@Basic(optional = false)
 	@JsonProperty(access = Access.READ_ONLY)
 	private Long id;
-	
+
 	@CreatedDate
 	@JsonProperty(access = Access.READ_ONLY)
 	private Date createdTime;
-	
+
 	@LastModifiedDate
 	@JsonProperty(access = Access.READ_ONLY)
 	private Date updatedTime;

@@ -10,13 +10,13 @@ import com.edu.biz.security.entity.Role;
 
 public interface RoleService {
 	public Role createRole(Role role);
-	
+
 	public Role updateRole(Role role);
-	
+
 	public boolean deleteRole(Long id);
-	
+
 	public Role getRole(Long id);
-	
+
 	public Page<Role> searchRoles(Map<String, Object> conditions, Pageable pageable);
 
 	public Set<String> findByPermissionCodes(Set<String> roleCodes);

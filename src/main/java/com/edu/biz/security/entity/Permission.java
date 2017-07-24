@@ -10,16 +10,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
-public class Permission  extends BaseEntity{
+public class Permission extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String name;
 	private String code;
-	
+
 	@ManyToMany(mappedBy = "permissions")
 	@JsonProperty(access = Access.WRITE_ONLY)
-    private List<Role> roles;
+	private List<Role> roles;
 
 	public String getCode() {
 		return code;

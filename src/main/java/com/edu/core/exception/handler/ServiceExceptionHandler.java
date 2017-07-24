@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.edu.core.exception.ServiceException;
 
 @ControllerAdvice
-public class ServiceExceptionHandler  {
+public class ServiceExceptionHandler {
 
 	@ExceptionHandler(value = ServiceException.class)
 	@ResponseBody

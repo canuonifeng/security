@@ -20,28 +20,28 @@ import com.edu.biz.security.service.RoleService;
 @RestController
 @RequestMapping("/api/role")
 public class RoleController {
-	
+
 	@Autowired
 	private RoleService roleService;
-	
+
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('role', 'add')")
 	public Role add(@RequestBody Role role) {
 		return roleService.createRole(role);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('role', 'edit')")
 	public Role edit(@PathVariable Long id, @RequestBody Role role) {
 		return roleService.updateRole(role);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('role', 'delete')")
 	public boolean delete(@PathVariable Long id, @RequestBody Role role) {
 		return roleService.deleteRole(role.getId());
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('role', 'get')")
 	public Role get(@PathVariable Long id) {
@@ -49,10 +49,11 @@ public class RoleController {
 		role.setId(id);
 		return roleService.getRole(role.getId());
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('role', 'get')")
-	public Page<Role> pager(Map<String, Object> conditions, @PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+	public Page<Role> pager(Map<String, Object> conditions,
+			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return roleService.searchRoles(conditions, pageable);
 	}
 }

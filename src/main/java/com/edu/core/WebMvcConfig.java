@@ -11,7 +11,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	TimeCostInterceptor timeCostInterceptor;
 
 	@Override
-	  public void addInterceptors(InterceptorRegistry registry) {
-	    registry.addInterceptor(timeCostInterceptor).addPathPatterns("/**");
-	  }
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(timeCostInterceptor).addPathPatterns("/**");
+	}
 }
