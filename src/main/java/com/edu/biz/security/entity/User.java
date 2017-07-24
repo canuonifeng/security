@@ -1,18 +1,21 @@
 package com.edu.biz.security.entity;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
@@ -32,7 +35,7 @@ public class User extends BaseEntity implements UserDetails {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotEmpty(message = "密码不能为空")
 	private String password;
-	
+
 	private String nickname;
 	
 	private String email;
@@ -40,11 +43,16 @@ public class User extends BaseEntity implements UserDetails {
 	@JsonIgnore
 	private String salt;
 
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@ManyToMany(targetEntity=Role.class,fetch=FetchType.EAGER)
 	@JoinTable(name = "user_role", 
 		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , 
 		inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
 	private List<Role> roles;
+	
+	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
+	@JoinColumn(name="org_id")
+	private Organization org;
+	
 
 	public String getUsername() {
 		return username;
@@ -86,9 +94,20 @@ public class User extends BaseEntity implements UserDetails {
 		this.salt = salt;
 	}
 
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		this.getRoles().forEach(r -> authorities.add(new SimpleGrantedAuthority(r.getCode())));
+		return authorities;
 	}
 
 	@Override
@@ -109,13 +128,5 @@ public class User extends BaseEntity implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
-	}
-
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
 	}
 }

@@ -2,12 +2,12 @@ package com.edu.biz.security.entity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
 
@@ -17,17 +17,23 @@ public class Role extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 
 	private String name;
+	private String code;
 	
-	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	@ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
     private List<User> users;
  
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(
-        name = "role_permission", 
-        joinColumns = @JoinColumn(
-          name = "role_id", referencedColumnName="id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "permission_id", referencedColumnName="id"))
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "role_permission", 
+		joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") , 
+		inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id") )
     private List<Permission> permissions;
 
 	public String getName() {
