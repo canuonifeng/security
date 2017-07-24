@@ -1,8 +1,13 @@
 package com.edu.biz.security.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 
 import com.edu.biz.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Permission  extends BaseEntity{
@@ -11,6 +16,10 @@ public class Permission  extends BaseEntity{
 	
 	private String name;
 	private String code;
+	
+	@ManyToMany(mappedBy = "permissions")
+	@JsonProperty(access = Access.WRITE_ONLY)
+    private List<Role> roles;
 
 	public String getCode() {
 		return code;

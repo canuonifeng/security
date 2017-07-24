@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -32,7 +31,7 @@ public class Role extends BaseEntity{
 	@JsonProperty(access = Access.WRITE_ONLY)
     private List<User> users;
  
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "role_permission", 
 		joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") , 
 		inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id") )
