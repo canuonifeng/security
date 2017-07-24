@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -49,5 +50,18 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'delete')")
 	public boolean delete(@PathVariable Long id) {
 		return userService.deleteUser(id);
+	}
+	
+	@RequestMapping(path = "/permission", method = RequestMethod.GET)
+	@PreAuthorize("isAuthenticated()")
+	public Map<String, Object> findCurrentUserPermissionCodes(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(userService.isAdmin()) {
+			map.put("isAdmin", true);
+		} else {
+			map.put("isAdmin", false);
+			map.put("permissionCodes", userService.findCurrentUserPermissionCodes());
+		}
+		return map;
 	}
 }

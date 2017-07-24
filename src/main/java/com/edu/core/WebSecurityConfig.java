@@ -1,6 +1,7 @@
 package com.edu.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.dao.ReflectionSaltSource;
@@ -12,6 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 @Configuration
 @EnableWebSecurity
@@ -27,11 +30,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationSuccessHandler authenticationSuccessHandler;
 
+	@Bean
+	public RememberMeServices rememberMeServices() {
+		SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
+		rememberMeServices.setAlwaysRemember(true);
+		return rememberMeServices;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests().anyRequest().authenticated().and().formLogin()
 				.loginProcessingUrl("/loginCheck").successHandler(authenticationSuccessHandler).and().httpBasic()
-				.authenticationEntryPoint(authEntryPoint);
+				.authenticationEntryPoint(authEntryPoint).and().rememberMe().rememberMeServices(rememberMeServices());
 	}
 
 	@Override

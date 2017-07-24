@@ -1,6 +1,7 @@
 package com.edu.biz.security.service;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,8 @@ public interface UserService {
 	public User updateUser(User user);
 
 	public boolean deleteUser(Long id);
+	
+	public boolean isAdmin();
+	
+	public Set<String> findCurrentUserPermissionCodes();
 }
