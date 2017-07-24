@@ -1,4 +1,4 @@
-package com.edu.biz.event.listener;
+package com.edu.biz.security.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.edu.biz.event.CreateUserEvent;
 import com.edu.biz.security.entity.User;
+import com.edu.biz.security.event.CreateUserEvent;
 
 @Component
 public class CreateUserListener implements ApplicationListener<CreateUserEvent> {

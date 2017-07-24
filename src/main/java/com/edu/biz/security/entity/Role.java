@@ -19,14 +19,6 @@ public class Role extends BaseEntity{
 	private String name;
 	private String code;
 	
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	@ManyToMany(mappedBy = "roles")
 	@JsonProperty(access = Access.WRITE_ONLY)
     private List<User> users;
@@ -38,6 +30,14 @@ public class Role extends BaseEntity{
     @JsonProperty(access = Access.WRITE_ONLY)
     private List<Permission> permissions;
 
+    public String getCode() {
+    		return code;
+    }
+    
+    public void setCode(String code) {
+    		this.code = code;
+    }
+    
 	public String getName() {
 		return name;
 	}

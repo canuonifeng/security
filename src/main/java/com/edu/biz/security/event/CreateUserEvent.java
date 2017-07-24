@@ -1,4 +1,4 @@
-package com.edu.biz.event;
+package com.edu.biz.security.event;
 
 import org.springframework.context.ApplicationEvent;
 
