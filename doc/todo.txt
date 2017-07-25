@@ -4,10 +4,15 @@
 * validate
 * 异常捕获以及返回值处理
 * security 登入登出、密码加密、rememberMe、权限拦截
-
-* 安全
-* ThreadLocal，当前用户
-* 导入导出
 * 异步事件机制
+* ThreadLocal，当前用户
+
+* API的规范
+* Response规范
+* Log规范
+* 单元测试
+* 安全
+* 导入导出
 * 线程池
 * 缓存
+* Scheduler
