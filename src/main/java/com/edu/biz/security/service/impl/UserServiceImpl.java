@@ -7,7 +7,6 @@ import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -33,9 +32,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private ApplicationContext applicationContext;
 
 	@Autowired
 	private RoleService roleService;
