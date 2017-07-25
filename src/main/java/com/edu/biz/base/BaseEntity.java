@@ -17,6 +17,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 abstract public class BaseEntity implements Serializable {
@@ -25,16 +27,19 @@ abstract public class BaseEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Basic(optional = false)
 	@JsonProperty(access = Access.READ_ONLY)
+	@Basic(optional = false)
+	@ApiModelProperty(hidden=true)
 	private Long id;
 
 	@CreatedDate
 	@JsonProperty(access = Access.READ_ONLY)
+	@ApiModelProperty(hidden=true)
 	private Date createdTime;
 
 	@LastModifiedDate
 	@JsonProperty(access = Access.READ_ONLY)
+	@ApiModelProperty(hidden=true)
 	private Date updatedTime;
 
 	public Long getId() {

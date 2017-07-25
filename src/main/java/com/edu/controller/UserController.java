@@ -21,6 +21,7 @@ import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.UserService;
 
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -39,13 +40,18 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
+	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
 	public User add(@Valid @RequestBody User user) {
 		return userService.createUser(user);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(path = "/{id}",method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
-	public User edit(@RequestBody User user) {
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long"),
+		@ApiImplicitParam(name = "user", value = "密码", required = true, dataType = "String"),
+	})
+	public User edit(@PathVariable Long id,@RequestBody User user) {
 		return userService.updateUser(user);
 	}
 
