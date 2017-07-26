@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +45,12 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
 	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "username", value = "登录名", required = true, dataType = "String"),
+		@ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String"),
+		@ApiImplicitParam(name = "email", value = "邮箱", dataType = "String"),
+		@ApiImplicitParam(name = "nickname", value = "昵称", dataType = "String"),
+	})
 	public User add(@Valid @RequestBody User user) {
 		return userService.createUser(user);
 	}
@@ -52,7 +60,9 @@ public class UserController {
 	@ApiOperation(value = "编辑用户信息")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long"),
-		@ApiImplicitParam(name = "username", value = "登录名", required = true, dataType = "String")
+		@ApiImplicitParam(name = "username", value = "登录名", required = true, dataType = "String"),
+		@ApiImplicitParam(name = "email", value = "邮箱", dataType = "String"),
+		@ApiImplicitParam(name = "nickname", value = "昵称", dataType = "String"),
 	})
 	public User edit(@PathVariable Long id, @RequestBody User user) {
 		user.setId(id);
@@ -67,7 +77,7 @@ public class UserController {
 		userService.deleteUser(id);
 	}
 
-	@RequestMapping(path = "/permission", method = RequestMethod.GET)
+	@RequestMapping(path = "/permissions", method = RequestMethod.GET)
 	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "获取当前用户权限", notes = "以数组的方式返回权限code列表")
 	public Map<String, Object> findCurrentUserPermissionCodes() {
@@ -79,5 +89,18 @@ public class UserController {
 			map.put("permissionCodes", userService.findCurrentUserPermissionCodes());
 		}
 		return map;
+	}
+	
+	@RequestMapping(path = "/password", method = RequestMethod.PUT)
+	@PreAuthorize("isAuthenticated()")
+	@ApiOperation(value = "设置当前用户新密码")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "oldPassword", value = "老密码", required = true, dataType = "String"),
+		@ApiImplicitParam(name = "newPassword", value = "新密码", required = true, dataType = "String"),
+	})
+	public boolean setNewPassword(@RequestBody Map<String,String> map) {
+		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		userService.setNewPassword(user.getId(), map.get("oldPassword"), map.get("newPassword"));
+		return true;
 	}
 }
