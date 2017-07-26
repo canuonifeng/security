@@ -41,18 +41,18 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
+	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
 	public User add(@Valid @RequestBody User user) {
 		return userService.createUser(user);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	@ApiOperation(value = "编辑用户信息")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long"),
-		@ApiImplicitParam(name = "username", value = "登录名", required = true, dataType = "String")
-	})
-	public User edit(@RequestBody User user) {
+	@ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long"),
+			@ApiImplicitParam(name = "user", value = "用户信息", required = true, dataType = "String"), })
+	public User edit(@PathVariable Long id, @RequestBody User user) {
+		user.setId(id);
 		return userService.updateUser(user);
 	}
 
@@ -60,8 +60,8 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'delete')")
 	@ApiOperation(value = "删除用户", notes = "根据url的id来指定删除对象")
 	@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long")
-	public boolean delete(@PathVariable Long id) {
-		return userService.deleteUser(id);
+	public void delete(@PathVariable Long id) {
+		userService.deleteUser(id);
 	}
 
 	@RequestMapping(path = "/permission", method = RequestMethod.GET)

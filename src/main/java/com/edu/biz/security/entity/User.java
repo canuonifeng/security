@@ -12,7 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity implements UserDetails {
@@ -30,21 +34,27 @@ public class User extends BaseEntity implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	@NotEmpty(message = "用户名不能为空")
+	@ApiModelProperty(value=" 用户名")
 	private String username;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotEmpty(message = "密码不能为空")
+	@ApiModelProperty(value="密码")
 	private String password;
 
 	private String nickname;
 
+	@NotEmpty(message = "email不能为空")
+	@Email(message="email格式不正确")
 	private String email;
 
 	@JsonIgnore
+	@ApiModelProperty(hidden=true)
 	private String salt;
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	@ApiModelProperty(hidden=true)
 	private List<Role> roles;
 
 	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
