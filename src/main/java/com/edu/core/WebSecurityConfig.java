@@ -2,23 +2,20 @@ package com.edu.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
-@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -39,9 +36,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().anyRequest().authenticated().and().formLogin()
-				.loginProcessingUrl("/loginCheck").successHandler(authenticationSuccessHandler).and().httpBasic()
-				.authenticationEntryPoint(authEntryPoint).and().rememberMe().rememberMeServices(rememberMeServices());
+		http.csrf().disable();
+		http.authorizeRequests().anyRequest().authenticated();
+		http.rememberMe().rememberMeServices(rememberMeServices());
+		http.formLogin().loginProcessingUrl("/loginCheck").successHandler(authenticationSuccessHandler);
+		http.httpBasic().authenticationEntryPoint(authEntryPoint);
+		http.addFilterAt(new LoginFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override
