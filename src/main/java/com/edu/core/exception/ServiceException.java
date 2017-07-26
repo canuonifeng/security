@@ -2,7 +2,7 @@ package com.edu.core.exception;
 
 public class ServiceException extends RuntimeException {
 	private static final long serialVersionUID = -7561648875099918786L;
-	private String code = "400";
+	protected String code = "400";
 
 	public ServiceException() {
 		super();

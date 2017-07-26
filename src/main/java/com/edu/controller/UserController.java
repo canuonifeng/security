@@ -42,7 +42,7 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
-	@ApiOperation(value = "添加用户")
+	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
 	public User add(@Valid @RequestBody User user) {
 		return userService.createUser(user);
 	}
@@ -63,8 +63,8 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'delete')")
 	@ApiOperation(value = "删除用户", notes = "根据url的id来指定删除对象")
 	@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long")
-	public boolean delete(@PathVariable Long id) {
-		return userService.deleteUser(id);
+	public void delete(@PathVariable Long id) {
+		userService.deleteUser(id);
 	}
 
 	@RequestMapping(path = "/permission", method = RequestMethod.GET)

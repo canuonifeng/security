@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -26,17 +26,13 @@ import com.edu.biz.security.entity.User;
 import com.edu.biz.security.event.CreateUserEvent;
 import com.edu.biz.security.service.RoleService;
 import com.edu.biz.security.service.UserService;
+import com.edu.core.exception.NotFoundServiceException;
 import com.edu.core.util.BeanUtils;
 
 @Service
-@Validated
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
-
 	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private ApplicationContext applicationContext;
 
 	@Autowired
 	private RoleService roleService;
@@ -53,6 +49,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
+	@Validated
 	public User createUser(User user) {
 		String salt = getRandomString(16);
 		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
@@ -98,13 +95,20 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	public User updateUser(User user) {
 		User savedUser = userDao.findOne(user.getId());
+		if (null == savedUser) {
+			throw new NotFoundServiceException("用户不存在");
+		}
 		BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username", "email", "nickname");
 		return userDao.save(savedUser);
 	}
 
 	@Override
 	public boolean deleteUser(Long id) {
-		userDao.delete(id);
+		try {
+			userDao.delete(id);
+		} catch (EmptyResultDataAccessException e) {
+			logger.error("需要删除的用户:" + id + " 不存在！");
+		}
 		return null == userDao.findOne(id);
 	}
 
