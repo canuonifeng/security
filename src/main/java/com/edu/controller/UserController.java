@@ -34,6 +34,7 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('user', 'get')")
+	@ApiOperation(value = "分页查询用户")
 	public Page<User> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return userService.searchUsers(conditions, pageable);
@@ -41,18 +42,20 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
+	@ApiOperation(value = "添加用户")
 	public User add(@Valid @RequestBody User user) {
 		return userService.createUser(user);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	@ApiOperation(value = "编辑用户信息")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long"),
 		@ApiImplicitParam(name = "username", value = "登录名", required = true, dataType = "String")
 	})
-	public User edit(@RequestBody User user) {
+	public User edit(@PathVariable Long id, @RequestBody User user) {
+		user.setId(id);
 		return userService.updateUser(user);
 	}
 
@@ -66,6 +69,7 @@ public class UserController {
 
 	@RequestMapping(path = "/permission", method = RequestMethod.GET)
 	@PreAuthorize("isAuthenticated()")
+	@ApiOperation(value = "获取当前用户权限", notes = "以数组的方式返回权限code列表")
 	public Map<String, Object> findCurrentUserPermissionCodes() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (userService.isAdmin()) {
