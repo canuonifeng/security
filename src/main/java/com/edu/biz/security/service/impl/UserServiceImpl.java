@@ -23,6 +23,7 @@ import com.edu.biz.base.BaseService;
 import com.edu.biz.security.dao.UserDao;
 import com.edu.biz.security.dao.specification.UserSpecification;
 import com.edu.biz.security.entity.User;
+import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.event.CreateUserEvent;
 import com.edu.biz.security.service.RoleService;
 import com.edu.biz.security.service.UserService;
@@ -49,7 +50,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	@Validated
+	@Validated({Create.class})
 	public User createUser(User user) {
 		String salt = getRandomString(16);
 		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
@@ -93,6 +94,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
+	@Validated
 	public User updateUser(User user) {
 		User savedUser = userDao.findOne(user.getId());
 		if (null == savedUser) {

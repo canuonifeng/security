@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.User;
+import com.edu.biz.security.entity.validgroup.Create;
+import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.UserService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -43,7 +46,7 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
 	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
-	public User add(@Valid @RequestBody User user) {
+	public User add(@Validated( { Create.class }) @RequestBody User user) {
 		return userService.createUser(user);
 	}
 
@@ -54,7 +57,7 @@ public class UserController {
 		@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long"),
 		@ApiImplicitParam(name = "username", value = "登录名", required = true, dataType = "String")
 	})
-	public User edit(@PathVariable Long id, @RequestBody User user) {
+	public User edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody User user) {
 		user.setId(id);
 		return userService.updateUser(user);
 	}
