@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.User;
@@ -33,7 +34,7 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('user', 'get')")
-	public Page<User> pager(Map<String, Object> conditions,
+	public Page<User> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return userService.searchUsers(conditions, pageable);
 	}
@@ -52,6 +53,7 @@ public class UserController {
 		@ApiImplicitParam(name = "user", value = "密码", required = true, dataType = "String"),
 	})
 	public User edit(@PathVariable Long id,@RequestBody User user) {
+		user.setId(id);
 		return userService.updateUser(user);
 	}
 
@@ -59,8 +61,8 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'delete')")
 	@ApiOperation(value = "删除用户", notes = "根据url的id来指定删除对象")
 	@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long")
-	public boolean delete(@PathVariable Long id) {
-		return userService.deleteUser(id);
+	public void delete(@PathVariable Long id) {
+		userService.deleteUser(id);
 	}
 
 	@RequestMapping(path = "/permission", method = RequestMethod.GET)
