@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
@@ -96,7 +97,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	public User updateUser(User user) {
-		return userDao.save(user);
+		User savedUser = userDao.findOne(user.getId());
+		BeanUtils.copyProperties(user, savedUser, "salt", "createdTime", "updatedTime", "password");
+		return userDao.save(savedUser);
 	}
 
 	@Override
