@@ -26,11 +26,11 @@ public class BeanUtils {
 		Class<?> actualEditable = target.getClass();
 
 		PropertyDescriptor[] targetPds = org.springframework.beans.BeanUtils.getPropertyDescriptors(actualEditable);
-		List<String> ignoreList = (copyProperties != null ? Arrays.asList(copyProperties) : null);
+		List<String> copyList = (copyProperties != null ? Arrays.asList(copyProperties) : null);
 
 		for (PropertyDescriptor targetPd : targetPds) {
 			Method writeMethod = targetPd.getWriteMethod();
-			if (writeMethod != null && (ignoreList == null && ignoreList.contains(targetPd.getName()))) {
+			if (writeMethod != null && (copyList == null || copyList.contains(targetPd.getName()))) {
 				PropertyDescriptor sourcePd = org.springframework.beans.BeanUtils
 						.getPropertyDescriptor(source.getClass(), targetPd.getName());
 				if (sourcePd != null) {
