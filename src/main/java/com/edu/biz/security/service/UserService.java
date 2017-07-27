@@ -18,6 +18,8 @@ public interface UserService {
 
 	public boolean deleteUser(Long id);
 	
+	public User getUserById(Long id);
+	
 	public boolean isAdmin();
 	
 	public Set<String> findCurrentUserPermissionCodes();

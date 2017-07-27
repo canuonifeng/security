@@ -62,6 +62,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		applicationContext.publishEvent(new CreateUserEvent(user));
 		return user;
 	}
+	
+	public User getUserById(Long id)
+	{
+		return userDao.findOne(id);
+	}
 
 	@Override
 	public boolean isAdmin() {

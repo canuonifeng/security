@@ -64,6 +64,14 @@ public class UserController {
 	public void delete(@PathVariable Long id) {
 		userService.deleteUser(id);
 	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('user', 'show')")
+	@ApiOperation(value = "查询用户", notes = "根据url的id来查询用户信息")
+	@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long")
+	public User get(@PathVariable Long id){
+		return userService.getUserById(id);
+	}
 
 	@RequestMapping(path = "/permissions", method = RequestMethod.GET)
 	@PreAuthorize("isAuthenticated()")
