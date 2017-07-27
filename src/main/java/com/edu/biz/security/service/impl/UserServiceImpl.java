@@ -106,7 +106,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (null == savedUser) {
 			throw new NotFoundException("用户不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username", "email", "nickname");
+//		BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username", "email", "nickname","name","hpone","gender","");
+		BeanUtils.copyPropertiesWithIgnoreProperties(user, savedUser,"id","password","salt","createdTime","updatedTime");
 		return userDao.save(savedUser);
 	}
 

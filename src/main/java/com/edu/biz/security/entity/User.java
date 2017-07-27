@@ -1,11 +1,14 @@
 package com.edu.biz.security.entity;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -20,6 +23,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
+import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.security.entity.validgroup.Create;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,6 +40,19 @@ public class User extends BaseEntity implements UserDetails {
 	@NotEmpty(message = "用户名不能为空")
 	@ApiModelProperty(value = " 用户名")
 	private String username;
+	
+	private String name;
+	
+	private String phone;
+	
+	@Enumerated(EnumType.STRING)
+    private Gender gender;
+	
+	@JsonProperty(access = Access.READ_ONLY)
+	private Date lastLoginTime;
+	
+	@JsonProperty(access = Access.READ_ONLY)
+	private String lastLoginIp;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotEmpty(message = "密码不能为空", groups = { Create.class })
@@ -43,6 +60,10 @@ public class User extends BaseEntity implements UserDetails {
 	private String password;
 
 	private String nickname;
+	
+	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "faculty_id")
+	private Faculty faculty;
 
 	@NotEmpty(message = "email不能为空")
 	@Email(message = "email格式不正确")
@@ -140,4 +161,58 @@ public class User extends BaseEntity implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+	
+	public String getGenderName() {
+		return gender.getName();
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public Date getLastLoginTime() {
+		return lastLoginTime;
+	}
+
+	public void setLastLoginTime(Date lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
+	}
+
+	public String getLastLoginIp() {
+		return lastLoginIp;
+	}
+
+	public void setLastLoginIp(String lastLoginIp) {
+		this.lastLoginIp = lastLoginIp;
+	}
+
+	public Faculty getFaculty() {
+		return faculty;
+	}
+
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
+	}
+	
+	
 }
