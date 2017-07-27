@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.service.RoleService;
 
+import io.swagger.annotations.Api;
+
 @RestController
 @RequestMapping("/api/role")
+@Api("角色")
 public class RoleController {
 
 	@Autowired

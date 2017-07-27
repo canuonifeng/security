@@ -23,10 +23,12 @@ import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.UserService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/user")
+@Api("用户")
 public class UserController {
 
 	@Autowired
