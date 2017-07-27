@@ -21,4 +21,6 @@ public interface UserService {
 	public boolean isAdmin();
 	
 	public Set<String> findCurrentUserPermissionCodes();
+	
+	public void setNewPassword(Long id, String oldPassword, String newPassword);
 }

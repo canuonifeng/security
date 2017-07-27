@@ -59,19 +59,6 @@ CREATE TABLE `organization` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `menu` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `parent_id` int(10) UNSIGNED,
-  `permission_id` int(10) UNSIGNED,
-  `name` varchar(64) NOT NULL COMMENT '名称',
-  `code` varchar(64) NOT NULL COMMENT '',
-  `menu_type` varchar(64) NOT NULL DEFAULT 'menu' COMMENT '',
-  `url` varchar(64) COMMENT '',
-  `created_time` timestamp NOT NULL COMMENT '创建时间',
-  `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 INSERT INTO `user` (`username`, `nickname`, `email`, `password`, `salt`, `created_time`, `updated_time`) VALUES
 ('admin', 'test', 'test@aa', '56e88fcd763ee7a36c409ef6cf852aea', 'ujQAwILUUuVemyxz', now(), now());
 
@@ -93,10 +80,3 @@ INSERT INTO `role_permission` (`role_id`,`permission_id`,`created_time`) VALUES
 (2, 1,now()),
 (2, 2,now()),
 (2, 3,now());
-
-INSERT INTO `menu` (`name`,`code`, `url`, `parent_id`,`permission_id`) VALUES 
-('系统管理', 'sys_manage', '', null, 1),
-('用户管理', 'user_manage', '', 1, 2),
-('添加', 'user_add', '' ,2, 3),
-('修改', 'user_edit', '', 2, 4),
-('删除', 'user_delete', '', 2, 5);

@@ -27,7 +27,8 @@ import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.event.CreateUserEvent;
 import com.edu.biz.security.service.RoleService;
 import com.edu.biz.security.service.UserService;
-import com.edu.core.exception.NotFoundServiceException;
+import com.edu.core.exception.InvalidParameterException;
+import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
 
 @Service
@@ -98,7 +99,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	public User updateUser(User user) {
 		User savedUser = userDao.findOne(user.getId());
 		if (null == savedUser) {
-			throw new NotFoundServiceException("用户不存在");
+			throw new NotFoundException("用户不存在");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username", "email", "nickname");
 		return userDao.save(savedUser);
@@ -114,4 +115,17 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		return null == userDao.findOne(id);
 	}
 
+	@Override
+	public void setNewPassword(Long id, String oldPassword, String newPassword) {
+		User user = userDao.findOne(id);
+		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+		String password = encoder.encodePassword(oldPassword, user.getSalt());
+		if (!password.equals(user.getPassword())) {
+			throw new InvalidParameterException("密码校验错误");
+		}
+		
+		user.setSalt(getRandomString(16));
+		user.setPassword(encoder.encodePassword(newPassword, user.getSalt()));
+		userDao.save(user);
+	}
 }
