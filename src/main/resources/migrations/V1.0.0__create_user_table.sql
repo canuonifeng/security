@@ -6,28 +6,28 @@ CREATE TABLE `user` (
   `password` varchar(64) NOT NULL COMMENT '用户密码',
   `salt` varchar(32) NOT NULL COMMENT '密码SALT',
   `org_id` int(10) UNSIGNED,
-  `created_time` timestamp NOT NULL COMMENT '创建时间',
-  `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `role` (
+CREATE TABLE `role` ( 
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(64) NOT NULL COMMENT '名称',
   `code` varchar(64) NOT NULL COMMENT 'code',
-  `created_time` timestamp NOT NULL COMMENT '创建时间',
-  `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间', 
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `permission` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(64) NOT NULL COMMENT '名称',
   `code` varchar(64) NOT NULL COMMENT 'code',
-  `created_time` timestamp NOT NULL COMMENT '创建时间',
-  `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -35,8 +35,8 @@ CREATE TABLE `role_permission` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `role_id` int(10) UNSIGNED NOT NULL,
   `permission_id` int(10) UNSIGNED NOT NULL,
-  `created_time` timestamp NOT NULL COMMENT '创建时间',
-  `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -44,8 +44,8 @@ CREATE TABLE `user_role` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `user_id` int(10) UNSIGNED NOT NULL,
   `role_id` int(10) UNSIGNED NOT NULL,
-  `created_time` timestamp NOT NULL COMMENT '创建时间',
-  `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -54,8 +54,8 @@ CREATE TABLE `organization` (
   `parent_id` int(10) UNSIGNED,
   `name` varchar(64) NOT NULL COMMENT '名称',
   `code` varchar(64) NOT NULL COMMENT '',
-  `created_time` timestamp NOT NULL COMMENT '创建时间',
-  `updated_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

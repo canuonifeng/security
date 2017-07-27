@@ -3,8 +3,6 @@ package com.edu.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.User;
+import com.edu.biz.security.entity.validgroup.Create;
+import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -42,14 +43,14 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
 	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
-	public User add(@Valid @RequestBody User user) {
+	public User add(@Validated( { Create.class }) @RequestBody User user) {
 		return userService.createUser(user);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	@ApiOperation(value = "编辑用户信息")
-	public User edit(@PathVariable Long id, @RequestBody User user) {
+	public User edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody User user) {
 		user.setId(id);
 		return userService.updateUser(user);
 	}
