@@ -39,6 +39,7 @@ public class FacultyController extends BaseController<Faculty> {
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('faculty', 'delete')")
 	public boolean delete(@PathVariable Long id, @RequestBody Faculty faculty) {
+		faculty.setId(id);
 		return facultyService.deleteFaculty(faculty.getId());
 	}
 
