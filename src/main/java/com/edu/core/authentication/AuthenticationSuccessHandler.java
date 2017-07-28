@@ -1,7 +1,9 @@
-package com.edu.core;
+package com.edu.core.authentication;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.UserService;
+import com.edu.core.ResponseBodyWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
@@ -33,7 +35,10 @@ public class AuthenticationSuccessHandler
 		user.setLastLoginIp(getIpAddr(request));
 		userService.updateUser(user);
 		ObjectMapper mapper = new ObjectMapper();
-		response.getWriter().append(mapper.writeValueAsString(new ResponseWrapper("ok")));
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("token", request.getSession().getId());
+		response.getWriter().append(mapper.writeValueAsString(new ResponseBodyWrapper(map)));
 		response.setContentType("application/json");
 		response.setStatus(200);
 	}

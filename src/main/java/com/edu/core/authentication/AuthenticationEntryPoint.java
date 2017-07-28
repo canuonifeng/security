@@ -1,7 +1,8 @@
-package com.edu.core;
+package com.edu.core.authentication;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,18 +12,25 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+import com.edu.core.ResponseBodyWrapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Component
 public class AuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
 	@Override
 	public void commence(final HttpServletRequest request, final HttpServletResponse response,
 			final AuthenticationException authException) throws IOException, ServletException {
-		// Authentication failed, send error response.
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		response.addHeader("WWW-Authenticate", "Basic realm=" + getRealmName() + "");
 
-		PrintWriter writer = response.getWriter();
-		writer.println("HTTP Status 401 : " + authException.getMessage());
+		Map<String, String> map = new HashMap<String, String>();
+		ResponseBodyWrapper responseWrapper = new ResponseBodyWrapper(map);
+		responseWrapper.setStatus(HttpServletResponse.SC_UNAUTHORIZED+"");
+		responseWrapper.setMessage(authException.getMessage());
+		
+		ObjectMapper mapper = new ObjectMapper();
+		response.getWriter().append(mapper.writeValueAsString(responseWrapper));
+		response.setContentType("application/json");
+		response.setStatus(200);
 	}
 
 	@Override
