@@ -15,6 +15,8 @@ public interface UserService {
 	public User createUser(User user);
 
 	public User updateUser(User user);
+	
+	public Boolean checkUserName(String userName,Long userId);
 
 	public boolean deleteUser(Long id);
 	
