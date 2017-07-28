@@ -1,7 +1,10 @@
-package com.edu.core;
+package com.edu.core.authentication;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,17 +18,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class LoginFilter extends UsernamePasswordAuthenticationFilter {
-	
+public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
 	private boolean postOnly = true;
-	
-	public Authentication attemptAuthentication(HttpServletRequest request,
-			HttpServletResponse response) throws AuthenticationException {
+
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException {
 		if (postOnly && !request.getMethod().equals("POST")) {
-			throw new AuthenticationServiceException(
-					"Authentication method not supported: " + request.getMethod());
+			throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
 		}
-		
+
 		Map<String, String> map = readBody(request);
 		String username = map.get("username");
 		String password = map.get("password");
@@ -40,23 +42,30 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		username = username.trim();
 
-		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-				username, password);
+		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
 
 		// Allow subclasses to set the "details" property
 		setDetails(request, authRequest);
 
 		return this.getAuthenticationManager().authenticate(authRequest);
 	}
-	
+
 	private Map<String, String> readBody(HttpServletRequest request) {
 		StringBuffer stringBuffer = new StringBuffer();
 		try {
-			BufferedReader reader = request.getReader();
+			InputStream in = request.getInputStream();
+			BufferedInputStream inputStream = new BufferedInputStream(in);
+
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+			
 			String line = null;
-			while (null != (line = reader.readLine())) {
-				stringBuffer.append(reader.readLine());
+			while (null != (line = bufferedReader.readLine())) {
+				stringBuffer.append(line);
 			}
+			
+			bufferedReader.close();
+			inputStream.close();
+			
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(stringBuffer.toString(), Map.class);
 		} catch (IOException e) {
