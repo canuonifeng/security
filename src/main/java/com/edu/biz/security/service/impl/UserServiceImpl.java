@@ -29,6 +29,7 @@ import com.edu.biz.security.service.RoleService;
 import com.edu.biz.security.service.UserService;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
+import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
 
 @Service
@@ -53,6 +54,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Validated({Create.class})
 	public User createUser(User user) {
+		if(!this.checkUserName(user.getUsername(), null)){
+			throw new ServiceException("406","用户名已被占用");
+		}
 		String salt = getRandomString(16);
 		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 		String password = encoder.encodePassword(user.getPassword(), salt);
@@ -61,6 +65,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user = userDao.save(user);
 		applicationContext.publishEvent(new CreateUserEvent(user));
 		return user;
+	}
+	
+	public User getUserById(Long id)
+	{
+		return userDao.findOne(id);
 	}
 
 	@Override
@@ -101,7 +110,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (null == savedUser) {
 			throw new NotFoundException("用户不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username", "email", "nickname");
+		if(!this.checkUserName(user.getUsername(), user.getId())) {
+			throw new ServiceException("406","用户名已被占用");
+		}
+//		BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username", "email", "nickname","name","hpone","gender","");
+		BeanUtils.copyPropertiesWithIgnoreProperties(user, savedUser,"id","password","salt","createdTime","updatedTime");
 		return userDao.save(savedUser);
 	}
 
@@ -127,5 +140,17 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setSalt(getRandomString(16));
 		user.setPassword(encoder.encodePassword(newPassword, user.getSalt()));
 		userDao.save(user);
+	}
+
+	@Override
+	public Boolean checkUserName(String userName, Long userId) {
+		User user = userDao.getByUsername(userName);
+		if(null == user) {
+			return true;
+		}
+		if(user.getId().equals(userId)) {
+			return true;
+		}
+		return false;
 	}
 }

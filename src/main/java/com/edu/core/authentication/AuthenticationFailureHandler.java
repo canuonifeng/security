@@ -21,17 +21,16 @@ public class AuthenticationFailureHandler
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-
+		response.setCharacterEncoding("UTF-8");
 		Map<String, String> map = new HashMap<String, String>();
 		ResponseBodyWrapper responseWrapper = new ResponseBodyWrapper(map);
 		responseWrapper.setStatus(HttpServletResponse.SC_UNAUTHORIZED + "");
-		responseWrapper.setMessage(exception.getMessage());
+		responseWrapper.setMessage("用户名或密码错误");
 
 		ObjectMapper mapper = new ObjectMapper();
 		response.getWriter().append(mapper.writeValueAsString(responseWrapper));
 		response.setContentType("application/json");
 		response.setStatus(200);
-
 	}
 
 }

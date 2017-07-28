@@ -52,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		AuthenticationFilter authFilter = new AuthenticationFilter();
 		authFilter.setAuthenticationManager(this.authenticationManagerBean());
 		authFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+		authFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
 		http.addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
 		http.formLogin().successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler);
 		http.authorizeRequests().anyRequest().authenticated();

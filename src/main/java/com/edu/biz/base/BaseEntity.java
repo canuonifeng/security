@@ -27,7 +27,6 @@ abstract public class BaseEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonProperty(access = Access.READ_ONLY)
 	@Basic(optional = false)
 	@ApiModelProperty(hidden=true)
 	private Long id;
