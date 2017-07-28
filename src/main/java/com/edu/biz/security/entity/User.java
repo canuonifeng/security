@@ -72,6 +72,9 @@ public class User extends BaseEntity implements UserDetails {
 	@JsonIgnore
 	@ApiModelProperty(hidden = true)
 	private String salt;
+	
+	@Enumerated(EnumType.STRING)
+	private UserStatus status;
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
@@ -84,6 +87,18 @@ public class User extends BaseEntity implements UserDetails {
 
 	public String getUsername() {
 		return username;
+	}
+
+	public UserStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(UserStatus status) {
+		this.status = status;
+	}
+	
+	public String getStatusName() {
+		return status.getName();
 	}
 
 	public void setUsername(String username) {
@@ -212,6 +227,14 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setFaculty(Faculty faculty) {
 		this.faculty = faculty;
+	}
+
+	public Organization getOrg() {
+		return org;
+	}
+
+	public void setOrg(Organization org) {
+		this.org = org;
 	}
 	
 	
