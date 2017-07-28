@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.edu.biz.security.dao.OrgDao;
 import com.edu.biz.security.dao.specification.OrgSpecification;
 import com.edu.biz.security.entity.Organization;
+import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.OrgService;
+import com.edu.core.exception.NotFoundException;
+import com.edu.core.util.BeanUtils;
 
 @Service
 public class OrgServiceImpl implements OrgService {
@@ -24,8 +28,14 @@ public class OrgServiceImpl implements OrgService {
 	}
 
 	@Override
+	@Validated
 	public Organization updateOrg(Organization org) {
-		return orgDao.save(org);
+		Organization savedOrg = orgDao.findOne(org.getId());
+		if (null == savedOrg) {
+			throw new NotFoundException("组织不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(org, savedOrg, "name", "code", "faculty_id");
+		return orgDao.save(savedOrg);
 	}
 
 	@Override
