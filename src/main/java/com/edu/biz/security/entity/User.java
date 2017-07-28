@@ -74,7 +74,7 @@ public class User extends BaseEntity implements UserDetails {
 	private String salt;
 	
 	@Enumerated(EnumType.STRING)
-	private UserStatus status;
+	private UserStatus status = UserStatus.enable;
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
