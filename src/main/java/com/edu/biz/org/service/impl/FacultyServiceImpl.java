@@ -24,7 +24,7 @@ public class FacultyServiceImpl extends BaseService implements FacultyService {
 	@Override
 	public Faculty createFaculty(Faculty faculty) {
 		if(!this.checkCode(faculty.getCode(), null)){
-			throw new ServiceException("406","用户名已被占用");
+			throw new ServiceException("406","院系编码已被占用");
 		}
 		return facultyDao.save(faculty);
 	}
@@ -33,10 +33,10 @@ public class FacultyServiceImpl extends BaseService implements FacultyService {
 	public Faculty updateFaculty(Faculty faculty) {
 		Faculty savedfaculty = facultyDao.findOne(faculty.getId());
 		if (null == savedfaculty) {
-			throw new NotFoundException("用户不存在");
+			throw new NotFoundException("院系不存在");
 		}
 		if(!this.checkCode(faculty.getCode(), faculty.getId())) {
-			throw new ServiceException("406","用户名已被占用");
+			throw new ServiceException("406","院系编码已被占用");
 		}
 		return facultyDao.save(faculty);
 	}
