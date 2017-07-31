@@ -20,8 +20,11 @@ import com.edu.biz.security.entity.Organization;
 import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.OrgService;
 
+import io.swagger.annotations.Api;
+
 @RestController
 @RequestMapping("/api/org")
+@Api("组织机构")
 public class OrgController extends BaseController<Organization> {
 	@Autowired
 	private OrgService orgService;
