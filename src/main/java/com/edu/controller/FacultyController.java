@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api/faculty")
 public class FacultyController extends BaseController<Faculty> {
@@ -28,6 +30,12 @@ public class FacultyController extends BaseController<Faculty> {
 	@PreAuthorize("hasPermission('faculty', 'add')")
 	public Faculty add(@RequestBody Faculty faculty) {
 		return facultyService.createFaculty(faculty);
+	}
+	
+	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@ApiOperation(value = "检查院系编号是否重复", notes = "根据院系编号检查是否重复")
+	public Boolean checkUserName(String code,  Long facultyId){
+		 return facultyService.checkCode(code, facultyId);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
