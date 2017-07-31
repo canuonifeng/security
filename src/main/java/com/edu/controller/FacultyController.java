@@ -62,7 +62,7 @@ public class FacultyController extends BaseController<Faculty> {
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('faculty', 'get')")
 	public Page<Faculty> pager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 5, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return facultyService.searchFaculty(conditions, pageable);
 	}
 }

@@ -59,7 +59,7 @@ public class OrgController extends BaseController<Organization> {
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
 	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 3, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return orgService.searchOrgs(conditions, pageable);
 	}
 }

@@ -23,6 +23,7 @@ import com.edu.biz.base.BaseService;
 import com.edu.biz.security.dao.UserDao;
 import com.edu.biz.security.dao.specification.UserSpecification;
 import com.edu.biz.security.entity.User;
+import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.event.CreateUserEvent;
 import com.edu.biz.security.service.RoleService;
@@ -115,6 +116,17 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 //		BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username", "email", "nickname","name","hpone","gender","");
 		BeanUtils.copyPropertiesWithIgnoreProperties(user, savedUser,"id","password","salt","createdTime","updatedTime");
+		return userDao.save(savedUser);
+	}
+	
+	@Override
+	@Validated
+	public User changeUserStatus(Long id, UserStatus status) {
+		User savedUser = userDao.findOne(id);
+		if (null == savedUser) {
+			throw new NotFoundException("用户不存在");
+		}
+		savedUser.setStatus(status);
 		return userDao.save(savedUser);
 	}
 
