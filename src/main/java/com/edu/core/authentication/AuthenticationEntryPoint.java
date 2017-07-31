@@ -24,7 +24,7 @@ public class AuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
 		Map<String, String> map = new HashMap<String, String>();
 		ResponseWrapper responseWrapper = new ResponseWrapper(map);
-		responseWrapper.setStatus(HttpServletResponse.SC_UNAUTHORIZED+"");
+		responseWrapper.setStatus(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
 		responseWrapper.setMessage(authException.getMessage());
 		
 		ObjectMapper mapper = new ObjectMapper();
