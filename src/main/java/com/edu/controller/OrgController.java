@@ -8,13 +8,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.Organization;
+import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.OrgService;
 
 import io.swagger.annotations.Api;
@@ -34,14 +37,15 @@ public class OrgController extends BaseController<Organization> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('org', 'edit')")
-	public Organization edit(@PathVariable Long id, @RequestBody Organization org) {
+	public Organization edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody Organization org) {
+		org.setId(id);
 		return orgService.updateOrg(org);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('org', 'delete')")
-	public boolean delete(@PathVariable Long id, @RequestBody Organization org) {
-		return orgService.deleteOrg(org.getId());
+	public boolean delete(@PathVariable Long id) {
+		return orgService.deleteOrg(id);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
@@ -54,7 +58,7 @@ public class OrgController extends BaseController<Organization> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
-	public Page<Organization> pager(Map<String, Object> conditions,
+	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return orgService.searchOrgs(conditions, pageable);
 	}
