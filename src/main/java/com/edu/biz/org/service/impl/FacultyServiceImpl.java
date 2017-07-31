@@ -12,7 +12,6 @@ import com.edu.biz.org.dao.FacultyDao;
 import com.edu.biz.org.dao.specification.FacultySpecification;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
-import com.edu.biz.security.entity.User;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 
