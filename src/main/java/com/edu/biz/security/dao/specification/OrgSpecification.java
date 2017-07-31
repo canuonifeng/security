@@ -27,7 +27,6 @@ public class OrgSpecification implements Specification<Organization> {
 
 		if (null != conditions) {
 			if (conditions.containsKey("name")) {
-//				list.add(cb.equal(root.get("name").as(String.class), this.conditions.get("name")));
 				list.add(cb.like(root.get("name"), "%"+conditions.get("name")+"%"));
 			}
 		}
