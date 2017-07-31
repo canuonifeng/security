@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.org.entity.Faculty;
@@ -38,9 +39,8 @@ public class FacultyController extends BaseController<Faculty> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('faculty', 'delete')")
-	public boolean delete(@PathVariable Long id, @RequestBody Faculty faculty) {
-		faculty.setId(id);
-		return facultyService.deleteFaculty(faculty.getId());
+	public boolean delete(@PathVariable Long id) {
+		return facultyService.deleteFaculty(id);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
@@ -53,7 +53,7 @@ public class FacultyController extends BaseController<Faculty> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('faculty', 'get')")
-	public Page<Faculty> pager(Map<String, Object> conditions,
+	public Page<Faculty> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return facultyService.searchFaculty(conditions, pageable);
 	}

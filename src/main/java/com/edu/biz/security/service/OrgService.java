@@ -19,4 +19,5 @@ public interface OrgService {
 
 	Page<Organization> searchOrgs(Map<String, Object> conditions, Pageable pageable);
 
+	public Boolean checkCode(String code,Long id);
 }
