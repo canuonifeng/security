@@ -60,7 +60,6 @@ public class OrgController extends BaseController<Organization> {
 	@PreAuthorize("hasPermission('org', 'get')")
 	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		System.out.println(conditions);
 		return orgService.searchOrgs(conditions, pageable);
 	}
 }
