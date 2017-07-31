@@ -1,4 +1,4 @@
-package com.edu.core;
+package com.edu.core.filter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +17,6 @@ public class TimeCostInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		response.addHeader("Access-Control-Allow-Origin", "*");
 		long beginTime = System.currentTimeMillis();// 1、开始时间
 		timeThreadLocal.set(beginTime);// 线程绑定变量（该数据只有当前请求的线程可见）
 		return true;// 继续流程

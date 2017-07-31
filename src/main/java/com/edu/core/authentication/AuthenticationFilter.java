@@ -29,9 +29,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 			throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
 		}
 
-		Map<String, String> map = readBody(request);
-		String username = map.get("username");
-		String password = map.get("password");
+		String username = "", password = "";
+
+		if (null != this.obtainUsername(request) && null != this.obtainPassword(request)) {
+			username = this.obtainUsername(request);
+			password = this.obtainPassword(request);
+		} else {
+			Map<String, String> map = readBody(request);
+			username = map.get("username");
+			password = map.get("password");
+		}
 
 		if (username == null) {
 			username = "";
@@ -58,15 +65,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 			BufferedInputStream inputStream = new BufferedInputStream(in);
 
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-			
+
 			String line = null;
 			while (null != (line = bufferedReader.readLine())) {
 				stringBuffer.append(line);
 			}
-			
+
 			bufferedReader.close();
 			inputStream.close();
-			
+
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(stringBuffer.toString(), Map.class);
 		} catch (IOException e) {

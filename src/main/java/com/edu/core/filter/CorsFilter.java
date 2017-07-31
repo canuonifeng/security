@@ -1,4 +1,4 @@
-package com.edu.core;
+package com.edu.core.filter;
 
 import java.io.IOException;
 
@@ -24,9 +24,7 @@ public class CorsFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpServletRequest request = (HttpServletRequest) req;
-		if (request.getMethod().equals("OPTIONS")) {
-			response.setHeader("Access-Control-Allow-Origin", "*");
-		}
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
 		response.setHeader("Access-Control-Max-Age", "3600");
 		response.setHeader("Access-Control-Allow-Headers", "Content-Type, x-requested-with, authorization, x-auth-token");

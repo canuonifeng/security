@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.edu.core.TimeCostInterceptor;
+import com.edu.core.filter.TimeCostInterceptor;
 
 @Configuration
 @EnableWebMvc

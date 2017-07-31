@@ -15,10 +15,12 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 import com.edu.core.authentication.AuthenticationEntryPoint;
 import com.edu.core.authentication.AuthenticationFilter;
+import com.edu.core.filter.CsrfTokenResponseHeaderBindingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -46,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
+		http.addFilterAfter(new CsrfTokenResponseHeaderBindingFilter(), CsrfFilter.class);
 		http.rememberMe().rememberMeServices(rememberMeServices());
 		http.httpBasic().authenticationEntryPoint(authEntryPoint);
 		
