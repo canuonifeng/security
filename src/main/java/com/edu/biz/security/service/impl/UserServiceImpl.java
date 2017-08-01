@@ -20,9 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.edu.biz.base.BaseService;
+import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.security.dao.UserDao;
 import com.edu.biz.security.dao.specification.UserSpecification;
 import com.edu.biz.security.entity.Organization;
+import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.entity.validgroup.Create;
@@ -45,6 +48,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	private OrgService orgService;
+	
+	@Autowired
+	private FacultyService facultyService;
 
 	@Override
 	public Page<User> searchUsers(Map<String, Object> conditions, Pageable pageable) {
@@ -60,12 +66,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Validated({ Create.class })
 	public User createUser(User user) {
-		if (null != user.getOrg() && null == user.getOrg().getId()) {
-			user.setOrg(null);
-		}
-		if (null != user.getFaculty() && null == user.getFaculty().getId()) {
-			user.setFaculty(null);
-		}
+		this.filterOrg(user);
+		this.filterFaculty(user);
+		this.filterRole(user);
 		if(!this.checkUserName(user.getUsername(), null)){
 			throw new ServiceException("406","用户名已被占用");
 		}
@@ -87,6 +90,13 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (null != user.getFaculty() && null == user.getFaculty().getId()) {
 			user.setFaculty(null);
 		}
+		
+		if (null != user.getFaculty() && null != user.getFaculty().getId()) {
+			Faculty faculty = facultyService.getFaculty(user.getFaculty().getId());
+			if (null == faculty) {
+				throw new NotFoundException("院系"+user.getFaculty().getId()+"不存在") ;
+			}
+		}
 	}
 
 	private void filterOrg(User user) {
@@ -98,6 +108,19 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			Organization org = orgService.getOrg(user.getOrg().getId());
 			if (null == org) {
 				throw new NotFoundException("组织机构#"+user.getOrg().getId()+"不存在") ;
+			}
+		}
+	}
+	
+	private void filterRole(User user) {
+		if (null != user.getRoles()) {
+			for (Role validateRole : user.getRoles()) {
+				if (null != validateRole.getId()) {
+					Role role = roleService.getRole(validateRole.getId());
+					if (null == role) {
+						throw new NotFoundException("角色#"+validateRole.getId()+"不存在") ;
+					}
+				}
 			}
 		}
 	}
