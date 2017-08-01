@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.security.entity.User;
+import com.edu.biz.security.entity.UserStatus;
 
 public interface UserService {
 
@@ -15,6 +16,8 @@ public interface UserService {
 	public User createUser(User user);
 
 	public User updateUser(User user);
+	
+	public User changeUserStatus(Long id, UserStatus status);
 	
 	public Boolean checkUserName(String userName,Long userId);
 

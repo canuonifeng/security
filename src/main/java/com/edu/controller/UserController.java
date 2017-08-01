@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.User;
+import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.UserService;
@@ -40,7 +42,7 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'get')")
 	@ApiOperation(value = "分页查询用户")
 	public Page<User> pager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return userService.searchUsers(conditions, pageable);
 	}
 	
@@ -63,6 +65,14 @@ public class UserController {
 	public User edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody User user) {
 		user.setId(id);
 		return userService.updateUser(user);
+	}
+	
+	@RequestMapping(path = "/{id}/change_status", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('user', 'edit')")
+	@ApiOperation(value = "编辑用户信息")
+	public User changeUserStatus(@PathVariable Long id,@RequestBody Map<String,String> params) {
+		UserStatus status = UserStatus.valueOf(params.get("status"));
+		return userService.changeUserStatus(id, status);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)

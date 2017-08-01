@@ -56,7 +56,7 @@ public class RoleController {
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('role', 'get')")
 	public Page<Role> pager(Map<String, Object> conditions,
-			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return roleService.searchRoles(conditions, pageable);
 	}
 }
