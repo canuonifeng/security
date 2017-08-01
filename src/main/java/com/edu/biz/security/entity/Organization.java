@@ -34,6 +34,9 @@ public class Organization extends BaseEntity {
 	
 	
 	public Set<Organization> getChildren() {
+		if(null != this.children && this.children.size()==0) {
+			return null;
+		}
 		return children;
 	}
 
