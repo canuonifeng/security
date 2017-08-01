@@ -62,11 +62,21 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		String password = encoder.encodePassword(user.getPassword(), salt);
 		user.setSalt(salt);
 		user.setPassword(password);
+		
+		this.filterOrg(user);
+		this.filterOrg(user);
+		
 		user = userDao.save(user);
 		applicationContext.publishEvent(new CreateUserEvent(user));
 		return user;
 	}
 	
+	private void filterOrg(User user) {
+		if (null == user.getOrg()) {
+			
+		}
+	}
+
 	public User getUserById(Long id)
 	{
 		return userDao.findOne(id);
