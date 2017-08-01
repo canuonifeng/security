@@ -97,8 +97,10 @@ public class UserController {
 	@RequestMapping(path = "/password", method = RequestMethod.PUT)
 	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "设置当前用户新密码")
-	public boolean setNewPassword(@RequestBody String oldPassword, @RequestBody String newPassword) {
+	public boolean setNewPassword(@RequestBody Map<String,String> params) {
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String oldPassword = params.get("oldPassword");
+		String newPassword = params.get("newPassword");
 		userService.setNewPassword(user.getId(), oldPassword, newPassword);
 		return true;
 	}
