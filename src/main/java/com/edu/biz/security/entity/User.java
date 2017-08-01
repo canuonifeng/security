@@ -41,11 +41,14 @@ public class User extends BaseEntity implements UserDetails {
 	@ApiModelProperty(value = " 用户名")
 	private String username;
 	
+	@ApiModelProperty(value = "姓名")
 	private String name;
 	
+	@ApiModelProperty(value = "电话")
 	private String phone;
 	
 	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(value = " 性别")
     private Gender gender;
 	
 	@JsonProperty(access = Access.READ_ONLY)
@@ -59,6 +62,7 @@ public class User extends BaseEntity implements UserDetails {
 	@ApiModelProperty(value = "密码")
 	private String password;
 
+	@ApiModelProperty(value = "昵称")
 	private String nickname;
 	
 	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
@@ -83,6 +87,7 @@ public class User extends BaseEntity implements UserDetails {
 
 	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "org_id")
+	@ApiModelProperty(value = "所属组织机构")
 	private Organization org;
 
 	public String getUsername() {

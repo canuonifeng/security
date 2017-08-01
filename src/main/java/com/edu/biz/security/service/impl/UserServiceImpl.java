@@ -69,10 +69,17 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setPassword(password);
 
 		this.filterOrg(user);
+		this.filterFaculty(user);
 
 		user = userDao.save(user);
 		applicationContext.publishEvent(new CreateUserEvent(user));
 		return user;
+	}
+
+	private void filterFaculty(User user) {
+		if (null != user.getFaculty() && null == user.getFaculty().getId()) {
+			user.setFaculty(null);
+		}
 	}
 
 	private void filterOrg(User user) {
@@ -83,7 +90,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (null != user.getOrg() && null != user.getOrg().getId()) {
 			Organization org = orgService.getOrg(user.getOrg().getId());
 			if (null == org) {
-				throw new NotFoundException("组织机构不存在");
+				throw new NotFoundException("组织机构#"+user.getOrg().getId()+"不存在") ;
 			}
 		}
 	}
