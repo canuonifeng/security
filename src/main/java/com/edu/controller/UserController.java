@@ -27,6 +27,7 @@ import com.edu.biz.security.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/user")
@@ -53,8 +54,8 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
 	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
-	public User add(@Validated( { Create.class }) @RequestBody User user) {
-		System.out.println("用户："+user);
+
+	public User add(@Validated( { Create.class }) @RequestBody @ApiParam(hidden = true) User user) {
 		return userService.createUser(user);
 	}
 
@@ -105,8 +106,10 @@ public class UserController {
 	@RequestMapping(path = "/password", method = RequestMethod.PUT)
 	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "设置当前用户新密码")
-	public boolean setNewPassword(@RequestBody String oldPassword, @RequestBody String newPassword) {
+	public boolean setNewPassword(@RequestBody Map<String,String> params) {
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String oldPassword = params.get("oldPassword");
+		String newPassword = params.get("newPassword");
 		userService.setNewPassword(user.getId(), oldPassword, newPassword);
 		return true;
 	}

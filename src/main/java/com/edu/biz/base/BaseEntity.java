@@ -28,17 +28,17 @@ abstract public class BaseEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Basic(optional = false)
-	@ApiModelProperty(hidden=true)
+	@ApiModelProperty(value="主键")
 	private Long id;
 
 	@CreatedDate
 	@JsonProperty(access = Access.READ_ONLY)
-	@ApiModelProperty(hidden=true)
+	@ApiModelProperty(value="创建时间", readOnly=true)
 	private Date createdTime;
 
 	@LastModifiedDate
 	@JsonProperty(access = Access.READ_ONLY)
-	@ApiModelProperty(hidden=true)
+	@ApiModelProperty(value="更新时间", readOnly=true)
 	private Date updatedTime;
 
 	public Long getId() {

@@ -1,0 +1,43 @@
+package com.edu.core;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.edu.core.exception.ServiceException;
+
+@ControllerAdvice
+public class ThrowableHandler{
+	
+	@ExceptionHandler(value = MethodArgumentNotValidException.class)
+	@ResponseBody
+	public ResponseWrapper jsonErrorHandler(HttpServletRequest req, MethodArgumentNotValidException e)
+			throws Exception {
+		ResponseWrapper err = new ResponseWrapper(e.getBindingResult().getAllErrors());
+		err.setMessage("数据校验失败！");
+		err.setStatus(String.valueOf(HttpServletResponse.SC_NOT_ACCEPTABLE));
+		return err;
+	}
+	
+	@ExceptionHandler(value = ServiceException.class)
+	@ResponseBody
+	public ResponseWrapper jsonErrorHandler(HttpServletRequest req, ServiceException e) {
+		ResponseWrapper err = new ResponseWrapper(e.getMessage());
+		err.setMessage(e.getMessage());
+		err.setStatus(e.getCode());
+		return err;
+	}
+	
+	@ExceptionHandler(Throwable.class)
+	@ResponseBody
+	public ResponseWrapper throwableHandler(HttpServletRequest req, Throwable e) throws Exception {
+		ResponseWrapper err = new ResponseWrapper(e.getMessage());
+		err.setMessage("服务器异常");
+		err.setStatus(String.valueOf(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
+		return err;
+	}
+}
