@@ -67,10 +67,12 @@ public class User extends BaseEntity implements UserDetails {
 	
 	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "faculty_id")
+	@ApiModelProperty(value = "院系")
 	private Faculty faculty;
 
 	@NotEmpty(message = "email不能为空")
 	@Email(message = "email格式不正确")
+	@ApiModelProperty(value = "邮件")
 	private String email;
 
 	@JsonIgnore
@@ -78,11 +80,12 @@ public class User extends BaseEntity implements UserDetails {
 	private String salt;
 	
 	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(value = "用户状态")
 	private UserStatus status = UserStatus.enable;
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
-	@ApiModelProperty(hidden = true)
+	@ApiModelProperty(value = "角色列表")
 	private List<Role> roles;
 
 	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
