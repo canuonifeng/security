@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +71,8 @@ public class UserController {
 	@RequestMapping(path = "/{id}/change_status", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	@ApiOperation(value = "编辑用户信息")
-	public User changeUserStatus(@PathVariable Long id, UserStatus status) {
+	public User changeUserStatus(@PathVariable Long id,@RequestBody Map<String,String> params) {
+		UserStatus status = UserStatus.valueOf(params.get("status"));
 		return userService.changeUserStatus(id, status);
 	}
 
