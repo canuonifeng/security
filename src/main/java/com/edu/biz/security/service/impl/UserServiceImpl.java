@@ -55,6 +55,12 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Validated({Create.class})
 	public User createUser(User user) {
+		if (null != user.getOrg() && null == user.getOrg().getId()) {
+			user.setOrg(null);
+		}
+		if (null != user.getFaculty() && null == user.getFaculty().getId()) {
+			user.setFaculty(null);
+		}
 		if(!this.checkUserName(user.getUsername(), null)){
 			throw new ServiceException("406","用户名已被占用");
 		}

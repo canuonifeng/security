@@ -54,6 +54,7 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'add')")
 	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
 	public User add(@Validated( { Create.class }) @RequestBody User user) {
+		System.out.println("用户："+user);
 		return userService.createUser(user);
 	}
 
@@ -69,7 +70,6 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'edit')")
 	@ApiOperation(value = "编辑用户信息")
 	public User changeUserStatus(@PathVariable Long id, UserStatus status) {
-		System.out.println("用户状态："+status);
 		return userService.changeUserStatus(id, status);
 	}
 
