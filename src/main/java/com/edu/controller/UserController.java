@@ -25,8 +25,10 @@ import com.edu.biz.security.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/api/user")
@@ -39,28 +41,35 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('user', 'get')")
 	@ApiOperation(value = "分页查询用户")
-	public Page<User> pager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "username", value = "用户名，完全匹配", dataType = "String", paramType = "query"),
+			@ApiImplicitParam(name = "page", value = "页码, 从0开始", dataType = "int", paramType = "query"),
+			@ApiImplicitParam(name = "size", value = "每页数据数", dataType = "int", paramType = "query"),
+			@ApiImplicitParam(name = "sort", value = "排序,允许多次出现，格式：[字段名,排序方式]。例：id,desc", dataType = "String", paramType = "query"), })
+	public Page<User> pager(@RequestParam @ApiIgnore Map<String, Object> conditions,
+			@PageableDefault(value = 20, sort = {
+					"id" }, direction = Sort.Direction.DESC) @ApiIgnore Pageable pageable) {
 		return userService.searchUsers(conditions, pageable);
 	}
-	
-	@RequestMapping(path = "/check_username",method = RequestMethod. GET)
+
+	@RequestMapping(path = "/check_username", method = RequestMethod.GET)
 	@ApiOperation(value = "检查用户名是否重复", notes = "根据用户名检查是否重复")
-	public Boolean checkUserName(String userName,  Long userId){
-		 return userService.checkUserName(userName, userId);
+	public Boolean checkUserName(String userName, Long userId) {
+		return userService.checkUserName(userName, userId);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
 	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
-	public User add(@Validated( { Create.class }) @RequestBody @ApiParam(hidden = true) User user) {
+	public User add(@Validated({ Create.class }) @RequestBody User user) {
 		return userService.createUser(user);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	@ApiOperation(value = "编辑用户信息")
-	public User edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody User user) {
+	public User edit(@PathVariable @ApiParam(name = "id", value = "用户ID", required = true) Long id,
+			@Validated({ Update.class }) @RequestBody User user) {
 		user.setId(id);
 		return userService.updateUser(user);
 	}
@@ -68,15 +77,14 @@ public class UserController {
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('user', 'delete')")
 	@ApiOperation(value = "删除用户", notes = "根据url的id来指定删除对象")
-	public void delete(@PathVariable Long id) {
+	public void delete(@PathVariable @ApiParam(name = "id", value = "用户ID", required = true) Long id) {
 		userService.deleteUser(id);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('user', 'show')")
 	@ApiOperation(value = "查询用户", notes = "根据url的id来查询用户信息")
-	@ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "Long")
-	public User get(@PathVariable Long id){
+	public User get(@PathVariable @ApiParam(name = "id", value = "用户ID", required = true) Long id) {
 		return userService.getUserById(id);
 	}
 
@@ -93,12 +101,12 @@ public class UserController {
 		}
 		return map;
 	}
-	
+
 	@RequestMapping(path = "/password", method = RequestMethod.PUT)
 	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "设置当前用户新密码")
-	public boolean setNewPassword(@RequestBody Map<String,String> params) {
-		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	public boolean setNewPassword(@RequestBody Map<String, String> params) {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String oldPassword = params.get("oldPassword");
 		String newPassword = params.get("newPassword");
 		userService.setNewPassword(user.getId(), oldPassword, newPassword);
