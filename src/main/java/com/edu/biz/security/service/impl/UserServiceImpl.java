@@ -22,9 +22,11 @@ import org.springframework.validation.annotation.Validated;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.security.dao.UserDao;
 import com.edu.biz.security.dao.specification.UserSpecification;
+import com.edu.biz.security.entity.Organization;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.event.CreateUserEvent;
+import com.edu.biz.security.service.OrgService;
 import com.edu.biz.security.service.RoleService;
 import com.edu.biz.security.service.UserService;
 import com.edu.core.exception.InvalidParameterException;
@@ -40,6 +42,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Autowired
 	private RoleService roleService;
 
+	@Autowired
+	private OrgService orgService;
+
 	@Override
 	public Page<User> searchUsers(Map<String, Object> conditions, Pageable pageable) {
 		return userDao.findAll(new UserSpecification(conditions), pageable);
@@ -52,33 +57,38 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	@Override
-	@Validated({Create.class})
+	@Validated({ Create.class })
 	public User createUser(User user) {
-		if(!this.checkUserName(user.getUsername(), null)){
-			throw new ServiceException("406","用户名已被占用");
+		if (!this.checkUserName(user.getUsername(), null)) {
+			throw new ServiceException("406", "用户名已被占用");
 		}
 		String salt = getRandomString(16);
 		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 		String password = encoder.encodePassword(user.getPassword(), salt);
 		user.setSalt(salt);
 		user.setPassword(password);
-		
+
 		this.filterOrg(user);
-		this.filterOrg(user);
-		
+
 		user = userDao.save(user);
 		applicationContext.publishEvent(new CreateUserEvent(user));
 		return user;
 	}
-	
+
 	private void filterOrg(User user) {
-		if (null == user.getOrg()) {
-			
+		if (null != user.getOrg() && null == user.getOrg().getId()) {
+			user.setOrg(null);
+		}
+
+		if (null != user.getOrg() && null != user.getOrg().getId()) {
+			Organization org = orgService.getOrg(user.getOrg().getId());
+			if (null == org) {
+				throw new NotFoundException("组织机构不存在");
+			}
 		}
 	}
 
-	public User getUserById(Long id)
-	{
+	public User getUserById(Long id) {
 		return userDao.findOne(id);
 	}
 
@@ -120,11 +130,13 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (null == savedUser) {
 			throw new NotFoundException("用户不存在");
 		}
-		if(!this.checkUserName(user.getUsername(), user.getId())) {
-			throw new ServiceException("406","用户名已被占用");
+		if (!this.checkUserName(user.getUsername(), user.getId())) {
+			throw new ServiceException("406", "用户名已被占用");
 		}
-//		BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username", "email", "nickname","name","hpone","gender","");
-		BeanUtils.copyPropertiesWithIgnoreProperties(user, savedUser,"id","password","salt","createdTime","updatedTime");
+		// BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username",
+		// "email", "nickname","name","hpone","gender","");
+		BeanUtils.copyPropertiesWithIgnoreProperties(user, savedUser, "id", "password", "salt", "createdTime",
+				"updatedTime");
 		return userDao.save(savedUser);
 	}
 
@@ -146,7 +158,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (!password.equals(user.getPassword())) {
 			throw new InvalidParameterException("密码校验错误");
 		}
-		
+
 		user.setSalt(getRandomString(16));
 		user.setPassword(encoder.encodePassword(newPassword, user.getSalt()));
 		userDao.save(user);
@@ -155,10 +167,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	public Boolean checkUserName(String userName, Long userId) {
 		User user = userDao.getByUsername(userName);
-		if(null == user) {
+		if (null == user) {
 			return true;
 		}
-		if(user.getId().equals(userId)) {
+		if (user.getId().equals(userId)) {
 			return true;
 		}
 		return false;
