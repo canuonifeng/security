@@ -90,7 +90,7 @@ public class UserController {
 
 	@RequestMapping(path = "/permissions", method = RequestMethod.GET)
 	@PreAuthorize("isAuthenticated()")
-	@ApiOperation(value = "获取当前用户权限", notes = "以数组的方式返回权限code列表")
+	@ApiOperation(value = "获取当前用户权限", notes = "如果当前用户是超级管理员，则返回{isAdmin:true};若不是超级管理员，以数组的方式返回权限code列表")
 	public Map<String, Object> findCurrentUserPermissionCodes() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (userService.isAdmin()) {
@@ -105,7 +105,7 @@ public class UserController {
 	@RequestMapping(path = "/password", method = RequestMethod.PUT)
 	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "设置当前用户新密码")
-	public boolean setNewPassword(@RequestBody Map<String, String> params) {
+	public boolean setNewPassword(@RequestBody @ApiParam Map<String, String> params) {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String oldPassword = params.get("oldPassword");
 		String newPassword = params.get("newPassword");
