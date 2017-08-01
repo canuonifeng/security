@@ -1,6 +1,8 @@
 package com.edu.core.config;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +17,12 @@ import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -27,16 +32,12 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 import com.edu.core.ResponseWrapper;
-import com.edu.core.authentication.AuthenticationEntryPoint;
 import com.edu.core.authentication.AuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-	@Autowired
-	private AuthenticationEntryPoint authEntryPoint;
 
 	@Autowired
 	private UserDetailsService userDetailService;
@@ -81,7 +82,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.rememberMe().rememberMeServices(rememberMeServices());
-		http.httpBasic().authenticationEntryPoint(authEntryPoint);
 
 		AuthenticationFilter authFilter = new AuthenticationFilter();
 		authFilter.setAuthenticationManager(this.authenticationManagerBean());
@@ -89,8 +89,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		authFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
 		http.addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
 		http.formLogin().successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler);
-		http.authorizeRequests().antMatchers("/csrf-token").permitAll().anyRequest().authenticated();
-		http.exceptionHandling().accessDeniedHandler(getAccessDeniedHandler());
+		http.authorizeRequests()
+			.antMatchers("/csrf-token").permitAll()
+	        .anyRequest().authenticated();
+		http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
+				.accessDeniedHandler(getAccessDeniedHandler());
+	}
+	
+	@Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**");
+    }
+
+	@Bean
+	public AuthenticationEntryPoint authenticationEntryPoint() {
+		return new AuthenticationEntryPoint() {
+			@Override
+			public void commence(final HttpServletRequest request, final HttpServletResponse response,
+					final AuthenticationException authException) throws IOException, ServletException {
+				Map<String, String> map = new HashMap<String, String>();
+				ResponseWrapper responseWrapper = new ResponseWrapper(map);
+				responseWrapper.setStatus(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
+				responseWrapper.setMessage(authException.getMessage());
+				
+				ObjectMapper mapper = new ObjectMapper();
+				response.getWriter().append(mapper.writeValueAsString(responseWrapper));
+				response.setContentType("application/json");
+				response.setStatus(200);
+			}
+		};
 	}
 
 	@Override
