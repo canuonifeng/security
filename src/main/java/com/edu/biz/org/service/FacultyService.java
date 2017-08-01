@@ -17,6 +17,8 @@ public interface FacultyService {
 	
 	public Faculty getFaculty(Long id);
 	
+	public Boolean checkCode(String code,Long facultyId);
+	
 	public Faculty getFacultyByCode(String code);
 	
 	public Page<Faculty> searchFaculty(Map<String, Object> conditions, Pageable pageable);

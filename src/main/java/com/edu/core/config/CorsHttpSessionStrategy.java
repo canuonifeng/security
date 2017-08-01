@@ -3,6 +3,7 @@ package com.edu.core.config;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.session.Session;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 import org.springframework.session.web.http.CookieHttpSessionStrategy;
@@ -10,6 +11,7 @@ import org.springframework.session.web.http.HeaderHttpSessionStrategy;
 import org.springframework.session.web.http.MultiHttpSessionStrategy;
 import org.springframework.stereotype.Component;
 
+@Configuration
 @EnableJdbcHttpSession
 @Component("httpSessionStrategy")
 public class CorsHttpSessionStrategy implements MultiHttpSessionStrategy {

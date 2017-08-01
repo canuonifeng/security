@@ -26,6 +26,7 @@ import com.edu.biz.security.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/user")
@@ -52,7 +53,7 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
 	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
-	public User add(@Validated( { Create.class }) @RequestBody User user) {
+	public User add(@Validated( { Create.class }) @RequestBody @ApiParam(hidden = true) User user) {
 		return userService.createUser(user);
 	}
 

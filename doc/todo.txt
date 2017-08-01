@@ -7,9 +7,11 @@
 * 异步事件机制
 * ThreadLocal，当前用户
 
+* 权限初始化
+* 未登入和无权限的返回标准
+* owasp top 10安全问题
 * API的规范
 * Response规范
-* owasp top 10安全问题
 * Log规范
 * 单元测试
 * 导入导出

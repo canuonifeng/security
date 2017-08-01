@@ -11,17 +11,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.UserService;
-import com.edu.core.ResponseBodyWrapper;
+import com.edu.core.ResponseWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class AuthenticationSuccessHandler
-		implements org.springframework.security.web.authentication.AuthenticationSuccessHandler {
+public class AuthenticationHandler
+		implements AuthenticationSuccessHandler, AuthenticationFailureHandler {
 
 	@Autowired
 	private UserService userService;
@@ -38,7 +41,22 @@ public class AuthenticationSuccessHandler
 		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("token", request.getSession().getId());
-		response.getWriter().append(mapper.writeValueAsString(new ResponseBodyWrapper(map)));
+		response.getWriter().append(mapper.writeValueAsString(new ResponseWrapper(map)));
+		response.setContentType("application/json");
+		response.setStatus(200);
+	}
+	
+	@Override
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException exception) throws IOException, ServletException {
+		response.setCharacterEncoding("UTF-8");
+		Map<String, String> map = new HashMap<String, String>();
+		ResponseWrapper responseWrapper = new ResponseWrapper(map);
+		responseWrapper.setStatus(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
+		responseWrapper.setMessage("用户名或密码错误");
+
+		ObjectMapper mapper = new ObjectMapper();
+		response.getWriter().append(mapper.writeValueAsString(responseWrapper));
 		response.setContentType("application/json");
 		response.setStatus(200);
 	}

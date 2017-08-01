@@ -12,7 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import com.edu.core.ResponseBodyWrapper;
+import com.edu.core.ResponseWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
@@ -23,8 +23,8 @@ public class AuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 			final AuthenticationException authException) throws IOException, ServletException {
 
 		Map<String, String> map = new HashMap<String, String>();
-		ResponseBodyWrapper responseWrapper = new ResponseBodyWrapper(map);
-		responseWrapper.setStatus(HttpServletResponse.SC_UNAUTHORIZED+"");
+		ResponseWrapper responseWrapper = new ResponseWrapper(map);
+		responseWrapper.setStatus(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
 		responseWrapper.setMessage(authException.getMessage());
 		
 		ObjectMapper mapper = new ObjectMapper();
