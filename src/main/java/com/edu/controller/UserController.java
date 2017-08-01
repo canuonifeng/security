@@ -42,7 +42,7 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'get')")
 	@ApiOperation(value = "分页查询用户")
 	public Page<User> pager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 3, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return userService.searchUsers(conditions, pageable);
 	}
 	
