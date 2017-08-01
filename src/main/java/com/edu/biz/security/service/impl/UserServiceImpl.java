@@ -159,6 +159,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	public void setNewPassword(Long id, String oldPassword, String newPassword) {
+		if (null == oldPassword || null == newPassword) {
+			throw new InvalidParameterException("密码不能为空");
+		}
+		
 		User user = userDao.findOne(id);
 		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 		String password = encoder.encodePassword(oldPassword, user.getSalt());
