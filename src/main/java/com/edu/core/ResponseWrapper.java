@@ -2,13 +2,13 @@ package com.edu.core;
 
 import java.io.Serializable;
 
-public class ResponseBodyWrapper implements Serializable {
+public class ResponseWrapper implements Serializable {
 
 	private final Object body;
 	private String status = "200";
 	private String message = "";
 
-	public ResponseBodyWrapper(Object body) {
+	public ResponseWrapper(Object body) {
 		this.body = body;
 	}
 
