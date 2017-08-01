@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.User;
+import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.UserService;
@@ -47,7 +49,7 @@ public class UserController {
 			@ApiImplicitParam(name = "size", value = "每页数据数", dataType = "int", paramType = "query"),
 			@ApiImplicitParam(name = "sort", value = "排序,允许多次出现，格式：[字段名,排序方式]。例：id,desc", dataType = "String", paramType = "query"), })
 	public Page<User> pager(@RequestParam @ApiIgnore Map<String, Object> conditions,
-			@PageableDefault(value = 20, sort = {
+			@PageableDefault(value = 10, sort = {
 					"id" }, direction = Sort.Direction.DESC) @ApiIgnore Pageable pageable) {
 		return userService.searchUsers(conditions, pageable);
 	}
@@ -72,6 +74,14 @@ public class UserController {
 			@Validated({ Update.class }) @RequestBody User user) {
 		user.setId(id);
 		return userService.updateUser(user);
+	}
+	
+	@RequestMapping(path = "/{id}/change_status", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('user', 'edit')")
+	@ApiOperation(value = "编辑用户信息")
+	public User changeUserStatus(@PathVariable Long id,@RequestBody Map<String,String> params) {
+		UserStatus status = UserStatus.valueOf(params.get("status"));
+		return userService.changeUserStatus(id, status);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
