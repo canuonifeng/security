@@ -24,12 +24,7 @@ public class OrgSpecification implements Specification<Organization> {
 	@Override
 	public Predicate toPredicate(Root<Organization> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
-
-		if (null != conditions) {
-			if (conditions.containsKey("name")) {
-				list.add(cb.like(root.get("name"), "%"+conditions.get("name")+"%"));
-			}
-		}
+		list.add(cb.isNull(root.get("parent").get("id"))); 
 
 		Predicate[] p = new Predicate[list.size()];
 		return cb.and(list.toArray(p));
