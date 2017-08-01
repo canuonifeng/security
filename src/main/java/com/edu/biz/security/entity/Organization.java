@@ -3,12 +3,15 @@ package com.edu.biz.security.entity;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.org.entity.Faculty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Organization extends BaseEntity {
@@ -16,6 +19,11 @@ public class Organization extends BaseEntity {
 	@OneToMany
 	@JoinColumn(name = "parent_id")
 	private Set<Organization> children;
+	
+	@ManyToOne
+	@JoinColumn(name = "parent_id")
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private Organization parent;
 
 	private String name;
 	private String code;
@@ -57,4 +65,11 @@ public class Organization extends BaseEntity {
 		this.faculty = faculty;
 	}
 
+	public Organization getParent() {
+		return parent;
+	}
+
+	public void setParent(Organization parent) {
+		this.parent = parent;
+	}
 }

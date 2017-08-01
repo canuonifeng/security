@@ -78,7 +78,6 @@ public class User extends BaseEntity implements UserDetails {
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
-	@ApiModelProperty(hidden = true)
 	private List<Role> roles;
 
 	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
