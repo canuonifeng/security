@@ -24,8 +24,8 @@ public class OrgServiceImpl implements OrgService {
 
 	@Override
 	public Organization createOrg(Organization org) {
-		if(!this.checkCode(org.getCode(), null)){
-			throw new ServiceException("406","code已被占用");
+		if (!this.checkCode(org.getCode(), null)) {
+			throw new ServiceException("406", "code已被占用");
 		}
 		return orgDao.save(org);
 	}
@@ -37,8 +37,8 @@ public class OrgServiceImpl implements OrgService {
 		if (null == savedOrg) {
 			throw new NotFoundException("组织不存在");
 		}
-		if(!this.checkCode(org.getCode(), org.getId())){
-			throw new ServiceException("406","code已被占用");
+		if (!this.checkCode(org.getCode(), org.getId())) {
+			throw new ServiceException("406", "code已被占用");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(org, savedOrg, "name", "code", "faculty", "parent");
 		return orgDao.save(savedOrg);
@@ -63,12 +63,18 @@ public class OrgServiceImpl implements OrgService {
 	@Override
 	public Boolean checkCode(String code, Long id) {
 		Organization org = orgDao.getByCode(code);
-		if(null == org) {
+		if (null == org) {
 			return true;
 		}
-		if(org.getId().equals(id)) {
+		if (org.getId().equals(id)) {
 			return true;
 		}
 		return false;
+	}
+
+	private void recursive(Organization org, String status) {
+		if(org.getChildren()!= null && !org.getChildren().equals("")) {
+			
+		}
 	}
 }

@@ -21,6 +21,7 @@ import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.OrgService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/org")
@@ -55,7 +56,13 @@ public class OrgController extends BaseController<Organization> {
 		org.setId(id);
 		return orgService.getOrg(org.getId());
 	}
-
+	
+	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@ApiOperation(value = "检查院系编号是否重复", notes = "根据院系编号检查是否重复")
+	public Boolean checkCode(String code,  Long orgId){
+		 return orgService.checkCode(code, orgId);
+	}
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
 	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,

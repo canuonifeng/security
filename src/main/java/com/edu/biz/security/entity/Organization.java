@@ -2,8 +2,8 @@ package com.edu.biz.security.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 @Entity
 public class Organization extends BaseEntity {
 	private static final long serialVersionUID = 1L;
-	@OneToMany
+	@OneToMany(cascade=CascadeType.REMOVE)
 	@JoinColumn(name = "parent_id")
 	private Set<Organization> children;
 	
