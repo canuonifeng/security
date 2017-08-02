@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.security.entity.OrgJsonViews;
 import com.edu.biz.security.entity.Organization;
 import com.edu.biz.security.service.OrgService;
 import com.edu.biz.validgroup.Update;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,6 +53,7 @@ public class OrgController extends BaseController<Organization> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
+	@JsonView(OrgJsonViews.AscadeChildren.class)
 	public Organization get(@PathVariable Long id) {
 		Organization org = new Organization();
 		org.setId(id);
@@ -65,6 +68,7 @@ public class OrgController extends BaseController<Organization> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
+	@JsonView(OrgJsonViews.AscadeChildren.class)
 	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return orgService.searchOrgs(conditions, pageable);
