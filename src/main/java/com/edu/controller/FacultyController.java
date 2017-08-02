@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/faculty")
+@Api("院系")
 public class FacultyController extends BaseController<Faculty> {
 	@Autowired
 	private FacultyService facultyService;
