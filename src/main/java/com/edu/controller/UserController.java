@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.security.entity.OrgJsonViews;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.service.UserService;
 import com.edu.biz.validgroup.Create;
 import com.edu.biz.validgroup.Update;
+import com.edu.biz.viewgroup.JsonViews;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -41,6 +44,7 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('user', 'get')")
+	@JsonView({JsonViews.Ascade.class})
 	@ApiOperation(value = "分页查询用户")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "username", value = "用户名，完全匹配", dataType = "String", paramType = "query"),
@@ -91,10 +95,13 @@ public class UserController {
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('user', 'show')")
+	@PreAuthorize("hasPermission('user', 'get')")
 	@ApiOperation(value = "查询用户", notes = "根据url的id来查询用户信息")
+	@JsonView({OrgJsonViews.AscadeParent.class})
 	public User get(@PathVariable @ApiParam(name = "id", value = "用户ID", required = true) Long id) {
-		return userService.getUserById(id);
+		User user = userService.getUserById(id);
+		return user;
+//		return userService.getUserById(id);
 	}
 
 	@RequestMapping(path = "/permissions", method = RequestMethod.GET)

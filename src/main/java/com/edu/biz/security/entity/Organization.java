@@ -10,7 +10,9 @@ import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.viewgroup.JsonViews;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
@@ -18,11 +20,12 @@ public class Organization extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	@OneToMany
 	@JoinColumn(name = "parent_id")
+	@JsonView({OrgJsonViews.AscadeChildren.class,OrgJsonViews.NoAscadeChildren.class})
 	private Set<Organization> children;
 	
 	@ManyToOne
 	@JoinColumn(name = "parent_id")
-	@JsonProperty(access = Access.WRITE_ONLY)
+	@JsonView({OrgJsonViews.AscadeParent.class,OrgJsonViews.NoAscadeParent.class})
 	private Organization parent;
 
 	private String name;
@@ -30,6 +33,7 @@ public class Organization extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name="faculty_id")
+	@JsonView({JsonViews.Ascade.class,JsonViews.NoAscade.class})
 	private Faculty faculty;
 	
 	
