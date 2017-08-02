@@ -1,6 +1,5 @@
 package com.edu.controller;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
-import com.edu.biz.security.entity.validgroup.Create;
-import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.UserService;
+import com.edu.biz.validgroup.Create;
+import com.edu.biz.validgroup.Update;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

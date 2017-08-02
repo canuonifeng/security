@@ -24,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.org.entity.Faculty;
-import com.edu.biz.security.entity.validgroup.Create;
+import com.edu.biz.validgroup.Create;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;

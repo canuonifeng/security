@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.Organization;
-import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.OrgService;
+import com.edu.biz.validgroup.Update;
 
 import io.swagger.annotations.Api;
 
