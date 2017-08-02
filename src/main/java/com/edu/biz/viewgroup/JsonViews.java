@@ -1,7 +1,7 @@
 package com.edu.biz.viewgroup;
 
 public class JsonViews {
-	public static class Public { }
-	public static class Ascade extends Public {}
-	public static class NoAscade extends Public {}
+	public static interface Public { }
+	public static interface Ascade extends Public {}
+	public static interface NoAscade extends Public {}
 }

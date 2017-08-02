@@ -20,12 +20,12 @@ public class Organization extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	@OneToMany(cascade=CascadeType.REMOVE)
 	@JoinColumn(name = "parent_id")
-	@JsonView({OrgJsonViews.AscadeChildren.class,OrgJsonViews.NoAscadeChildren.class})
+	@JsonView({OrgJsonViews.AscadeChildren.class,OrgJsonViews.AscadeChildrenAndParent.class})
 	private Set<Organization> children;
 	
 	@ManyToOne
 	@JoinColumn(name = "parent_id")
-	@JsonView({OrgJsonViews.AscadeParent.class,OrgJsonViews.NoAscadeParent.class})
+	@JsonView({OrgJsonViews.AscadeParent.class,OrgJsonViews.AscadeChildrenAndParent.class})
 	private Organization parent;
 
 	private String name;
@@ -33,7 +33,7 @@ public class Organization extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name="faculty_id")
-	@JsonView({JsonViews.Ascade.class,JsonViews.NoAscade.class})
+	@JsonView({JsonViews.Ascade.class})
 	private Faculty faculty;
 	
 	
