@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.security.entity.Organization;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.entity.validgroup.Update;
@@ -101,5 +102,10 @@ public class UserController {
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		userService.setNewPassword(user.getId(), oldPassword, newPassword);
 		return true;
+	}
+	
+	@RequestMapping(path = "/org/{orgId}")
+	public Long countByOrgId(@PathVariable Long orgId) {
+		return userService.countByOrgId(orgId);
 	}
 }

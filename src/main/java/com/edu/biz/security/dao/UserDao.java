@@ -1,5 +1,7 @@
 package com.edu.biz.security.dao;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Repository;
 
 import com.edu.biz.base.BaseDao;
@@ -10,4 +12,7 @@ public interface UserDao extends BaseDao<User> {
 
 	public User getByUsername(String userName);
 
+	public Long countByOrgId(Long orgId); 
+	
+	public Set<User> findByOrgId(Long orgId); 
 }

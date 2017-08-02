@@ -1,6 +1,7 @@
 package com.edu.controller;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.Organization;
+import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.OrgService;
+import com.edu.biz.security.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +32,9 @@ import io.swagger.annotations.ApiOperation;
 public class OrgController extends BaseController<Organization> {
 	@Autowired
 	private OrgService orgService;
+	
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('org', 'add')")
@@ -68,5 +74,10 @@ public class OrgController extends BaseController<Organization> {
 	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return orgService.searchOrgs(conditions, pageable);
+	}
+	
+	@RequestMapping(path = "/{orgId}/user")
+	public Set<User> findByOrgId(@PathVariable Long orgId) {
+		return userService.findByOrgId(orgId);
 	}
 }

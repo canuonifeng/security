@@ -27,4 +27,8 @@ public interface UserService {
 	public Set<String> findCurrentUserPermissionCodes();
 	
 	public void setNewPassword(Long id, String oldPassword, String newPassword);
+
+	public Long countByOrgId(Long orgId);
+	
+	public Set<User> findByOrgId(Long orgId);
 }

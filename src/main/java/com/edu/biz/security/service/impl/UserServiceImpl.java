@@ -182,4 +182,14 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 		return false;
 	}
+
+	@Override
+	public Long countByOrgId(Long orgId) {
+		return userDao.countByOrgId(orgId);
+	}
+	
+	@Override
+	public Set<User> findByOrgId(Long orgId) {
+		return userDao.findByOrgId(orgId);
+	}
 }
