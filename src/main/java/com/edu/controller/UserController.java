@@ -78,10 +78,8 @@ public class UserController {
 	@RequestMapping(path = "/{id}/status", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	@ApiOperation(value = "修改用户状态")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "status", value = "enable(启用),disable(禁用)", dataType = "String"),
-	})
-	public User changeUserStatus(@PathVariable Long id,@RequestBody Map<String,String> params) {
+	public User changeUserStatus(@PathVariable @ApiParam(name = "id", value = "用户ID", required = true) Long id,
+			@RequestBody @ApiParam(name = "status", value = "enable(启用)，disable(禁用)", required = true) Map<String,String> params) {
 		UserStatus status = UserStatus.valueOf(params.get("status"));
 		return userService.changeUserStatus(id, status);
 	}
