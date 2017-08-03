@@ -9,5 +9,5 @@ import com.edu.biz.security.entity.User;
 public interface UserDao extends BaseDao<User> {
 
 	public User getByUsername(String userName);
-
+	
 }

@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.OrgJsonViews;
 import com.edu.biz.security.entity.Organization;
+import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.OrgService;
+import com.edu.biz.security.service.UserService;
 import com.edu.biz.validgroup.Update;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -32,6 +34,9 @@ import io.swagger.annotations.ApiParam;
 public class OrgController extends BaseController<Organization> {
 	@Autowired
 	private OrgService orgService;
+	
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('org', 'add')")
@@ -50,6 +55,13 @@ public class OrgController extends BaseController<Organization> {
 	@PreAuthorize("hasPermission('org', 'delete')")
 	public boolean delete(@PathVariable @ApiParam(name = "id", value = "部门ID", required = true) Long id) {
 		return orgService.deleteOrg(id);
+	}
+
+	@RequestMapping(path = "remove/user/{userId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('org', 'edit')")
+	public User removeOrgUser(@PathVariable Long userId, @Validated( { Update.class }) @RequestBody User user) {
+		user.setId(userId);
+		return userService.updateUser(user);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)

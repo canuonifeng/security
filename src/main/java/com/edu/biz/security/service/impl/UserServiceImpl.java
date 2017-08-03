@@ -163,7 +163,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Validated
 	public User updateUser(User user) {
+		this.filterOrg(user);
+		this.filterFaculty(user);
+		this.filterRole(user);
 		User savedUser = userDao.findOne(user.getId());
+		
 		if (null == savedUser) {
 			throw new NotFoundException("用户不存在");
 		}
