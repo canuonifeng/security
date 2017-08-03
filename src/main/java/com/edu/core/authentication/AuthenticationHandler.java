@@ -15,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import com.edu.biz.security.entity.User;
@@ -24,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class AuthenticationHandler
-		implements AuthenticationSuccessHandler, AuthenticationFailureHandler {
+		implements AuthenticationSuccessHandler, AuthenticationFailureHandler, LogoutSuccessHandler {
 
 	@Autowired
 	private UserService userService;
@@ -38,14 +39,14 @@ public class AuthenticationHandler
 		user.setLastLoginIp(getIpAddr(request));
 		userService.updateUser(user);
 		ObjectMapper mapper = new ObjectMapper();
-		
+
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("token", request.getSession().getId());
 		response.getWriter().append(mapper.writeValueAsString(new ResponseWrapper(map)));
 		response.setContentType("application/json");
 		response.setStatus(200);
 	}
-	
+
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
@@ -77,6 +78,17 @@ public class AuthenticationHandler
 			return request.getRemoteAddr();
 		}
 		return ip;
+	}
+
+	@Override
+	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+			throws IOException, ServletException {
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> map = new HashMap<String, String>();
+		response.getWriter().append(mapper.writeValueAsString(new ResponseWrapper(map)));
+		response.setContentType("application/json");
+		response.setStatus(200);
+
 	}
 
 }

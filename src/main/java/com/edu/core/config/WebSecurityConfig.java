@@ -28,6 +28,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
@@ -47,6 +48,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AuthenticationFailureHandler authenticationFailureHandler;
+	
+	@Autowired
+	private LogoutSuccessHandler logoutSuccessHandler;
 
 	@Bean
 	public RememberMeServices rememberMeServices() {
@@ -89,6 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		authFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
 		http.addFilterAt(authFilter, UsernamePasswordAuthenticationFilter.class);
 		http.formLogin().successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler);
+		http.logout().logoutSuccessHandler(logoutSuccessHandler);
 		http.authorizeRequests()
 			.antMatchers("/csrf-token").permitAll()
 	        .anyRequest().authenticated();
