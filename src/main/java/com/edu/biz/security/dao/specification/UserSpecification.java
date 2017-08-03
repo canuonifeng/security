@@ -24,10 +24,19 @@ public class UserSpecification implements Specification<User> {
 	@Override
 	public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
-
 		if (null != conditions) {
 			if (conditions.containsKey("username")) {
+				
 				list.add(cb.equal(root.get("username").as(String.class), this.conditions.get("username")));
+			}
+			if (conditions.containsKey("org_id")) {
+				list.add(cb.equal(root.get("org").get("id").as(Long.class), this.conditions.get("org_id")));
+			}
+			if (conditions.containsKey("faculty_id")) {
+				list.add(cb.equal(root.get("faculty").get("id").as(Long.class), this.conditions.get("faculty_id")));
+			}
+			if (conditions.containsKey("name")) {
+				list.add(cb.like(root.get("name").as(String.class), "%"+this.conditions.get("name")+"%"));
 			}
 		}
 
