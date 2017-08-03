@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.edu.biz.security.dao.OrgDao;
-import com.edu.biz.security.dao.UserDao;
 import com.edu.biz.security.dao.specification.OrgSpecification;
 import com.edu.biz.security.entity.Organization;
 import com.edu.biz.security.service.OrgService;
@@ -23,8 +22,6 @@ public class OrgServiceImpl implements OrgService {
 	@Autowired
 	private OrgDao orgDao;
 
-	@Autowired
-	private UserDao userDao;
 	
 	@Override
 	public Organization createOrg(Organization org) {
