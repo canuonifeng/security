@@ -55,6 +55,13 @@ public class OrgController extends BaseController<Organization> {
 		return orgService.deleteOrg(id);
 	}
 
+	@RequestMapping(path = "remove/user/{userId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('org', 'edit')")
+	public User removeOrgUser(@PathVariable Long userId, @Validated( { Update.class }) @RequestBody User user) {
+		user.setId(userId);
+		return userService.updateUser(user);
+	}
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
 	public Organization get(@PathVariable Long id) {
@@ -74,10 +81,5 @@ public class OrgController extends BaseController<Organization> {
 	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return orgService.searchOrgs(conditions, pageable);
-	}
-	
-	@RequestMapping(path = "/{orgId}/user")
-	public Set<User> findByOrgId(@PathVariable Long orgId) {
-		return userService.findByOrgId(orgId);
 	}
 }

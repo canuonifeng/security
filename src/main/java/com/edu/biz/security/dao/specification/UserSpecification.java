@@ -29,6 +29,9 @@ public class UserSpecification implements Specification<User> {
 			if (conditions.containsKey("username")) {
 				list.add(cb.equal(root.get("username").as(String.class), this.conditions.get("username")));
 			}
+			if (conditions.containsKey("orgId")) {
+				list.add(cb.equal(root.get("org").get("id"), this.conditions.get("orgId")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];

@@ -103,9 +103,4 @@ public class UserController {
 		userService.setNewPassword(user.getId(), oldPassword, newPassword);
 		return true;
 	}
-	
-	@RequestMapping(path = "/org/{orgId}")
-	public Long countByOrgId(@PathVariable Long orgId) {
-		return userService.countByOrgId(orgId);
-	}
 }
