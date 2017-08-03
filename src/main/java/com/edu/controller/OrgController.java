@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/org")
@@ -47,7 +48,7 @@ public class OrgController extends BaseController<Organization> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('org', 'delete')")
-	public boolean delete(@PathVariable Long id) {
+	public boolean delete(@PathVariable @ApiParam(name = "id", value = "部门ID", required = true) Long id) {
 		return orgService.deleteOrg(id);
 	}
 
