@@ -14,6 +14,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -21,6 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 abstract public class BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -28,17 +30,17 @@ abstract public class BaseEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Basic(optional = false)
-	@ApiModelProperty(hidden=true)
+	@ApiModelProperty(value="主键")
 	private Long id;
 
 	@CreatedDate
 	@JsonProperty(access = Access.READ_ONLY)
-	@ApiModelProperty(hidden=true)
+	@ApiModelProperty(value="创建时间", readOnly=true)
 	private Date createdTime;
 
 	@LastModifiedDate
 	@JsonProperty(access = Access.READ_ONLY)
-	@ApiModelProperty(hidden=true)
+	@ApiModelProperty(value="更新时间", readOnly=true)
 	private Date updatedTime;
 
 	public Long getId() {

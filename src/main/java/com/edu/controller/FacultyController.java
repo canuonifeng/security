@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/faculty")
+@Api("院系")
 public class FacultyController extends BaseController<Faculty> {
 	@Autowired
 	private FacultyService facultyService;
@@ -62,7 +64,7 @@ public class FacultyController extends BaseController<Faculty> {
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('faculty', 'get')")
 	public Page<Faculty> pager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return facultyService.searchFaculty(conditions, pageable);
 	}
 }

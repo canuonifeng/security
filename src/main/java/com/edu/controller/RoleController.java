@@ -18,6 +18,7 @@ import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.service.RoleService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/role")
@@ -41,8 +42,8 @@ public class RoleController {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('role', 'delete')")
-	public boolean delete(@PathVariable Long id, @RequestBody Role role) {
-		return roleService.deleteRole(role.getId());
+	public boolean delete(@PathVariable @ApiParam(name = "id", value = "角色ID", required = true) Long id) {
+		return roleService.deleteRole(id);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
@@ -56,7 +57,7 @@ public class RoleController {
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('role', 'get')")
 	public Page<Role> pager(Map<String, Object> conditions,
-			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return roleService.searchRoles(conditions, pageable);
 	}
 }

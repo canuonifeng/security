@@ -24,10 +24,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.org.entity.Faculty;
-import com.edu.biz.security.entity.validgroup.Create;
+import com.edu.biz.validgroup.Create;
+import com.edu.biz.viewgroup.JsonViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -67,10 +69,13 @@ public class User extends BaseEntity implements UserDetails {
 	
 	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "faculty_id")
+	@ApiModelProperty(value = "院系")
+	@JsonView({JsonViews.Ascade.class})
 	private Faculty faculty;
 
 	@NotEmpty(message = "email不能为空")
 	@Email(message = "email格式不正确")
+	@ApiModelProperty(value = "邮件")
 	private String email;
 
 	@JsonIgnore
@@ -78,15 +83,19 @@ public class User extends BaseEntity implements UserDetails {
 	private String salt;
 	
 	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(value = "用户状态")
 	private UserStatus status = UserStatus.enable;
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
+	@ApiModelProperty(value = "角色列表")
+	@JsonView({JsonViews.Ascade.class})
 	private List<Role> roles;
 
 	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "org_id")
 	@ApiModelProperty(value = "所属组织机构")
+	@JsonView({JsonViews.Ascade.class})
 	private Organization org;
 
 	public String getUsername() {

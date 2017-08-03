@@ -17,14 +17,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.security.entity.OrgJsonViews;
 import com.edu.biz.security.entity.Organization;
 import com.edu.biz.security.entity.User;
-import com.edu.biz.security.entity.validgroup.Update;
 import com.edu.biz.security.service.OrgService;
 import com.edu.biz.security.service.UserService;
+import com.edu.biz.validgroup.Update;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping("/api/org")
@@ -51,7 +54,7 @@ public class OrgController extends BaseController<Organization> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('org', 'delete')")
-	public boolean delete(@PathVariable Long id) {
+	public boolean delete(@PathVariable @ApiParam(name = "id", value = "部门ID", required = true) Long id) {
 		return orgService.deleteOrg(id);
 	}
 
@@ -64,6 +67,7 @@ public class OrgController extends BaseController<Organization> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
+	@JsonView(OrgJsonViews.AscadeChildren.class)
 	public Organization get(@PathVariable Long id) {
 		Organization org = new Organization();
 		org.setId(id);
@@ -78,8 +82,9 @@ public class OrgController extends BaseController<Organization> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
+	@JsonView(OrgJsonViews.AscadeChildren.class)
 	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 15, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return orgService.searchOrgs(conditions, pageable);
 	}
 }

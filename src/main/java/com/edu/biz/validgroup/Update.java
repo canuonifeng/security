@@ -1,4 +1,4 @@
-package com.edu.biz.security.entity.validgroup;
+package com.edu.biz.validgroup;
 
 import javax.validation.GroupSequence;
 import javax.validation.groups.Default;

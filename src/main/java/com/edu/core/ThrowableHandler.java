@@ -3,6 +3,7 @@ package com.edu.core;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,15 @@ public class ThrowableHandler{
 		ResponseWrapper err = new ResponseWrapper(e.getMessage());
 		err.setMessage(e.getMessage());
 		err.setStatus(e.getCode());
+		return err;
+	}
+	
+	@ExceptionHandler(value = AccessDeniedException.class)
+	@ResponseBody
+	public ResponseWrapper AccessDeniedExceptionHandler(HttpServletRequest req, AccessDeniedException e){
+		ResponseWrapper err = new ResponseWrapper(e.getMessage());
+		err.setMessage("不允许访问");
+		err.setStatus(String.valueOf(HttpServletResponse.SC_FORBIDDEN));
 		return err;
 	}
 	
