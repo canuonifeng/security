@@ -1,4 +1,4 @@
-package com.edu.biz.security.entity;
+package com.edu.biz.org.entity;
 
 import com.edu.biz.viewgroup.JsonViews;
 

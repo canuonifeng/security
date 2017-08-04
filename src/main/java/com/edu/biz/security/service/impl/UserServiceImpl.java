@@ -21,15 +21,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.entity.Organization;
 import com.edu.biz.org.service.FacultyService;
+import com.edu.biz.org.service.OrgService;
 import com.edu.biz.security.dao.UserDao;
 import com.edu.biz.security.dao.specification.UserSpecification;
-import com.edu.biz.security.entity.Organization;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.event.CreateUserEvent;
-import com.edu.biz.security.service.OrgService;
 import com.edu.biz.security.service.RoleService;
 import com.edu.biz.security.service.UserService;
 import com.edu.biz.validgroup.Create;

@@ -1,4 +1,4 @@
-package com.edu.biz.security.dao.specification;
+package com.edu.biz.org.dao.specification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.edu.biz.security.entity.Organization;
+import com.edu.biz.org.entity.Organization;
 
 public class OrgSpecification implements Specification<Organization> {
 

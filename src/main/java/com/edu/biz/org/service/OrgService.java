@@ -1,11 +1,11 @@
-package com.edu.biz.security.service;
+package com.edu.biz.org.service;
 
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.edu.biz.security.entity.Organization;
+import com.edu.biz.org.entity.Organization;
 
 public interface OrgService {
 

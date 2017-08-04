@@ -1,4 +1,4 @@
-package com.edu.biz.security.service.impl;
+package com.edu.biz.org.service.impl;
 
 import java.util.Map;
 
@@ -8,10 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import com.edu.biz.security.dao.OrgDao;
-import com.edu.biz.security.dao.specification.OrgSpecification;
-import com.edu.biz.security.entity.Organization;
-import com.edu.biz.security.service.OrgService;
+import com.edu.biz.org.dao.OrgDao;
+import com.edu.biz.org.dao.specification.OrgSpecification;
+import com.edu.biz.org.entity.Organization;
+import com.edu.biz.org.service.OrgService;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;

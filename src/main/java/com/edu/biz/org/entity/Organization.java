@@ -1,4 +1,4 @@
-package com.edu.biz.security.entity;
+package com.edu.biz.org.entity;
 
 import java.util.Set;
 
@@ -9,7 +9,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
-import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.entity.OrgJsonViews.AscadeChildren;
+import com.edu.biz.org.entity.OrgJsonViews.AscadeChildrenAndParent;
+import com.edu.biz.org.entity.OrgJsonViews.AscadeParent;
 import com.edu.biz.viewgroup.JsonViews;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
