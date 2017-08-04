@@ -9,13 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
-import com.edu.biz.org.entity.OrgJsonViews.AscadeChildren;
-import com.edu.biz.org.entity.OrgJsonViews.AscadeChildrenAndParent;
-import com.edu.biz.org.entity.OrgJsonViews.AscadeParent;
 import com.edu.biz.viewgroup.JsonViews;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Organization extends BaseEntity {
@@ -27,7 +22,7 @@ public class Organization extends BaseEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "parent_id")
-	@JsonView({OrgJsonViews.AscadeParent.class,OrgJsonViews.AscadeChildrenAndParent.class})
+	@JsonView({OrgJsonViews.CascadeParent.class,OrgJsonViews.AscadeChildrenAndParent.class})
 	private Organization parent;
 
 	private String name;
@@ -35,7 +30,7 @@ public class Organization extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name="faculty_id")
-	@JsonView({JsonViews.Ascade.class})
+	@JsonView({JsonViews.Cascade.class})
 	private Faculty faculty;
 	
 	

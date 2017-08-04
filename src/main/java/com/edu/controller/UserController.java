@@ -46,7 +46,7 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('user', 'get')")
-	@JsonView({ JsonViews.Ascade.class })
+	@JsonView({ JsonViews.Cascade.class })
 	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
 	@ApiOperation(value = "分页查询用户")
 	@ApiImplicitParams({
@@ -106,7 +106,7 @@ public class UserController {
 	@PreAuthorize("hasPermission('user', 'get')")
 	@ApiOperation(value = "查询用户", notes = "根据url的id来查询用户信息")
 	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
-	@JsonView({ OrgJsonViews.AscadeParent.class })
+	@JsonView({ OrgJsonViews.CascadeParent.class })
 	public User get(@PathVariable @ApiParam(name = "id", value = "用户ID", required = true) Long id) {
 		User user = userService.getUserById(id);
 		return user;
