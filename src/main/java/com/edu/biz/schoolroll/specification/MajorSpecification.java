@@ -1,4 +1,4 @@
-package com.edu.biz.org.dao.specification;
+package com.edu.biz.schoolroll.specification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,22 +11,25 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.schoolroll.entity.Major;
 
-public class FacultySpecification implements Specification<Faculty> {
+public class MajorSpecification implements Specification<Major> {
 	private Map<String, Object> conditions;
-
-	public FacultySpecification(Map<String, Object> conditions) {
+	
+	public MajorSpecification(Map<String, Object> conditions) {
 		this.conditions = conditions;
 	}
-
+	
 	@Override
-	public Predicate toPredicate(Root<Faculty> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<Major> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
 
 		if (null != conditions) {
 			if (conditions.containsKey("name")) {
 				list.add(cb.like(root.get("name"), "%"+this.conditions.get("name")+"%"));
+			}
+			if (conditions.containsKey("facultyId")) {
+				list.add(cb.equal(root.get("faculty").get("id"), this.conditions.get("facultyId")));
 			}
 		}
 
