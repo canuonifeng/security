@@ -1,9 +1,14 @@
 package com.edu.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.entity.pojo.FacultyVo;
 import com.edu.biz.org.service.FacultyService;
+import com.edu.biz.schoolroll.service.MajorService;
+import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +35,9 @@ import io.swagger.annotations.ApiOperation;
 public class FacultyController extends BaseController<Faculty> {
 	@Autowired
 	private FacultyService facultyService;
+	
+	@Autowired
+	private MajorService majorService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('faculty', 'add')")
@@ -63,8 +74,22 @@ public class FacultyController extends BaseController<Faculty> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('faculty', 'get')")
-	public Page<Faculty> pager(@RequestParam Map<String, Object> conditions,
+	public Page<FacultyVo> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		return facultyService.searchFaculty(conditions, pageable);
+		Page<Faculty> page = facultyService.searchFaculty(conditions, pageable);
+		
+		List<FacultyVo> facultyVos = new ArrayList<FacultyVo>();
+		for (Faculty faculty: page.getContent()) {
+			FacultyVo facultyVo = new FacultyVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(faculty, facultyVo);
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("facultyId", faculty.getId());
+			Long majorNum = majorService.countMajor(map);
+			facultyVo.setMajorNum(majorNum.intValue());
+			facultyVos.add(facultyVo);
+		}
+//		Pageable pageableVo = new PageRequest(page.get, size, sort);
+		Page<FacultyVo> facultyVoPage = new PageImpl<>(facultyVos, pageable, page.getTotalElements());
+		return facultyVoPage;
 	}
 }
