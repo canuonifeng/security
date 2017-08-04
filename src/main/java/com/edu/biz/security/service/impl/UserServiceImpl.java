@@ -109,6 +109,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 			if (null == org) {
 				throw new NotFoundException("组织机构#"+user.getOrg().getId()+"不存在") ;
 			}
+			user.setOrg(org);
+			user.setOrgCode(org.getOrgCode());
 		}
 	}
 	

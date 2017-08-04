@@ -43,20 +43,20 @@ public class User extends BaseEntity implements UserDetails {
 	@NotEmpty(message = "用户名不能为空")
 	@ApiModelProperty(value = " 用户名")
 	private String username;
-	
+
 	@ApiModelProperty(value = "姓名")
 	private String name;
-	
+
 	@ApiModelProperty(value = "电话")
 	private String phone;
-	
+
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 性别")
-    private Gender gender;
-	
+	private Gender gender;
+
 	@JsonProperty(access = Access.READ_ONLY)
 	private Date lastLoginTime;
-	
+
 	@JsonProperty(access = Access.READ_ONLY)
 	private String lastLoginIp;
 
@@ -67,11 +67,11 @@ public class User extends BaseEntity implements UserDetails {
 
 	@ApiModelProperty(value = "昵称")
 	private String nickname;
-	
+
 	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "faculty_id")
 	@ApiModelProperty(value = "院系")
-	@JsonView({JsonViews.Cascade.class})
+	@JsonView({ JsonViews.Cascade.class })
 	private Faculty faculty;
 
 	@NotEmpty(message = "email不能为空")
@@ -82,7 +82,7 @@ public class User extends BaseEntity implements UserDetails {
 	@JsonIgnore
 	@ApiModelProperty(hidden = true)
 	private String salt;
-	
+
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = "用户状态")
 	private UserStatus status = UserStatus.enable;
@@ -90,14 +90,30 @@ public class User extends BaseEntity implements UserDetails {
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
 	@ApiModelProperty(value = "角色列表")
-	@JsonView({JsonViews.Cascade.class})
+	@JsonView({ JsonViews.Cascade.class })
 	private List<Role> roles;
 
 	@ManyToOne(targetEntity = Organization.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "org_id")
 	@ApiModelProperty(value = "所属组织机构")
-	@JsonView({JsonViews.Cascade.class})
+	@JsonView({ JsonViews.Cascade.class })
 	private Organization org;
+
+	private String orgCode;
+
+	public String getOrgCode() {
+		if (null != org) {
+			orgCode = org.getOrgCode();
+		}
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		if (null != org) {
+			orgCode = org.getOrgCode();
+		}
+		this.orgCode = orgCode;
+	}
 
 	public String getUsername() {
 		return username;
@@ -110,7 +126,7 @@ public class User extends BaseEntity implements UserDetails {
 	public void setStatus(UserStatus status) {
 		this.status = status;
 	}
-	
+
 	public String getStatusName() {
 		return status.getName();
 	}
@@ -210,7 +226,7 @@ public class User extends BaseEntity implements UserDetails {
 	public Gender getGender() {
 		return gender;
 	}
-	
+
 	public String getGenderName() {
 		return gender.getName();
 	}
@@ -250,6 +266,5 @@ public class User extends BaseEntity implements UserDetails {
 	public void setOrg(Organization org) {
 		this.org = org;
 	}
-	
-	
+
 }

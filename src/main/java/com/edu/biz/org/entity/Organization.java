@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -17,29 +18,27 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 public class Organization extends BaseEntity {
 	private static final long serialVersionUID = 1L;
-	@OneToMany(cascade=CascadeType.REMOVE)
+	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
-	@JsonView({CascadeChildren.class,CascadeChildrenAndParent.class})
+	@JsonView({ CascadeChildren.class, CascadeChildrenAndParent.class })
 	private Set<Organization> children;
-	
-	@ManyToOne
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
-	@JsonView({OrgJsonViews.CascadeParent.class,CascadeChildrenAndParent.class})
+	@JsonView({ OrgJsonViews.CascadeParent.class, CascadeChildrenAndParent.class })
 	private Organization parent;
 
 	private String name;
 	private String code;
-	
-	
+	private String orgCode;
 
 	@ManyToOne
-	@JoinColumn(name="faculty_id")
-	@JsonView({JsonViews.Cascade.class})
+	@JoinColumn(name = "faculty_id")
+	@JsonView({ JsonViews.Cascade.class })
 	private Faculty faculty;
-	
-	
+
 	public Set<Organization> getChildren() {
-		if(null != this.children && this.children.size()==0) {
+		if (null != this.children && this.children.size() == 0) {
 			return null;
 		}
 		return children;
@@ -79,5 +78,13 @@ public class Organization extends BaseEntity {
 
 	public void setParent(Organization parent) {
 		this.parent = parent;
+	}
+
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
 	}
 }
