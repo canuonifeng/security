@@ -69,6 +69,7 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")
 	@ApiOperation(value = "新增用户", notes = "根据提交的数据创建新用户")
+	@JsonView({ JsonViews.NoCascade.class })
 	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
 	public User add(@Validated({ Create.class }) @RequestBody User user) {
 		return userService.createUser(user);
@@ -77,6 +78,7 @@ public class UserController {
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	@ApiOperation(value = "编辑用户信息")
+	@JsonView({ JsonViews.NoCascade.class })
 	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
 	public User edit(@PathVariable @ApiParam(name = "id", value = "用户ID", required = true) Long id,
 			@Validated({ Update.class }) @RequestBody User user) {
