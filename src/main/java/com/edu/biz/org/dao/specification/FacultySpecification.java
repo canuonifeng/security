@@ -12,7 +12,6 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.org.entity.Faculty;
-import com.edu.biz.org.entity.pojo.FacultyVo;
 
 public class FacultySpecification implements Specification<Faculty> {
 	private Map<String, Object> conditions;

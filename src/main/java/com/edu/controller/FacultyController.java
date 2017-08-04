@@ -8,7 +8,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -88,7 +87,7 @@ public class FacultyController extends BaseController<Faculty> {
 			facultyVo.setMajorNum(majorNum.intValue());
 			facultyVos.add(facultyVo);
 		}
-//		Pageable pageableVo = new PageRequest(page.get, size, sort);
+
 		Page<FacultyVo> facultyVoPage = new PageImpl<>(facultyVos, pageable, page.getTotalElements());
 		return facultyVoPage;
 	}
