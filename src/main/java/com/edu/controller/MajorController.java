@@ -34,7 +34,7 @@ public class MajorController extends BaseController<Major> {
 	}
 	
 	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
-	@ApiOperation(value = "检查专业编号是否重复", notes = "根据专业编号检查是否重复")
+	@ApiOperation(value = "检查专业代码是否重复", notes = "根据专业代码检查是否重复")
 	public Boolean checkCode(String code,  Long majorId){
 		 return majorService.checkCode(code, majorId);
 	}

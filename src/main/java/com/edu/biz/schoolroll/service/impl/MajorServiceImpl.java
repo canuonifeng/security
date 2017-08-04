@@ -23,7 +23,7 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 	@Override
 	public Major createMajor(Major major) {
 		if(!this.checkCode(major.getCode(), null)){
-			throw new ServiceException("406","专业编码已被占用");
+			throw new ServiceException("406","专业代码已被占用");
 		}
 		return majorDao.save(major);
 	}
@@ -35,7 +35,7 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 			throw new NotFoundException("专业不存在");
 		}
 		if(!this.checkCode(major.getCode(), major.getId())) {
-			throw new ServiceException("406","专业编码已被占用");
+			throw new ServiceException("406","专业代码已被占用");
 		}
 		return majorDao.save(major);
 	}
