@@ -17,7 +17,7 @@ public class Major extends BaseEntity {
 	
 	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "faculty_id")
-	@ApiModelProperty(value = "专业")
+	@ApiModelProperty(value = "院系")
 	private Faculty faculty;
 	
 	public String getCode() {
