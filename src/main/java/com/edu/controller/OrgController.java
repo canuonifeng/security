@@ -66,7 +66,7 @@ public class OrgController extends BaseController<Organization> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
-	@JsonView(OrgJsonViews.AscadeChildren.class)
+	@JsonView(OrgJsonViews.CascadeChildren.class)
 	public Organization get(@PathVariable Long id) {
 		Organization org = new Organization();
 		org.setId(id);
@@ -81,7 +81,7 @@ public class OrgController extends BaseController<Organization> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('org', 'get')")
-	@JsonView(OrgJsonViews.AscadeChildren.class)
+	@JsonView(OrgJsonViews.CascadeChildren.class)
 	public Page<Organization> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return orgService.searchOrgs(conditions, pageable);

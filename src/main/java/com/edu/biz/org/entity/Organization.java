@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
+import com.edu.biz.org.entity.OrgJsonViews.CascadeChildren;
+import com.edu.biz.org.entity.OrgJsonViews.CascadeChildrenAndParent;
 import com.edu.biz.viewgroup.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -17,16 +19,18 @@ public class Organization extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	@OneToMany(cascade=CascadeType.REMOVE)
 	@JoinColumn(name = "parent_id")
-	@JsonView({OrgJsonViews.AscadeChildren.class,OrgJsonViews.AscadeChildrenAndParent.class})
+	@JsonView({CascadeChildren.class,CascadeChildrenAndParent.class})
 	private Set<Organization> children;
 	
 	@ManyToOne
 	@JoinColumn(name = "parent_id")
-	@JsonView({OrgJsonViews.CascadeParent.class,OrgJsonViews.AscadeChildrenAndParent.class})
+	@JsonView({OrgJsonViews.CascadeParent.class,CascadeChildrenAndParent.class})
 	private Organization parent;
 
 	private String name;
 	private String code;
+	
+	
 
 	@ManyToOne
 	@JoinColumn(name="faculty_id")

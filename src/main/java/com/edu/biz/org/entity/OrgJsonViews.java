@@ -9,8 +9,9 @@ public class OrgJsonViews {
 	public static interface CascadeParent extends JsonViews.Cascade {
 	}
 	
-	public static interface AscadeChildren extends JsonViews.Cascade {
+	public static interface CascadeChildren extends JsonViews.Cascade {
 	}
+	
 	
 	public static interface NoCascadeParent extends JsonViews.NoCascade {
 	}
@@ -18,6 +19,7 @@ public class OrgJsonViews {
 	public static interface NoCascadeChildren extends JsonViews.NoCascade {
 	}
 	
-	public static interface AscadeChildrenAndParent extends CascadeParent , AscadeChildren {
+	
+	public static interface CascadeChildrenAndParent extends CascadeParent , CascadeChildren {
 	}
 }
