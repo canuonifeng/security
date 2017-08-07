@@ -14,6 +14,7 @@ import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
+import com.edu.core.util.BeanUtils;
 
 @Service
 public class FacultyServiceImpl extends BaseService implements FacultyService {
@@ -31,14 +32,15 @@ public class FacultyServiceImpl extends BaseService implements FacultyService {
 
 	@Override
 	public Faculty updateFaculty(Faculty faculty) {
-		Faculty savedfaculty = facultyDao.findOne(faculty.getId());
-		if (null == savedfaculty) {
+		Faculty savedFaculty = facultyDao.findOne(faculty.getId());
+		if (null == savedFaculty) {
 			throw new NotFoundException("院系不存在");
 		}
 		if(!this.checkCode(faculty.getCode(), faculty.getId())) {
 			throw new ServiceException("406","院系编码已被占用");
 		}
-		return facultyDao.save(faculty);
+		BeanUtils.copyPropertiesWithCopyProperties(faculty, savedFaculty, "name", "code");
+		return facultyDao.save(savedFaculty);
 	}
 
 	@Override

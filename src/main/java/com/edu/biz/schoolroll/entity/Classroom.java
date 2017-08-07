@@ -4,9 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
-import com.edu.biz.org.entity.Faculty;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -14,11 +14,12 @@ import io.swagger.annotations.ApiModelProperty;
 public class Classroom extends BaseEntity {
 	private String code;
 	private String name;
+	private String grade;
 	
-	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "faculty_id")
-	@ApiModelProperty(value = "院系")
-	private Faculty faculty;
+	@ManyToOne(targetEntity = Major.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "major_id")
+	@ApiModelProperty(value = "专业")
+	private Major major;
 	
 	public String getCode() {
 		return code;
@@ -35,12 +36,20 @@ public class Classroom extends BaseEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public Faculty getFaculty() {
-		return faculty;
+
+	public String getGrade() {
+		return grade;
 	}
 
-	public void setFaculty(Faculty faculty) {
-		this.faculty = faculty;
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public Major getMajor() {
+		return major;
+	}
+
+	public void setMajor(Major major) {
+		this.major = major;
 	}
 }

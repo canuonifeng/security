@@ -5,5 +5,7 @@ import com.edu.biz.schoolroll.entity.Classroom;
 
 public interface ClassroomDao extends BaseDao<Classroom> {
 	public Classroom getByCode(String code);
+
+	public int countByMajorId(Long majorId);
 	
 }

@@ -61,7 +61,7 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 		if(null == major) {
 			return true;
 		}
-		if(major.getId().equals(major)) {
+		if(major.getId().equals(majorId)) {
 			return true;
 		}
 		return false;
