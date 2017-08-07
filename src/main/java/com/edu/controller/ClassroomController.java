@@ -34,7 +34,7 @@ public class ClassroomController extends BaseController<Classroom> {
 	@Autowired
 	private MajorService majorService;
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(path = "/batch/add", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classroom', 'add')")
 	public Boolean batchAdd(@RequestBody ClassroomForm form) {
 		
