@@ -28,11 +28,11 @@ import com.edu.biz.security.entity.Organization;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
-import com.edu.biz.security.entity.validgroup.Create;
 import com.edu.biz.security.event.CreateUserEvent;
 import com.edu.biz.security.service.OrgService;
 import com.edu.biz.security.service.RoleService;
 import com.edu.biz.security.service.UserService;
+import com.edu.biz.validgroup.Create;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
@@ -163,7 +163,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	@Validated
 	public User updateUser(User user) {
+		this.filterOrg(user);
+		this.filterFaculty(user);
+		this.filterRole(user);
 		User savedUser = userDao.findOne(user.getId());
+		
 		if (null == savedUser) {
 			throw new NotFoundException("用户不存在");
 		}
