@@ -39,7 +39,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/api/user")
 @Api("用户")
-public class UserController {
+public class UserController extends BaseController<User> {
 
 	@Autowired
 	private UserService userService;
