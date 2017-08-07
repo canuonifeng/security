@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/api/role")
 @Api("角色")
-public class RoleController {
+public class RoleController extends BaseController<Role> {
 
 	@Autowired
 	private RoleService roleService;
