@@ -2,13 +2,17 @@ package com.edu.core;
 
 import java.io.Serializable;
 
-public class ResponseWrapper implements Serializable {
+public class ResponseWrapper<T> implements Serializable {
 
-	private final Object body;
+	private T body;
 	private String status = "200";
 	private String message = "";
 
-	public ResponseWrapper(Object body) {
+	public ResponseWrapper() {
+		
+	}
+	
+	public ResponseWrapper(T body) {
 		this.body = body;
 	}
 
@@ -16,7 +20,7 @@ public class ResponseWrapper implements Serializable {
 		return status;
 	}
 
-	public Object getBody() {
+	public T getBody() {
 		return body;
 	}
 
@@ -30,5 +34,9 @@ public class ResponseWrapper implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public void setBody(T body) {
+		this.body = body;
 	}
 }
