@@ -1,10 +1,14 @@
 package com.edu.controller;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -19,8 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Major;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomForm;
+import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.MajorService;
+import com.edu.biz.schoolroll.service.MemberService;
+import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 
@@ -32,6 +39,9 @@ public class ClassroomController extends BaseController<Classroom> {
 	private ClassroomService classroomService;
 	
 	@Autowired
+	private MemberService memberService;
+
+	@Autowired
 	private MajorService majorService;
 
 	@RequestMapping(path = "/batch", method = RequestMethod.POST)
@@ -42,17 +52,22 @@ public class ClassroomController extends BaseController<Classroom> {
 		Major major = majorService.getMajor(form.getMajorId());
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
+        DecimalFormat dfInt=new DecimalFormat("00");
         
 		for (int i = 0, classroomNum = mojorCount+1; i < form.getNum(); i++) {
+			String num = dfInt.format(classroomNum);
+	        
 			Classroom classroom = new Classroom();
 			classroom.setGrade(form.getGrade());
-			String name = form.getClassroomSuffix() + classroomNum + form.getClassroomPrefix();
+			String name = form.getClassroomSuffix() + num + form.getClassroomPrefix();
 			classroom.setName(name);
 			classroom.setMajor(major);
 
-			String code = year + major.getCode() + classroomNum;
+			String code = year + major.getCode() + num;
 			classroom.setCode(code);
 			classroomService.createClassroom(classroom);
+			
+			classroomNum++;
 		}
 		return true;
 	}
@@ -80,9 +95,19 @@ public class ClassroomController extends BaseController<Classroom> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
-	public Page<Classroom> pager(@RequestParam Map<String, Object> conditions,
+	public Page<ClassroomVo> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		Page<Classroom> classroom = classroomService.searchClassroom(conditions, pageable);
-		return classroom;
+		Page<Classroom> page = classroomService.searchClassroom(conditions, pageable);
+		List<ClassroomVo> classroomVos = new ArrayList<ClassroomVo>();
+		for (Classroom classroom: page.getContent()) {
+			ClassroomVo classroomVo = new ClassroomVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(classroom, classroomVo);
+			int memberNum = memberService.countByClassroomId(classroom.getId());
+			classroomVo.setStudentNum(memberNum);
+			classroomVos.add(classroomVo);
+		}
+
+		Page<ClassroomVo> classroomVoPage = new PageImpl<>(classroomVos, pageable, page.getTotalElements());
+		return classroomVoPage;
 	}
 }
