@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.entity.FacultyStatus;
 import com.edu.biz.org.entity.pojo.FacultyVo;
 import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.schoolroll.service.MajorService;
@@ -27,6 +28,9 @@ import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/faculty")
@@ -55,6 +59,16 @@ public class FacultyController extends BaseController<Faculty> {
 	public Faculty edit(@PathVariable Long id, @RequestBody Faculty faculty) {
 		faculty.setId(id);
 		return facultyService.updateFaculty(faculty);
+	}
+	
+	@RequestMapping(path = "/{id}/status", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('faculty', 'edit')")
+	@ApiOperation(value = "修改院系状态")
+	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
+	public Faculty changeFacultyStatus(@PathVariable @ApiParam(name = "id", value = "院系ID", required = true) Long id,
+			@RequestBody @ApiParam(name = "status", value = "enable(启用)，disable(禁用)", required = true) Map<String, String> params) {
+		FacultyStatus status = FacultyStatus.valueOf(params.get("status"));
+		return facultyService.changeFacultyStatus(id, status);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
