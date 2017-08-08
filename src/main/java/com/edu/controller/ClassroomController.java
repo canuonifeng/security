@@ -45,27 +45,28 @@ public class ClassroomController extends BaseController<Classroom> {
 	@PreAuthorize("hasPermission('classroom', 'add')")
 	public Boolean batchAdd(@RequestBody ClassroomForm form) {
 
-		HashMap<String,Object> map=new HashMap<String,Object>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("majorId", form.getMajorId());
-		Long majorCount = majorService.countMajor(map);
+		Long classroomNum = classroomService.countClassroom(map);
 		Major major = majorService.getMajor(form.getMajorId());
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        DecimalFormat dfInt=new DecimalFormat("00");
-        
-		for (int i = 0, classroomNum = majorCount.intValue()+1; i < form.getNum(); i++) {
-			String num = dfInt.format(classroomNum);
-	        
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		String yearSuffix = String.valueOf(year).substring(String.valueOf(year).length() - 2);
+		DecimalFormat dfInt = new DecimalFormat("00");
+
+		for (int i = 0; i < form.getNum(); i++) {
+			String num = dfInt.format(classroomNum.intValue() + 1);
+
 			Classroom classroom = new Classroom();
 			classroom.setGrade(form.getGrade());
-			String name = form.getClassroomSuffix() + num + form.getClassroomPrefix();
+			String name = form.getClassroomPrefix() + num + form.getClassroomSuffix();
 			classroom.setName(name);
 			classroom.setMajor(major);
 
-			String code = year + major.getCode() + num;
+			String code = yearSuffix + major.getCode() + num;
 			classroom.setCode(code);
 			classroomService.createClassroom(classroom);
-			
+
 			classroomNum++;
 		}
 		return true;
@@ -98,10 +99,10 @@ public class ClassroomController extends BaseController<Classroom> {
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<Classroom> page = classroomService.searchClassroom(conditions, pageable);
 		List<ClassroomVo> classroomVos = new ArrayList<ClassroomVo>();
-		for (Classroom classroom: page.getContent()) {
+		for (Classroom classroom : page.getContent()) {
 			ClassroomVo classroomVo = new ClassroomVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(classroom, classroomVo);
-			HashMap<String,Object> map=new HashMap<String,Object>();
+			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("classroomId", classroom.getId());
 			Long memberNum = classroomService.countClassroomMember(map);
 			classroomVo.setStudentNum(memberNum.intValue());
