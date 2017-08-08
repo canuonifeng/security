@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.dao.MajorDao;
 import com.edu.biz.schoolroll.entity.Major;
+import com.edu.biz.schoolroll.entity.MajorStatus;
 import com.edu.biz.schoolroll.service.MajorService;
 import com.edu.biz.schoolroll.specification.MajorSpecification;
 import com.edu.core.exception.NotFoundException;
@@ -30,14 +31,24 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 
 	@Override
 	public Major updateMajor(Major major) {
-		Major savedmajor = majorDao.findOne(major.getId());
-		if (null == savedmajor) {
+		Major savedMajor = majorDao.findOne(major.getId());
+		if (null == savedMajor) {
 			throw new NotFoundException("专业不存在");
 		}
 		if(!this.checkCode(major.getCode(), major.getId())) {
 			throw new ServiceException("406","专业代码已被占用");
 		}
 		return majorDao.save(major);
+	}
+	
+	@Override
+	public Major changeMajorStatus(Long id, MajorStatus status) {
+		Major savedMajor = majorDao.findOne(id);
+		if (null == savedMajor) {
+			throw new NotFoundException("专业不存在");
+		}
+		savedMajor.setStatus(status);
+		return majorDao.save(savedMajor);
 	}
 
 	@Override

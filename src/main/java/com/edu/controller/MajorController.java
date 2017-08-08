@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.entity.Major;
+import com.edu.biz.schoolroll.entity.MajorStatus;
 import com.edu.biz.schoolroll.service.MajorService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/major")
@@ -44,6 +48,16 @@ public class MajorController extends BaseController<Major> {
 	public Major edit(@PathVariable Long id, @RequestBody Major major) {
 		major.setId(id);
 		return majorService.updateMajor(major);
+	}
+	
+	@RequestMapping(path = "/{id}/status", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('major', 'edit')")
+	@ApiOperation(value = "修改院系状态")
+	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
+	public Major changeMajorStatus(@PathVariable @ApiParam(name = "id", value = "专业ID", required = true) Long id,
+			@RequestBody @ApiParam(name = "status", value = "enable(启用)，disable(禁用)", required = true) Map<String, String> params) {
+		MajorStatus status = MajorStatus.valueOf(params.get("status"));
+		return majorService.changeMajorStatus(id, status);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
