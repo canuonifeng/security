@@ -12,17 +12,17 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.schoolroll.entity.Classroom;
-import com.edu.biz.schoolroll.entity.Member;
+import com.edu.biz.schoolroll.entity.ClassroomMember;
 
-public class MemberSpecification implements Specification<Member> {
+public class ClassroomMemberSpecification implements Specification<ClassroomMember> {
 	private Map<String, Object> conditions;
 	
-	public MemberSpecification(Map<String, Object> conditions) {
+	public ClassroomMemberSpecification(Map<String, Object> conditions) {
 		this.conditions = conditions;
 	}
 	
 	@Override
-	public Predicate toPredicate(Root<Member> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<ClassroomMember> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
 		if (null != conditions) {
 			if (conditions.containsKey("classroomId")) {

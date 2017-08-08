@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.dao.ClassroomDao;
+import com.edu.biz.schoolroll.dao.ClassroomMemberDao;
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.schoolroll.entity.ClassroomMember;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.specification.ClassroomSpecification;
 import com.edu.biz.schoolroll.specification.MajorSpecification;
+import com.edu.biz.schoolroll.specification.ClassroomMemberSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
@@ -22,6 +25,9 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	@Autowired
 	private ClassroomDao classroomDao;
 
+	@Autowired
+	private ClassroomMemberDao classroomMemberDao;
+	
 	@Override
 	public Classroom createClassroom(Classroom classroom) {
 		return classroomDao.save(classroom);
@@ -73,5 +79,33 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	@Override
 	public Long countClassroom(Map<String, Object> conditions) {
 		return classroomDao.count(new ClassroomSpecification(conditions));
+	}
+	
+	@Override
+	public ClassroomMember createClassroomMember(ClassroomMember classroomMember) {
+		return classroomMemberDao.save(classroomMember);
+	}
+
+	@Override
+	public ClassroomMember getClassroomMember(Long id) {
+		return classroomMemberDao.findOne(id);
+	}
+
+	@Override
+	public Boolean deleteClassroomMember(Long id) {
+		classroomMemberDao.delete(id);
+		return null == classroomMemberDao.findOne(id);
+	}
+
+	@Override
+	public ClassroomMember updateClassroomMember(ClassroomMember classroomMember) {
+		ClassroomMember savedMember = classroomMemberDao.findOne(classroomMember.getId());
+		BeanUtils.copyPropertiesWithCopyProperties(classroomMember, savedMember, "classroom", "student");
+		return classroomMemberDao.save(savedMember);
+	}
+
+	@Override
+	public Long countClassroomMember(Map<String, Object> conditions) {
+		return classroomMemberDao.count(new ClassroomMemberSpecification(conditions));
 	}
 }

@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name="classroom_member")
-public class Member extends BaseEntity {
+public class ClassroomMember extends BaseEntity {
 	
 	@ManyToOne(targetEntity = Major.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "classroom_id")

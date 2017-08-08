@@ -27,7 +27,6 @@ import com.edu.biz.schoolroll.entity.pojo.ClassroomForm;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.MajorService;
-import com.edu.biz.schoolroll.service.MemberService;
 import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
@@ -38,9 +37,6 @@ import io.swagger.annotations.Api;
 public class ClassroomController extends BaseController<Classroom> {
 	@Autowired
 	private ClassroomService classroomService;
-	
-	@Autowired
-	private MemberService memberService;
 
 	@Autowired
 	private MajorService majorService;
@@ -107,7 +103,7 @@ public class ClassroomController extends BaseController<Classroom> {
 			BeanUtils.copyPropertiesWithIgnoreProperties(classroom, classroomVo);
 			HashMap<String,Object> map=new HashMap<String,Object>();
 			map.put("classroomId", classroom.getId());
-			Long memberNum = memberService.countMember(map);
+			Long memberNum = classroomService.countClassroomMember(map);
 			classroomVo.setStudentNum(memberNum.intValue());
 			classroomVos.add(classroomVo);
 		}

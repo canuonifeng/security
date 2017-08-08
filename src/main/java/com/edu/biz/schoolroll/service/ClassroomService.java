@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.schoolroll.entity.ClassroomMember;
 
 public interface ClassroomService {
 	
@@ -24,4 +25,14 @@ public interface ClassroomService {
 	public Page<Classroom> searchClassroom(Map<String, Object> conditions, Pageable pageable);
 	
 	public Long countClassroom(Map<String, Object> conditions);
+	
+	public ClassroomMember createClassroomMember(ClassroomMember classroomMember);
+	
+	public ClassroomMember getClassroomMember(Long id);
+	
+	public Boolean deleteClassroomMember(Long id);
+	
+	public ClassroomMember updateClassroomMember(ClassroomMember classroomMember);
+	
+	public Long countClassroomMember(Map<String, Object> conditions);
 }
