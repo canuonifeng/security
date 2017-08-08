@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS `major` (
   `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
   `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='专业表';
+  UNIQUE KEY `major_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `classroom` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -17,5 +17,5 @@ CREATE TABLE IF NOT EXISTS `classroom` (
   `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
   `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='班级表';
+  UNIQUE KEY `classroom_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
