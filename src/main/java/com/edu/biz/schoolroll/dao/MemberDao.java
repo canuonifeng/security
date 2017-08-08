@@ -5,6 +5,4 @@ import com.edu.biz.schoolroll.entity.Member;
 
 public interface MemberDao extends BaseDao<Member> {
 	
-	public int countByClassroomId(Long classroomId);
-	
 }
