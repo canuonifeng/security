@@ -39,10 +39,10 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = "所属专业")
 	private Major major;
 	
-//	@ManyToOne(targetEntity = Classroom.class, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "classroom_id")
-//	@ApiModelProperty(value = "所属专业")
-//	private Classroom classroom;
+	@ManyToOne(targetEntity = Classroom.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "classroom_id")
+	@ApiModelProperty(value = "所属班级")
+	private Classroom classroom;
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
@@ -79,7 +79,11 @@ public class Student extends BaseEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+		
+	public String getGenderName() {
+		return gender.getName();
+	}
+	
 	public Gender getGender() {
 		return gender;
 	}
@@ -123,9 +127,17 @@ public class Student extends BaseEntity {
 	public StudentStatus getStatus() {
 		return status;
 	}
+	
+	public String getStatusName() {
+		return status.getName();
+	}
 
 	public void setStatus(StudentStatus status) {
 		this.status = status;
+	}
+	
+	public String getFromName() {
+		return from.getName();
 	}
 
 	public StudentFrom getFrom() {
