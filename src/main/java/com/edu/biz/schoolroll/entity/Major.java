@@ -1,6 +1,8 @@
 package com.edu.biz.schoolroll.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,6 +22,22 @@ public class Major extends BaseEntity {
 	@ApiModelProperty(value = "院系")
 	private Faculty faculty;
 	
+	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(value = " 状态")
+	private MajorStatus status = MajorStatus.enable;
+	
+	public MajorStatus getStatus() {
+		return status;
+	}
+	
+	public String getStatusName() {
+		return status.getName();
+	}
+
+	public void setStatus(MajorStatus status) {
+		this.status = status;
+	}
+
 	public String getCode() {
 		return code;
 	}

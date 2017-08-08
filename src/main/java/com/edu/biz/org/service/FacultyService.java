@@ -6,12 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.entity.FacultyStatus;
 
 public interface FacultyService {
 
 	public Faculty createFaculty(Faculty faculty);
 	
 	public Faculty updateFaculty(Faculty faculty);
+	
+	public Faculty changeFacultyStatus(Long id, FacultyStatus status);
 	
 	public Boolean deleteFaculty(Long id);
 	

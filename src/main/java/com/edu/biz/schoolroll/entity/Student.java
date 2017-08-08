@@ -116,13 +116,13 @@ public class Student extends BaseEntity {
 		this.major = major;
 	}
 
-//	public Classroom getClassroom() {
-//		return classroom;
-//	}
-//
-//	public void setClassroom(Classroom classroom) {
-//		this.classroom = classroom;
-//	}
+	public Classroom getClassroom() {
+		return classroom;
+	}
+
+	public void setClassroom(Classroom classroom) {
+		this.classroom = classroom;
+	}
 
 	public StudentStatus getStatus() {
 		return status;
