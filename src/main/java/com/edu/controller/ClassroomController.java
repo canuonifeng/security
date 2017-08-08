@@ -3,6 +3,7 @@ package com.edu.controller;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,14 +48,16 @@ public class ClassroomController extends BaseController<Classroom> {
 	@RequestMapping(path = "/batch", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classroom', 'add')")
 	public Boolean batchAdd(@RequestBody ClassroomForm form) {
-		
-		int mojorCount = classroomService.countByMajorId(form.getMajorId());
+
+		HashMap<String,Object> map=new HashMap<String,Object>();
+		map.put("majorId", form.getMajorId());
+		Long majorCount = majorService.countMajor(map);
 		Major major = majorService.getMajor(form.getMajorId());
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         DecimalFormat dfInt=new DecimalFormat("00");
         
-		for (int i = 0, classroomNum = mojorCount+1; i < form.getNum(); i++) {
+		for (int i = 0, classroomNum = majorCount.intValue()+1; i < form.getNum(); i++) {
 			String num = dfInt.format(classroomNum);
 	        
 			Classroom classroom = new Classroom();
@@ -102,8 +105,10 @@ public class ClassroomController extends BaseController<Classroom> {
 		for (Classroom classroom: page.getContent()) {
 			ClassroomVo classroomVo = new ClassroomVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(classroom, classroomVo);
-			int memberNum = memberService.countByClassroomId(classroom.getId());
-			classroomVo.setStudentNum(memberNum);
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("classroomId", classroom.getId());
+			Long memberNum = memberService.countMember(map);
+			classroomVo.setStudentNum(memberNum.intValue());
 			classroomVos.add(classroomVo);
 		}
 

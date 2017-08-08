@@ -1,5 +1,7 @@
 package com.edu.biz.schoolroll.service;
 
+import java.util.Map;
+
 import com.edu.biz.schoolroll.entity.Member;
 
 public interface MemberService {
@@ -12,5 +14,5 @@ public interface MemberService {
 	
 	public Member getMember(Long id);
 
-	public int countByClassroomId(Long classroomId);
+	public Long countMember(Map<String, Object> conditions);
 }

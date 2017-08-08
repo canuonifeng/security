@@ -12,6 +12,7 @@ import com.edu.biz.schoolroll.dao.ClassroomDao;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.specification.ClassroomSpecification;
+import com.edu.biz.schoolroll.specification.MajorSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
@@ -69,9 +70,8 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	public Classroom getClassroomByCode(String code) {
 		return classroomDao.getByCode(code);
 	}
-	
 	@Override
-	public int countByMajorId(Long majorId) {
-		return classroomDao.countByMajorId(majorId);
+	public Long countClassroom(Map<String, Object> conditions) {
+		return classroomDao.count(new ClassroomSpecification(conditions));
 	}
 }
