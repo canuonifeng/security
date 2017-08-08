@@ -17,10 +17,14 @@ public class Faculty extends BaseEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
-	private FacultyStatus status;
+	private FacultyStatus status = FacultyStatus.enable;
 	
 	public FacultyStatus getStatus() {
 		return status;
+	}
+	
+	public String getStatusName() {
+		return status.getName();
 	}
 
 	public void setStatus(FacultyStatus status) {

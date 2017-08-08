@@ -24,10 +24,14 @@ public class Major extends BaseEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
-	private MajorStatus status;
+	private MajorStatus status = MajorStatus.enable;
 	
 	public MajorStatus getStatus() {
 		return status;
+	}
+	
+	public String getStatusName() {
+		return status.getName();
 	}
 
 	public void setStatus(MajorStatus status) {
