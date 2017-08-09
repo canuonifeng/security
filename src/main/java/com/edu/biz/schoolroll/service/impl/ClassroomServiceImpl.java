@@ -20,7 +20,7 @@ import com.edu.core.util.BeanUtils;
 public class ClassroomServiceImpl extends BaseService implements ClassroomService {
 	@Autowired
 	private ClassroomDao classroomDao;
-
+	
 	@Override
 	public Classroom createClassroom(Classroom classroom) {
 		return classroomDao.save(classroom);
@@ -69,9 +69,8 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	public Classroom getClassroomByCode(String code) {
 		return classroomDao.getByCode(code);
 	}
-	
 	@Override
-	public int countByMajorId(Long majorId) {
-		return classroomDao.countByMajorId(majorId);
+	public Long countClassroom(Map<String, Object> conditions) {
+		return classroomDao.count(new ClassroomSpecification(conditions));
 	}
 }

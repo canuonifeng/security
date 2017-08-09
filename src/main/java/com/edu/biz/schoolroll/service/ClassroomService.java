@@ -23,5 +23,5 @@ public interface ClassroomService {
 	
 	public Page<Classroom> searchClassroom(Map<String, Object> conditions, Pageable pageable);
 	
-	public int countByMajorId(Long majorId);
+	public Long countClassroom(Map<String, Object> conditions);
 }
