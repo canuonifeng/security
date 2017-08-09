@@ -9,8 +9,8 @@ CREATE TABLE `user` (
   `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
   `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `username` (`username`)
+  UNIQUE KEY `user_email` (`email`),
+  UNIQUE KEY `user_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `role` ( 

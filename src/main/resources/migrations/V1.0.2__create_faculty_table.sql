@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS `faculty` (
   `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
   `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='院系表';
+  UNIQUE KEY `faculty_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

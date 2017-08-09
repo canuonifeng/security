@@ -11,6 +11,7 @@ import com.edu.biz.base.BaseService;
 import com.edu.biz.org.dao.FacultyDao;
 import com.edu.biz.org.dao.specification.FacultySpecification;
 import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.entity.FacultyStatus;
 import com.edu.biz.org.service.FacultyService;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
@@ -40,6 +41,16 @@ public class FacultyServiceImpl extends BaseService implements FacultyService {
 			throw new ServiceException("406","院系编码已被占用");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(faculty, savedFaculty, "name", "code");
+		return facultyDao.save(savedFaculty);
+	}
+	
+	@Override
+	public Faculty changeFacultyStatus(Long id, FacultyStatus status) {
+		Faculty savedFaculty = facultyDao.findOne(id);
+		if (null == savedFaculty) {
+			throw new NotFoundException("院系不存在");
+		}
+		savedFaculty.setStatus(status);
 		return facultyDao.save(savedFaculty);
 	}
 

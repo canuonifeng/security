@@ -6,12 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.schoolroll.entity.Major;
+import com.edu.biz.schoolroll.entity.MajorStatus;
 
 public interface MajorService {
 	
 	public Major createMajor(Major major);
 	
 	public Major updateMajor(Major major);
+	
+	public Major changeMajorStatus(Long id, MajorStatus status);
 	
 	public Boolean deleteMajor(Long id);
 	
