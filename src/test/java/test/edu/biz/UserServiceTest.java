@@ -3,6 +3,8 @@ package test.edu.biz;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.edu.biz.security.entity.Gender;
 import com.edu.biz.security.entity.User;
@@ -13,6 +15,9 @@ public class UserServiceTest extends BaseServiceTest {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	private User initUser() {
 		User user = new User();
@@ -101,9 +106,17 @@ public class UserServiceTest extends BaseServiceTest {
 		Assert.assertTrue(userService.checkUserName("testuser001", null));
 	}
 	
+	@Test
 	public void testGetUser(){
 		User initUser = initUser();
 		User user = userService.getUserById(initUser.getId());
 		Assert.assertEquals(initUser,user);
+	}
+	
+	@Test
+	public void testLoadUserByUsername() {
+		initUser();
+		UserDetails user =  userDetailsService.loadUserByUsername("testuser001");
+		Assert.assertEquals("testuser001", user.getUsername());
 	}
 }
