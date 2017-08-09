@@ -168,7 +168,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		this.filterOrg(user);
 		this.filterFaculty(user);
 		this.filterRole(user);
-		User savedUser = userDao.findOne(user.getId());
+		User savedUser = this.getUserById(user.getId());//userDao.findOne(user.getId());
 		
 		if (null == savedUser) {
 			throw new NotFoundException("用户不存在");
