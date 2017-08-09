@@ -27,6 +27,7 @@ import com.edu.biz.schoolroll.entity.pojo.ClassroomForm;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.MajorService;
+import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
@@ -40,6 +41,9 @@ public class ClassroomController extends BaseController<Classroom> {
 
 	@Autowired
 	private MajorService majorService;
+	
+	@Autowired
+	private StudentService studentService;
 
 	@RequestMapping(path = "/batch", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classroom', 'add')")
@@ -104,7 +108,7 @@ public class ClassroomController extends BaseController<Classroom> {
 			BeanUtils.copyPropertiesWithIgnoreProperties(classroom, classroomVo);
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("classroomId", classroom.getId());
-			Long memberNum = classroomService.countClassroomMember(map);
+			Long memberNum = studentService.countStudent(map);
 			classroomVo.setStudentNum(memberNum.intValue());
 			classroomVos.add(classroomVo);
 		}
