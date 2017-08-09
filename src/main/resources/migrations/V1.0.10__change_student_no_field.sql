@@ -1,0 +1,1 @@
+ALTER TABLE `student` CHANGE `no` `no` VARCHAR(64) NULL COMMENT '学号';
