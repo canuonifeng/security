@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 public class Student extends BaseEntity {
 	@ApiModelProperty(value = " 学号")
-	private int no;
+	private String no;
 	
 	@NotEmpty(message = "姓名不能为空")
 	@ApiModelProperty(value = " 姓名")
@@ -64,11 +64,11 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = "备注")
 	private String remark;
 
-	public int getNo() {
+	public String getNo() {
 		return no;
 	}
 
-	public void setNo(int no) {
+	public void setNo(String no) {
 		this.no = no;
 	}
 

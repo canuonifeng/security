@@ -84,6 +84,13 @@ public class FacultyController extends BaseController<Faculty> {
 		faculty.setId(id);
 		return facultyService.getFaculty(faculty.getId());
 	}
+	
+	@RequestMapping(path = "/findFacultys", method = RequestMethod.GET)
+	public List<Faculty> findFacultys(@RequestParam Map<String, Object> conditions) {
+		List<Faculty> list = facultyService.findFacultys(conditions);
+		
+		return list;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('faculty', 'get')")

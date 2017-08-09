@@ -1,5 +1,6 @@
 package com.edu.biz.schoolroll.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,11 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 	@Override
 	public Major getMajor(Long id) {
 		return majorDao.findOne(id);
+	}
+	
+	@Override
+	public List<Major> findMajors(Map<String, Object> conditions) {
+		return majorDao.findAll(new MajorSpecification(conditions));
 	}
 
 	@Override
