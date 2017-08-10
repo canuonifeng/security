@@ -5,23 +5,17 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.edu.biz.security.entity.Gender;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
-import com.edu.biz.security.service.UserService;
 import com.edu.core.ResponseWrapper;
 
 public class UserControllerTest extends BaseControllerTest {
-
-	@Autowired
-	private UserService userService;
 	
 	@Test
 	public void testAddUser() {
@@ -34,16 +28,13 @@ public class UserControllerTest extends BaseControllerTest {
 		user.setPhone("1999999999");
 		user.setGender(Gender.female);
 		user.setStatus(UserStatus.enable);
+		
+		HttpHeaders headers = makeHttpHeaders();
+		HttpEntity<User> requestEntity = new HttpEntity<User>(user, headers);
 
-		// 拿到header信息
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("x-auth-token", authToken);
-		HttpEntity requestEntity = new HttpEntity(user, headers);
-
-		ResponseWrapper savedUser = restTemplate.postForObject("/api/user", requestEntity, ResponseWrapper.class);
+		ResponseWrapper<User> savedUser = restTemplate.postForObject("/api/user", requestEntity, ResponseWrapper.class);
 		if (savedUser.getBody()  instanceof Map) {
-			Map map = (Map) savedUser.getBody();
+			Map<?, ?> map = (Map<?, ?>) savedUser.getBody();
 			Assert.assertEquals(user.getEmail(), map.get("email").toString());
 		} else {
 			throw new RuntimeException();
@@ -52,15 +43,39 @@ public class UserControllerTest extends BaseControllerTest {
 
 	@Test
 	public void testGetUser() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.add("x-auth-token", authToken);
-		HttpEntity requestEntity = new HttpEntity(new HashMap(), headers);
+		HttpHeaders headers = makeHttpHeaders();
+		Map addUser = addUser("test001");
+		HttpEntity<HashMap> requestEntity = new HttpEntity<HashMap>(new HashMap(), headers);
 
-		ResponseEntity<ResponseWrapper<Map>> response = restTemplate.exchange("/api/user/1", HttpMethod.GET,
+		ResponseEntity<ResponseWrapper<Map>> response = restTemplate.exchange("/api/user/"+addUser.get("id"), HttpMethod.GET,
 				requestEntity, ResponseWrapper.class, new HashMap());
 		ResponseWrapper<Map> wrapperUser = response.getBody();
 		Map user = wrapperUser.getBody();
 		Assert.assertNotNull(user);
+	}
+	
+	private Map addUser(String username)
+	{
+		User user = new User();
+		user.setEmail(username+"@test.com");
+		user.setPassword("test");
+		user.setNickname(username);
+		user.setName(username);
+		user.setUsername(username);
+		user.setPhone("13212345678");
+		user.setGender(Gender.female);
+		user.setStatus(UserStatus.enable);
+		
+		HttpHeaders headers = makeHttpHeaders();
+		HttpEntity<User> requestEntity = new HttpEntity<User>(user, headers);
+
+		ResponseWrapper<User> savedUser = restTemplate.postForObject("/api/user", requestEntity, ResponseWrapper.class);
+		if (savedUser.getBody()  instanceof Map) {
+			Map<?, ?> map = (Map<?, ?>) savedUser.getBody();
+			Assert.assertEquals(user.getEmail(), map.get("email").toString());
+			return map;
+		} else {
+			throw new RuntimeException();
+		} 
 	}
 }

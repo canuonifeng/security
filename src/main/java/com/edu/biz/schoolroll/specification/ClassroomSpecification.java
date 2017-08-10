@@ -24,7 +24,20 @@ public class ClassroomSpecification implements Specification<Classroom> {
 	@Override
 	public Predicate toPredicate(Root<Classroom> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
-
+		if (null != conditions) {
+			if (conditions.containsKey("name")) {
+				list.add(cb.like(root.get("name"), "%"+this.conditions.get("name")+"%"));
+			}
+			if (conditions.containsKey("grade")) {
+				list.add(cb.equal(root.get("grade").as(Long.class), this.conditions.get("grade")));
+			}
+			if (conditions.containsKey("majorId")) {
+				list.add(cb.equal(root.get("major").get("id").as(Long.class), this.conditions.get("majorId")));
+			}
+			if (conditions.containsKey("facultyId")) {
+				list.add(cb.equal(root.get("major").get("faculty").get("id"), this.conditions.get("facultyId")));
+			}
+		}
 		Predicate[] p = new Predicate[list.size()];
 		return cb.and(list.toArray(p));
 	}
