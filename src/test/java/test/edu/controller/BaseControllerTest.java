@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.edu.Application;
-import com.edu.biz.security.entity.Gender;
+import com.edu.biz.dict.Gender;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
