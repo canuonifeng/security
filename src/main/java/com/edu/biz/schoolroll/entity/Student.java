@@ -11,6 +11,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.dict.Gender;
+import com.edu.biz.dict.IDType;
+import com.edu.biz.dict.Nation;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -57,10 +59,53 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = "籍贯")
 	private String native_place;
 	
-	@NotEmpty(message = "身份证号不能为空")
+	@NotEmpty(message = "证件号码不能为空")
 	@ApiModelProperty(value = "身份证号")
 	private String idcard;
+
+	@ApiModelProperty(value = "出生日期")
+	private String birthday;
 	
+	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(value = "民族")
+	private Nation nation;
+	
+	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(value = "证件类型")
+	private IDType idtype;
+	
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+	
+	public String getNationName() {
+		return nation.getName();
+	}
+
+	public Nation getNation() {
+		return nation;
+	}
+
+	public void setNation(Nation nation) {
+		this.nation = nation;
+	}
+	
+	public String getIdtypeName() {
+		return idtype.getName();
+	}
+
+	public IDType getIdtype() {
+		return idtype;
+	}
+
+	public void setIdtype(IDType idtype) {
+		this.idtype = idtype;
+	}
+
 	@ApiModelProperty(value = "备注")
 	private String remark;
 
