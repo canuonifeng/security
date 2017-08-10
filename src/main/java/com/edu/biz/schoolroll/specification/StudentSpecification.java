@@ -24,7 +24,7 @@ public class StudentSpecification implements Specification<Student> {
 	@Override
 	public Predicate toPredicate(Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
-
+		
 		if (null != conditions) {
 			if (conditions.containsKey("name")) {
 				list.add(cb.like(root.get("name"), "%"+this.conditions.get("name")+"%"));
@@ -32,8 +32,8 @@ public class StudentSpecification implements Specification<Student> {
 			if (conditions.containsKey("no")) {
 				list.add(cb.equal(root.get("no"), this.conditions.get("no")));
 			}
-			if (conditions.containsKey("yearMonth")) {
-				list.add(cb.equal(root.get("year_month"), this.conditions.get("yearMonth")));
+			if (this.conditions.get("hasNo").equals("0")) {
+				list.add(cb.isNull(root.get("no")));
 			}
 			if (conditions.containsKey("yearMonth")) {
 				list.add(cb.equal(root.get("year_month"), this.conditions.get("yearMonth")));
@@ -44,14 +44,14 @@ public class StudentSpecification implements Specification<Student> {
 			if (conditions.containsKey("majorId")) {
 				list.add(cb.equal(root.get("major").get("id"), this.conditions.get("majorId")));
 			}
+			if (conditions.containsKey("studentStatus")) {
+				list.add(cb.equal(root.get("status").as(String.class), this.conditions.get("studentStatus")));
+			}
 			if (conditions.containsKey("classroomId")) {
 				list.add(cb.equal(root.get("classroom").get("id"), this.conditions.get("classroomId")));
 			}
-			if (conditions.containsKey("status")) {
-				list.add(cb.equal(root.get("status"), this.conditions.get("status")));
-			}
-			if (conditions.containsKey("from")) {
-				list.add(cb.equal(root.get("from"), this.conditions.get("from")));
+			if (conditions.containsKey("studentFrom")) {
+				list.add(cb.equal(root.get("from").as(String.class), this.conditions.get("studentFrom")));
 			}
 		}
 

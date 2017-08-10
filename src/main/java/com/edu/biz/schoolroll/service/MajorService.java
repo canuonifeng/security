@@ -1,5 +1,6 @@
 package com.edu.biz.schoolroll.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -25,6 +26,8 @@ public interface MajorService {
 	public Major getMajorByCode(String code);
 	
 	public Page<Major> searchMajor(Map<String, Object> conditions, Pageable pageable);
+	
+	public List<Major> findMajors(Map<String, Object> conditions);
 	
 	public Long countMajor(Map<String, Object> conditions);
 }

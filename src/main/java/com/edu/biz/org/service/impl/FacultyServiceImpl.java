@@ -1,5 +1,6 @@
 package com.edu.biz.org.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,11 @@ public class FacultyServiceImpl extends BaseService implements FacultyService {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public List<Faculty> findFacultys(Map<String, Object> conditions) {
+		return facultyDao.findAll(new FacultySpecification(conditions));
 	}
 
 	@Override
