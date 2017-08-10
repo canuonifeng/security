@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,13 @@ public class MajorController extends BaseController<Major> {
 		Major major = new Major();
 		major.setId(id);
 		return majorService.getMajor(major.getId());
+	}
+	
+	@RequestMapping(path = "/findMajors", method = RequestMethod.GET)
+	public List<Major> findMajors(@RequestParam Map<String, Object> conditions) {
+		List<Major> list = majorService.findMajors(conditions);
+		
+		return list;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

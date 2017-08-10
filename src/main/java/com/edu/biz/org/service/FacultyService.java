@@ -1,5 +1,6 @@
 package com.edu.biz.org.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ public interface FacultyService {
 	public Boolean checkCode(String code,Long facultyId);
 	
 	public Faculty getFacultyByCode(String code);
+	
+	public List<Faculty> findFacultys(Map<String, Object> conditions);
 	
 	public Page<Faculty> searchFaculty(Map<String, Object> conditions, Pageable pageable);
 }

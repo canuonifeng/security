@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 public class Student extends BaseEntity {
 	@ApiModelProperty(value = " 学号")
-	private int no;
+	private String no;
 	
 	@NotEmpty(message = "姓名不能为空")
 	@ApiModelProperty(value = " 姓名")
@@ -41,7 +41,7 @@ public class Student extends BaseEntity {
 	
 	@ManyToOne(targetEntity = Classroom.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "classroom_id")
-	@ApiModelProperty(value = "所属专业")
+	@ApiModelProperty(value = "所属班级")
 	private Classroom classroom;
 	
 	@Enumerated(EnumType.STRING)
@@ -64,11 +64,11 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = "备注")
 	private String remark;
 
-	public int getNo() {
+	public String getNo() {
 		return no;
 	}
 
-	public void setNo(int no) {
+	public void setNo(String no) {
 		this.no = no;
 	}
 
@@ -79,7 +79,11 @@ public class Student extends BaseEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+		
+	public String getGenderName() {
+		return gender.getName();
+	}
+	
 	public Gender getGender() {
 		return gender;
 	}
@@ -123,9 +127,17 @@ public class Student extends BaseEntity {
 	public StudentStatus getStatus() {
 		return status;
 	}
+	
+	public String getStatusName() {
+		return status.getName();
+	}
 
 	public void setStatus(StudentStatus status) {
 		this.status = status;
+	}
+	
+	public String getFromName() {
+		return from.getName();
 	}
 
 	public StudentFrom getFrom() {
