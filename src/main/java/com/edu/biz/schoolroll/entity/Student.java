@@ -59,7 +59,7 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = "籍贯")
 	private String native_place;
 	
-	@NotEmpty(message = "身份证号不能为空")
+	@NotEmpty(message = "证件号码不能为空")
 	@ApiModelProperty(value = "身份证号")
 	private String idcard;
 
