@@ -1,5 +1,6 @@
 package com.edu.biz.schoolroll.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import com.edu.core.util.BeanUtils;
 public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	private StudentDao studentDao;
-	
+
 	@Override
 	public Student createStudent(Student student) {
 		return studentDao.save(student);
@@ -32,7 +33,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			throw new NotFoundException("该学生不存在");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent);
-		
+
 		return studentDao.save(student);
 	}
 
@@ -57,4 +58,8 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		return studentDao.count(new StudentSpecification(conditions));
 	}
 
+	@Override
+	public List<Student> findStudents(Map<String, Object> conditions) {
+		return studentDao.findAll(new StudentSpecification(conditions));
+	}
 }
