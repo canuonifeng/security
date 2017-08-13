@@ -60,6 +60,13 @@ public class UserController extends BaseController<User> {
 		return userService.searchUsers(conditions, pageable);
 	}
 
+	@RequestMapping(path = "remove/{userId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('user', 'edit')")
+	public User removeOrgUser(@PathVariable Long userId, @Validated( { Update.class }) @RequestBody User user) {
+		user.setId(userId);
+		return userService.updateUser(user);
+	}
+	
 	@RequestMapping(path = "/check_username", method = RequestMethod.GET)
 	@ApiOperation(value = "检查用户名是否重复", notes = "根据用户名检查是否重复")
 	public Boolean checkUserName(String userName, Long userId) {
