@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.security.entity.Role;
@@ -56,7 +57,7 @@ public class RoleController extends BaseController<Role> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('role', 'get')")
-	public Page<Role> pager(Map<String, Object> conditions,
+	public Page<Role> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return roleService.searchRoles(conditions, pageable);
 	}
