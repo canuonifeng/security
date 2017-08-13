@@ -53,7 +53,7 @@ public class Student extends BaseEntity {
 	@NotEmpty(message = "学生来源不能为空")
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 学生来源")
-	private StudentFrom from;
+	private StudentFrom origin;
 	
 	@NotEmpty(message = "籍贯不能为空")
 	@ApiModelProperty(value = "籍贯")
@@ -181,16 +181,16 @@ public class Student extends BaseEntity {
 		this.status = status;
 	}
 	
-	public String getFromName() {
-		return from.getName();
+	public String getOriginName() {
+		return origin.getName();
 	}
 
-	public StudentFrom getFrom() {
-		return from;
+	public StudentFrom getOrigin() {
+		return origin;
 	}
 
-	public void setFrom(StudentFrom from) {
-		this.from = from;
+	public void setOrigin(StudentFrom origin) {
+		this.origin = origin;
 	}
 
 	public String getNative_place() {
