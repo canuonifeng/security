@@ -22,6 +22,7 @@ import com.edu.biz.org.service.OrgService;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.service.UserService;
 import com.edu.biz.validgroup.Update;
+import com.edu.biz.viewgroup.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
@@ -40,12 +41,14 @@ public class OrgController extends BaseController<Organization> {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('org', 'add')")
+	@JsonView(JsonViews.NoCascade.class)
 	public Organization add(@RequestBody Organization org) {
 		return orgService.createOrg(org);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('org', 'edit')")
+	@JsonView(JsonViews.NoCascade.class)
 	public Organization edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody Organization org) {
 		org.setId(id);
 		return orgService.updateOrg(org);

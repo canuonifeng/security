@@ -55,7 +55,6 @@ public class OrgServiceImpl implements OrgService {
 		BeanUtils.copyPropertiesWithCopyProperties(org, savedOrg, "name", "code", "faculty", "parent");
 		org = orgDao.save(org);
 		org = this.updateOrgCode(org, org.getParent());
-		org.setParent(null);
 		return org;
 	}
 
