@@ -71,7 +71,7 @@ public class StudentController extends BaseController<Student> {
 			 Student student = studentService.getStudent(id);
 			 studentService.joinClassroom(student, classroom);
 		}
-		return null;
+		return true;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
