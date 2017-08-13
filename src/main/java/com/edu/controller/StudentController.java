@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.validgroup.Update;
 
@@ -29,7 +32,9 @@ import io.swagger.annotations.ApiParam;
 public class StudentController extends BaseController<Student> {
 	@Autowired
 	private StudentService studentService;
-	
+	@Autowired
+	private ClassroomService classroomService;
+
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('student', 'add')")
 	public Student add(@RequestBody Student student) {
@@ -38,7 +43,7 @@ public class StudentController extends BaseController<Student> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('student', 'edit')")
-	public Student edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody Student student) {
+	public Student edit(@PathVariable Long id, @Validated({ Update.class }) @RequestBody Student student) {
 		student.setId(id);
 		return studentService.updateStudent(student);
 	}
@@ -56,11 +61,30 @@ public class StudentController extends BaseController<Student> {
 		student.setId(id);
 		return studentService.getStudent(student.getId());
 	}
-	
+
+	@RequestMapping(path = "/join/{classroomId}/classroom", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('student', 'put')")
+	public Boolean joinClassroom(@PathVariable Long classroomId, @RequestBody Map<String, String> studentIds) {
+		Classroom classroom = classroomService.getClassroom(classroomId);
+		for (String key : studentIds.keySet()) {
+			 Long id = Long.parseLong(studentIds.get(key));
+			 Student student = studentService.getStudent(id);
+			 studentService.joinClassroom(student, classroom);
+		}
+		return true;
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
 	public Page<Student> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return studentService.searchStudents(conditions, pageable);
+	}
+
+	@RequestMapping(path = "/findStudents", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('student', 'get')")
+	public List<Student> findStudents(@RequestParam Map<String, Object> conditions) {
+		List<Student> list = studentService.findStudents(conditions);
+		return list;
 	}
 }

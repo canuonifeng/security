@@ -32,11 +32,14 @@ public class StudentSpecification implements Specification<Student> {
 			if (conditions.containsKey("no")) {
 				list.add(cb.equal(root.get("no"), this.conditions.get("no")));
 			}
-			if (conditions.containsKey("hasNo") && this.conditions.get("hasNo").equals("0")) {
+			if (this.conditions.containsKey("hasNo") && this.conditions.get("hasNo").equals("0")) {
 				list.add(cb.isNull(root.get("no")));
 			}
+			if (this.conditions.containsKey("hasClassroomId") && this.conditions.get("hasClassroomId").equals("0")) {
+				list.add(cb.isNull(root.get("classroom").get("id")));
+			}
 			if (conditions.containsKey("yearMonth")) {
-				list.add(cb.equal(root.get("year_month"), this.conditions.get("yearMonth")));
+				list.add(cb.equal(root.get("admission_time"), this.conditions.get("yearMonth")));
 			}
 			if (conditions.containsKey("facultyId")) {
 				list.add(cb.equal(root.get("major").get("faculty").get("id"), this.conditions.get("facultyId")));
@@ -51,7 +54,7 @@ public class StudentSpecification implements Specification<Student> {
 				list.add(cb.equal(root.get("classroom").get("id"), this.conditions.get("classroomId")));
 			}
 			if (conditions.containsKey("studentFrom")) {
-				list.add(cb.equal(root.get("from").as(String.class), this.conditions.get("studentFrom")));
+				list.add(cb.equal(root.get("origin").as(String.class), this.conditions.get("studentFrom")));
 			}
 		}
 

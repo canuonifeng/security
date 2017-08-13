@@ -25,13 +25,12 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = " 姓名")
 	private String name;
 	
-	@NotEmpty(message = "姓名不能为空")
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 性别")
-	private Gender gender;
+	private Gender gender = Gender.secret;
 	
 	@ApiModelProperty(value="入学年月")
-	private String year_month;
+	private String admission_time;
 	
 	@ApiModelProperty(value="年级")
 	private String grade;
@@ -50,10 +49,9 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = " 状态")
 	private StudentStatus status;
 	
-	@NotEmpty(message = "学生来源不能为空")
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 学生来源")
-	private StudentFrom origin;
+	private StudentOrigin origin = StudentOrigin.unified;
 	
 	@NotEmpty(message = "籍贯不能为空")
 	@ApiModelProperty(value = "籍贯")
@@ -68,11 +66,11 @@ public class Student extends BaseEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = "民族")
-	private Nation nation;
+	private Nation nation = Nation.HAN;
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = "证件类型")
-	private IDType idtype;
+	private IDType idtype = IDType.idcard;
 	
 	public String getBirthday() {
 		return birthday;
@@ -137,14 +135,6 @@ public class Student extends BaseEntity {
 		this.gender = gender;
 	}
 
-	public String getYear_month() {
-		return year_month;
-	}
-
-	public void setYear_month(String year_month) {
-		this.year_month = year_month;
-	}
-
 	public String getGrade() {
 		return grade;
 	}
@@ -185,11 +175,11 @@ public class Student extends BaseEntity {
 		return origin.getName();
 	}
 
-	public StudentFrom getOrigin() {
+	public StudentOrigin getOrigin() {
 		return origin;
 	}
 
-	public void setOrigin(StudentFrom origin) {
+	public void setOrigin(StudentOrigin origin) {
 		this.origin = origin;
 	}
 
@@ -215,5 +205,13 @@ public class Student extends BaseEntity {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getAdmission_time() {
+		return admission_time;
+	}
+
+	public void setAdmission_time(String admission_time) {
+		this.admission_time = admission_time;
 	}
 }
