@@ -23,10 +23,9 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = " 姓名")
 	private String name;
 	
-	@NotEmpty(message = "姓名不能为空")
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 性别")
-	private Gender gender;
+	private Gender gender = Gender.secret;
 	
 	@ApiModelProperty(value="入学年月")
 	private String year_month;
@@ -48,10 +47,9 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = " 状态")
 	private StudentStatus status;
 	
-	@NotEmpty(message = "学生来源不能为空")
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 学生来源")
-	private StudentFrom from;
+	private StudentFrom from = StudentFrom.unified;
 	
 	@NotEmpty(message = "籍贯不能为空")
 	@ApiModelProperty(value = "籍贯")

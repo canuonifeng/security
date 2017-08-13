@@ -32,8 +32,11 @@ public class StudentSpecification implements Specification<Student> {
 			if (conditions.containsKey("no")) {
 				list.add(cb.equal(root.get("no"), this.conditions.get("no")));
 			}
-			if (this.conditions.get("hasNo").equals("0")) {
+			if (this.conditions.containsKey("hasNo") && this.conditions.get("hasNo").equals("0")) {
 				list.add(cb.isNull(root.get("no")));
+			}
+			if (this.conditions.containsKey("hasClassroomId") && this.conditions.get("hasClassroomId").equals("0")) {
+				list.add(cb.isNull(root.get("classroom").get("id")));
 			}
 			if (conditions.containsKey("yearMonth")) {
 				list.add(cb.equal(root.get("year_month"), this.conditions.get("yearMonth")));

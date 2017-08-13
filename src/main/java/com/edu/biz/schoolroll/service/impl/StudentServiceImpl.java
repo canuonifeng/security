@@ -10,17 +10,21 @@ import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.dao.StudentDao;
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.schoolroll.specification.StudentSpecification;
 import com.edu.core.exception.NotFoundException;
+import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
 
 @Service
 public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	private StudentDao studentDao;
-
+	@Autowired
+	private ClassroomService classroomService;
 	@Override
 	public Student createStudent(Student student) {
 		return studentDao.save(student);
@@ -32,7 +36,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (null == saveStudent) {
 			throw new NotFoundException("该学生不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent);
+		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent, "classroom");
 
 		return studentDao.save(student);
 	}
@@ -61,5 +65,37 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Override
 	public List<Student> findStudents(Map<String, Object> conditions) {
 		return studentDao.findAll(new StudentSpecification(conditions));
+	}
+	
+	@Override
+	public Boolean joinClassroom(Student student, Classroom classroom) {
+		Boolean result = this.canJoinClassroom(student, classroom);
+		if(!result) {
+			throw new ServiceException("403", "该学生不能加入该班级");
+		}
+		student.setClassroom(classroom);
+		updateStudent(student);
+		return true;
+	}
+	
+	private Boolean canJoinClassroom(Student student, Classroom classroom) {
+		if(student == null) {
+			return false;
+		}
+		if(classroom == null) {
+			return false;
+		}
+		if(!student.getGrade().equals(classroom.getGrade())) {
+			return false;
+		}
+		logger.debug(student.getMajor().getId().toString()+" == "+student.getMajor().getName()+" == "+classroom.getMajor().getName());
+		logger.debug(student.getMajor().getClass().toString()+"  "+classroom.getMajor().getClass().toString());
+		if(!student.getMajor().equals(classroom.getMajor())) {
+			return false;
+		}
+		if(student.getClassroom() == null) {
+			return true;
+		}
+		return false;
 	}
 }
