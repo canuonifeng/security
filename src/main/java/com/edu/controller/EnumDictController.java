@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.dict.Gender;
 import com.edu.biz.schoolroll.entity.StudentOrigin;
 import com.edu.biz.schoolroll.entity.StudentStatus;
 
@@ -37,6 +38,18 @@ public class EnumDictController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("id", studentStatus.name());
 			map.put("name" , studentStatus.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	@RequestMapping(path = "/gender", method = RequestMethod.GET)
+	public List<Object> getGender() {
+		ArrayList<Object> list=new ArrayList<Object>();
+		for(Gender gender : Gender.values()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", gender.name());
+			map.put("name" , gender.getName());
 			list.add(map);
 		}
 		return list;
