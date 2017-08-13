@@ -60,7 +60,7 @@ public class UserController extends BaseController<User> {
 		return userService.searchUsers(conditions, pageable);
 	}
 
-	@RequestMapping(path = "remove/{userId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "{userId}/remove_org", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
 	public User removeOrgUser(@PathVariable Long userId, @Validated( { Update.class }) @RequestBody User user) {
 		user.setId(userId);
