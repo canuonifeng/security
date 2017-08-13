@@ -30,7 +30,7 @@ public class Student extends BaseEntity {
 	private Gender gender = Gender.secret;
 	
 	@ApiModelProperty(value="入学年月")
-	private String year_month;
+	private String admission_time;
 	
 	@ApiModelProperty(value="年级")
 	private String grade;
@@ -51,7 +51,7 @@ public class Student extends BaseEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 学生来源")
-	private StudentFrom from = StudentFrom.unified;
+	private StudentOrigin origin = StudentOrigin.unified;
 	
 	@NotEmpty(message = "籍贯不能为空")
 	@ApiModelProperty(value = "籍贯")
@@ -66,11 +66,11 @@ public class Student extends BaseEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = "民族")
-	private Nation nation;
+	private Nation nation = Nation.HAN;
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = "证件类型")
-	private IDType idtype;
+	private IDType idtype = IDType.idcard;
 	
 	public String getBirthday() {
 		return birthday;
@@ -135,14 +135,6 @@ public class Student extends BaseEntity {
 		this.gender = gender;
 	}
 
-	public String getYear_month() {
-		return year_month;
-	}
-
-	public void setYear_month(String year_month) {
-		this.year_month = year_month;
-	}
-
 	public String getGrade() {
 		return grade;
 	}
@@ -179,16 +171,16 @@ public class Student extends BaseEntity {
 		this.status = status;
 	}
 	
-	public String getFromName() {
-		return from.getName();
+	public String getOriginName() {
+		return origin.getName();
 	}
 
-	public StudentFrom getFrom() {
-		return from;
+	public StudentOrigin getOrigin() {
+		return origin;
 	}
 
-	public void setFrom(StudentFrom from) {
-		this.from = from;
+	public void setOrigin(StudentOrigin origin) {
+		this.origin = origin;
 	}
 
 	public String getNative_place() {
@@ -213,5 +205,13 @@ public class Student extends BaseEntity {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getAdmission_time() {
+		return admission_time;
+	}
+
+	public void setAdmission_time(String admission_time) {
+		this.admission_time = admission_time;
 	}
 }

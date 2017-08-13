@@ -1,10 +1,10 @@
 package com.edu.biz.schoolroll.entity;
 
-public enum StudentFrom {
+public enum StudentOrigin {
 	alone("单招"), unified("统考"),selftaught("自考");
 	
 	private String name;
-    private StudentFrom(String name){
+    private StudentOrigin(String name){
         this.name = name;
     }
 

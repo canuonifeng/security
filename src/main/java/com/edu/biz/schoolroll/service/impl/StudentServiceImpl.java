@@ -23,8 +23,6 @@ import com.edu.core.util.BeanUtils;
 public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	private StudentDao studentDao;
-	@Autowired
-	private ClassroomService classroomService;
 	@Override
 	public Student createStudent(Student student) {
 		return studentDao.save(student);
@@ -88,8 +86,6 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if(!student.getGrade().equals(classroom.getGrade())) {
 			return false;
 		}
-		logger.debug(student.getMajor().getId().toString()+" == "+student.getMajor().getName()+" == "+classroom.getMajor().getName());
-		logger.debug(student.getMajor().getClass().toString()+"  "+classroom.getMajor().getClass().toString());
 		if(!student.getMajor().equals(classroom.getMajor())) {
 			return false;
 		}
