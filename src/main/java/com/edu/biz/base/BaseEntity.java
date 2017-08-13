@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 abstract public class BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -30,17 +30,17 @@ abstract public class BaseEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Basic(optional = false)
-	@ApiModelProperty(value="主键")
+	@ApiModelProperty(value = "主键")
 	private Long id;
 
 	@CreatedDate
 	@JsonProperty(access = Access.READ_ONLY)
-	@ApiModelProperty(value="创建时间", readOnly=true)
+	@ApiModelProperty(value = "创建时间", readOnly = true)
 	private Date createdTime;
 
 	@LastModifiedDate
 	@JsonProperty(access = Access.READ_ONLY)
-	@ApiModelProperty(value="更新时间", readOnly=true)
+	@ApiModelProperty(value = "更新时间", readOnly = true)
 	private Date updatedTime;
 
 	public Long getId() {
@@ -81,12 +81,18 @@ abstract public class BaseEntity implements Serializable {
 			return true;
 		if (object == null)
 			return false;
-		if (getClass() != object.getClass())
+		if (!(object instanceof BaseEntity)) {
 			return false;
-
+		}
+		if (!getClass().isAssignableFrom(object.getClass()) && !object.getClass().isAssignableFrom(getClass())) {
+			return false;
+		}
 		BaseEntity other = (BaseEntity) object;
-		if (this.getId() != other.getId() && (this.getId() == null || !this.id.equals(other.id))) {
+		if (other.getId() == null || getId() == null) {
 			return false;
+		}
+		if (other.getId().equals(getId())) {
+			return true;
 		}
 		return true;
 	}
