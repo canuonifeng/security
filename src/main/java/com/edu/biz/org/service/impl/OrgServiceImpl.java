@@ -36,7 +36,6 @@ public class OrgServiceImpl implements OrgService {
 		}
 		org= orgDao.save(org);
 		org = this.updateOrgCode(org, org.getParent());
-		org.setParent(null);
 		return org;
 	}
 
