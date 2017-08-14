@@ -35,7 +35,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (null == saveStudent) {
 			throw new NotFoundException("该学生不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent, "classroom", "no");
+		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent, "classroom");
 
 		return studentDao.save(student);
 	}
@@ -80,6 +80,17 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	@Override
 	public Student findByClassroomIdOrderByNoDesc(Long classroomId) {
 		return studentDao.findTopByClassroomIdOrderByNoDesc(classroomId);
+	}
+
+	@Override
+	public Student AssignStudentNum(Student student) {
+		Student saveStudent = studentDao.findOne(student.getId());
+		if (null == saveStudent) {
+			throw new NotFoundException("该学生不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent, "classroom", "no");
+
+		return studentDao.save(student);
 	}
 
 	private Boolean canJoinClassroom(Student student, Classroom classroom) {

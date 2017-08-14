@@ -28,4 +28,6 @@ public interface StudentService {
 	public Boolean joinClassroom(Student student, Classroom classroom);
 	
 	public Student findByClassroomIdOrderByNoDesc(Long classroomId);
+	
+	public Student AssignStudentNum(Student student);
 }

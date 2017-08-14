@@ -78,7 +78,7 @@ public class StudentController extends BaseController<Student> {
 				String studentNo = classroom.getCode()+dfInt.format(no + 1);
 				student.setNo(studentNo);
 				student.setClassroom(classroom);
-				studentService.updateStudent(student);
+				studentService.AssignStudentNum(student);
 				no++;
 			}
 		} else {
