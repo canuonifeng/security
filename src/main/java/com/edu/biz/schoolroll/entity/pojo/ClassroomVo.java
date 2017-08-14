@@ -4,32 +4,27 @@ import com.edu.biz.schoolroll.entity.Classroom;
 
 public class ClassroomVo extends Classroom {
 
-	private int studentNum;
-	private int femaleNum;
-	private int maleNum;
-
-	public int getStudentNum() {
+	private Long studentNum;
+	private Long femaleNum;
+	private Long maleNum;
+	public Long getStudentNum() {
 		return studentNum;
 	}
-
-	public void setStudentNum(int studentNum) {
+	public void setStudentNum(Long studentNum) {
 		this.studentNum = studentNum;
 	}
-
-	public int getFemaleNum() {
+	public Long getFemaleNum() {
 		return femaleNum;
 	}
-
-	public void setFemaleNum(int femaleNum) {
+	public void setFemaleNum(Long femaleNum) {
 		this.femaleNum = femaleNum;
 	}
-
-	public int getMaleNum() {
+	public Long getMaleNum() {
 		return maleNum;
 	}
-
-	public void setMaleNum(int maleNum) {
+	public void setMaleNum(Long maleNum) {
 		this.maleNum = maleNum;
 	}
+
 
 }

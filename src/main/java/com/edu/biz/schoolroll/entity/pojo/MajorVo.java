@@ -3,49 +3,50 @@ package com.edu.biz.schoolroll.entity.pojo;
 import com.edu.biz.schoolroll.entity.Major;
 
 public class MajorVo extends Major {
-	private int studentNum;
-	private int femaleNum;
-	private int maleNum;
-	private int unAssginFemalNum;
-	private int unAssginMaleNum;
+	private Long studentNum;
+	private Long femaleNum;
+	private Long maleNum;
+	private Long unAssginFemalNum;
+	private Long unAssginMaleNum;
 
-	public int getStudentNum() {
+	public Long getStudentNum() {
 		return studentNum;
 	}
 
-	public void setStudentNum(int studentNum) {
+	public void setStudentNum(Long studentNum) {
 		this.studentNum = studentNum;
 	}
 
-	public int getFemaleNum() {
+	public Long getFemaleNum() {
 		return femaleNum;
 	}
 
-	public void setFemaleNum(int femaleNum) {
+	public void setFemaleNum(Long femaleNum) {
 		this.femaleNum = femaleNum;
 	}
 
-	public int getMaleNum() {
+	public Long getMaleNum() {
 		return maleNum;
 	}
 
-	public void setMaleNum(int maleNum) {
+	public void setMaleNum(Long maleNum) {
 		this.maleNum = maleNum;
 	}
 
-	public int getUnAssginFemalNum() {
+	public Long getUnAssginFemalNum() {
 		return unAssginFemalNum;
 	}
 
-	public void setUnAssginFemalNum(int unAssginFemalNum) {
+	public void setUnAssginFemalNum(Long unAssginFemalNum) {
 		this.unAssginFemalNum = unAssginFemalNum;
 	}
 
-	public int getUnAssginMaleNum() {
+	public Long getUnAssginMaleNum() {
 		return unAssginMaleNum;
 	}
 
-	public void setUnAssginMaleNum(int unAssginMaleNum) {
+	public void setUnAssginMaleNum(Long unAssginMaleNum) {
 		this.unAssginMaleNum = unAssginMaleNum;
 	}
+
 }
