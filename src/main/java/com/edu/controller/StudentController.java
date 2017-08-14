@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -66,11 +67,46 @@ public class StudentController extends BaseController<Student> {
 	@PreAuthorize("hasPermission('student', 'put')")
 	public Boolean joinClassroom(@PathVariable Long classroomId, @RequestBody Map<String, String> studentIds) {
 		Classroom classroom = classroomService.getClassroom(classroomId);
-		for (String key : studentIds.keySet()) {
-			 Long id = Long.parseLong(studentIds.get(key));
-			 Student student = studentService.getStudent(id);
-			 studentService.joinClassroom(student, classroom);
+		if(classroom.getIsAssignNum() == 1) {
+			Student lastStudent = studentService.findByClassroomIdOrderByNoDesc(classroom.getId());
+			String lastNo = lastStudent.getNo().substring(lastStudent.getNo().length()-2);
+			int no = Integer.parseInt(lastNo);
+			DecimalFormat dfInt = new DecimalFormat("00");
+			for (String key : studentIds.keySet()) {
+				Long id = Long.parseLong(studentIds.get(key));
+				Student student = studentService.getStudent(id);
+				String studentNo = classroom.getCode()+dfInt.format(no + 1);
+				student.setNo(studentNo);
+				student.setClassroom(classroom);
+				studentService.AssignStudentNum(student);
+				no++;
+			}
+		} else {
+			for (String key : studentIds.keySet()) {
+				Long id = Long.parseLong(studentIds.get(key));
+				Student student = studentService.getStudent(id);
+				studentService.joinClassroom(student, classroom);
+			}
 		}
+
+		return true;
+	}
+
+	@RequestMapping(path = "/{classroomId}/assgin_num", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('student', 'put')")
+	public Boolean assginNum(@PathVariable Long classroomId, @RequestBody Map<Integer, String> studentIds) {
+		Classroom classroom = classroomService.getClassroom(classroomId);
+		int num = 0;
+		DecimalFormat dfInt = new DecimalFormat("00");
+		for (Integer i = 0; i < studentIds.size(); i++) {
+			String studentNo = classroom.getCode()+dfInt.format(num + 1);
+			Student student = studentService.getStudent(Long.parseLong(studentIds.get(i)));
+			student.setNo(studentNo);
+			studentService.updateStudent(student);
+			num++;
+		}
+		classroom.setIsAssignNum(1);
+		classroomService.updateClassroom(classroom);
 		return true;
 	}
 

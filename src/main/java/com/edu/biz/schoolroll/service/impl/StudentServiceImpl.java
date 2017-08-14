@@ -23,6 +23,7 @@ import com.edu.core.util.BeanUtils;
 public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	private StudentDao studentDao;
+
 	@Override
 	public Student createStudent(Student student) {
 		return studentDao.save(student);
@@ -64,32 +65,48 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	public List<Student> findStudents(Map<String, Object> conditions) {
 		return studentDao.findAll(new StudentSpecification(conditions));
 	}
-	
+
 	@Override
 	public Boolean joinClassroom(Student student, Classroom classroom) {
 		Boolean result = this.canJoinClassroom(student, classroom);
-		if(!result) {
+		if (!result) {
 			throw new ServiceException("403", "该学生不能加入该班级");
 		}
 		student.setClassroom(classroom);
 		updateStudent(student);
 		return true;
 	}
-	
+
+	@Override
+	public Student findByClassroomIdOrderByNoDesc(Long classroomId) {
+		return studentDao.findTopByClassroomIdOrderByNoDesc(classroomId);
+	}
+
+	@Override
+	public Student AssignStudentNum(Student student) {
+		Student saveStudent = studentDao.findOne(student.getId());
+		if (null == saveStudent) {
+			throw new NotFoundException("该学生不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent, "classroom", "no");
+
+		return studentDao.save(student);
+	}
+
 	private Boolean canJoinClassroom(Student student, Classroom classroom) {
-		if(student == null) {
+		if (student == null) {
 			return false;
 		}
-		if(classroom == null) {
+		if (classroom == null) {
 			return false;
 		}
-		if(!student.getGrade().equals(classroom.getGrade())) {
+		if (!student.getGrade().equals(classroom.getGrade())) {
 			return false;
 		}
-		if(!student.getMajor().equals(classroom.getMajor())) {
+		if (!student.getMajor().equals(classroom.getMajor())) {
 			return false;
 		}
-		if(student.getClassroom() == null) {
+		if (student.getClassroom() == null) {
 			return true;
 		}
 		return false;
