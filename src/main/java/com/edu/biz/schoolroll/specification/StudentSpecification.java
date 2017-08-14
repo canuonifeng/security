@@ -56,6 +56,9 @@ public class StudentSpecification implements Specification<Student> {
 			if (conditions.containsKey("studentFrom")) {
 				list.add(cb.equal(root.get("origin").as(String.class), this.conditions.get("studentFrom")));
 			}
+			if (conditions.containsKey("grade")) {
+				list.add(cb.equal(root.get("grade"), this.conditions.get("grade")));
+			}
 			if (conditions.containsKey("gender")) {
 				list.add(cb.equal(root.get("gender").as(String.class), this.conditions.get("gender")));
 			}
