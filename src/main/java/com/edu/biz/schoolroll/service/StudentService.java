@@ -26,4 +26,6 @@ public interface StudentService {
 	public List<Student> findStudents(Map<String, Object> conditions);
 	
 	public Boolean joinClassroom(Student student, Classroom classroom);
+	
+	public Student findByClassroomIdOrderByNoDesc(Long classroomId);
 }
