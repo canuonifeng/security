@@ -1,5 +1,6 @@
 package com.edu.biz.schoolroll.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -24,4 +25,6 @@ public interface ClassroomService {
 	public Page<Classroom> searchClassroom(Map<String, Object> conditions, Pageable pageable);
 	
 	public Long countClassroom(Map<String, Object> conditions);
+	
+	public List<Classroom> findUnAssignNumClassroom(Map<String, Object> conditions);
 }

@@ -15,6 +15,7 @@ public class Classroom extends BaseEntity {
 	private String code;
 	private String name;
 	private String grade;
+	private int isAssignNum;
 	
 	@ManyToOne(targetEntity = Major.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "major_id")
@@ -51,5 +52,13 @@ public class Classroom extends BaseEntity {
 
 	public void setMajor(Major major) {
 		this.major = major;
+	}
+
+	public int getIsAssignNum() {
+		return isAssignNum;
+	}
+
+	public void setIsAssignNum(int isAssignNum) {
+		this.isAssignNum = isAssignNum;
 	}
 }
