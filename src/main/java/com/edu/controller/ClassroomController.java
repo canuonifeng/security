@@ -42,7 +42,7 @@ public class ClassroomController extends BaseController<Classroom> {
 
 	@Autowired
 	private MajorService majorService;
-	
+
 	@Autowired
 	private StudentService studentService;
 
@@ -93,9 +93,26 @@ public class ClassroomController extends BaseController<Classroom> {
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	public Classroom get(@PathVariable Long id) {
-		Classroom classroom = new Classroom();
-		classroom.setId(id);
-		return classroomService.getClassroom(classroom.getId());
+		Classroom classroom = classroomService.getClassroom(id);
+		ClassroomVo classroomVo = new ClassroomVo();
+		BeanUtils.copyPropertiesWithIgnoreProperties(classroom, classroomVo);
+		HashMap<String, Object> map = new HashMap<String ,Object>();
+		map.put("classroomId", classroom.getId());
+		Long studentNum = studentService.countStudent(map);
+		classroomVo.setStudentNum(studentNum);
+		
+		map.clear();
+		map.put("classroomId", classroom.getId());
+		map.put("gender", "male");
+		Long maleNum = studentService.countStudent(map);
+		classroomVo.setMaleNum(maleNum);
+		
+		map.clear();
+		map.put("classroomId", classroom.getId());
+		map.put("gender", "female");
+		Long femaleNum = studentService.countStudent(map);
+		classroomVo.setFemaleNum(femaleNum);
+		return classroomVo;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -110,18 +127,18 @@ public class ClassroomController extends BaseController<Classroom> {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("classroomId", classroom.getId());
 			Long memberNum = studentService.countStudent(map);
-			classroomVo.setStudentNum(memberNum.intValue());
+			classroomVo.setStudentNum(memberNum);
 			classroomVos.add(classroomVo);
 		}
 
 		Page<ClassroomVo> classroomVoPage = new PageImpl<>(classroomVos, pageable, page.getTotalElements());
 		return classroomVoPage;
 	}
-	
+
 	@RequestMapping(path = "/find/un_assign_num", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	public List<Classroom> findUnAssignNumClassroom() {
-		HashMap<String,Object> conditions=new HashMap<String,Object>();
+		HashMap<String, Object> conditions = new HashMap<String, Object>();
 		conditions.put("isAssignNum", 0);
 		List<Classroom> list = classroomService.findUnAssignNumClassroom(conditions);
 		return list;
