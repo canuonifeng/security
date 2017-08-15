@@ -72,6 +72,9 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = "证件类型")
 	private IDType idtype = IDType.idcard;
 	
+	@ApiModelProperty(value = "排序")
+	private int seq;
+	
 	public String getBirthday() {
 		return birthday;
 	}
@@ -213,5 +216,13 @@ public class Student extends BaseEntity {
 
 	public void setAdmission_time(String admission_time) {
 		this.admission_time = admission_time;
+	}
+
+	public int getSeq() {
+		return seq;
+	}
+
+	public void setSeq(int seq) {
+		this.seq = seq;
 	}
 }

@@ -110,6 +110,18 @@ public class StudentController extends BaseController<Student> {
 		return true;
 	}
 
+	@RequestMapping(path = "/{classroomId}/student_sort", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('student', 'put')")
+	public Boolean studentSort(@RequestBody Map<Integer, String> studentIds) {
+		for (Integer i = 0, seq = 1; i < studentIds.size(); i++) {
+			Student student = studentService.getStudent(Long.parseLong(studentIds.get(i)));
+			student.setSeq(seq);
+			studentService.updateStudent(student);
+			seq++;
+		}
+		return true;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
 	public Page<Student> pager(@RequestParam Map<String, Object> conditions,
