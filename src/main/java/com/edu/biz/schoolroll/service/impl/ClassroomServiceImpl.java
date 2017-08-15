@@ -1,5 +1,6 @@
 package com.edu.biz.schoolroll.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.dao.ClassroomDao;
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.specification.ClassroomSpecification;
+import com.edu.biz.schoolroll.specification.StudentSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
@@ -41,6 +44,11 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	public Page<Classroom> searchClassroom(Map<String, Object> conditions, Pageable pageable) {
 		return classroomDao.findAll(new ClassroomSpecification(conditions), pageable);
 	}
+	
+	@Override
+	public List<Classroom> findUnAssignNumClassroom(Map<String, Object> conditions) {
+		return classroomDao.findAll(new ClassroomSpecification(conditions));
+	}
 
 	@Override
 	public Classroom updateClassroom(Classroom classroom) {
@@ -51,7 +59,7 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 		if(!this.checkCode(classroom.getCode(), classroom.getId())) {
 			throw new ServiceException("406","班级编码已被占用");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(classroom, savedClassroom, "name", "code");
+		BeanUtils.copyPropertiesWithCopyProperties(classroom, savedClassroom, "name", "code", "isAssignNum");
 		return classroomDao.save(savedClassroom);
 	}
 

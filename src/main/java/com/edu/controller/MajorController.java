@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.entity.Major;
 import com.edu.biz.schoolroll.entity.MajorStatus;
+import com.edu.biz.schoolroll.entity.pojo.MajorVo;
 import com.edu.biz.schoolroll.service.MajorService;
+import com.edu.biz.schoolroll.service.StudentService;
+import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +36,8 @@ import io.swagger.annotations.ApiResponses;
 public class MajorController extends BaseController<Major> {
 	@Autowired
 	private MajorService majorService;
+	@Autowired
+	private StudentService studentService;
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('major', 'add')")
 	public Major add(@RequestBody Major major) {
@@ -70,9 +76,41 @@ public class MajorController extends BaseController<Major> {
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('major', 'get')")
 	public Major get(@PathVariable Long id) {
-		Major major = new Major();
-		major.setId(id);
-		return majorService.getMajor(major.getId());
+		Major major = majorService.getMajor(id);
+		MajorVo majorVo = new MajorVo();
+		BeanUtils.copyPropertiesWithIgnoreProperties(major, majorVo);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("majorId", major.getId());
+		Long studentNum = studentService.countStudent(map);
+		majorVo.setStudentNum(studentNum);
+		
+		map.clear();
+		map.put("majorId", major.getId());
+		map.put("gender", "male");
+		Long maleNum = studentService.countStudent(map);
+		majorVo.setMaleNum(maleNum);
+		
+		map.clear();
+		map.put("majorId", major.getId());
+		map.put("gender", "female");
+		Long femaleNum = studentService.countStudent(map);
+		majorVo.setFemaleNum(femaleNum);
+		
+		map.clear();
+		map.put("majorId", major.getId());
+		map.put("gender", "male");
+		map.put("hasClassroomId", "0");
+		Long unAssginMaleNum = studentService.countStudent(map);
+		majorVo.setUnAssginMaleNum(unAssginMaleNum);
+		
+		map.clear();
+		map.put("majorId", major.getId());
+		map.put("gender", "female");
+		map.put("hasClassroomId", "0");
+		Long unAssginFemalNum = studentService.countStudent(map);
+		majorVo.setUnAssginFemalNum(unAssginFemalNum);
+		
+		return majorVo;
 	}
 	
 	@RequestMapping(path = "/findMajors", method = RequestMethod.GET)

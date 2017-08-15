@@ -37,6 +37,9 @@ public class ClassroomSpecification implements Specification<Classroom> {
 			if (conditions.containsKey("facultyId")) {
 				list.add(cb.equal(root.get("major").get("faculty").get("id"), this.conditions.get("facultyId")));
 			}
+			if (conditions.containsKey("isAssignNum")) {
+				list.add(cb.equal(root.get("isAssignNum"), this.conditions.get("isAssignNum")));
+			}
 		}
 		Predicate[] p = new Predicate[list.size()];
 		return cb.and(list.toArray(p));

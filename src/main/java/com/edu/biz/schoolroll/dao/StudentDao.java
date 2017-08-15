@@ -5,4 +5,6 @@ import com.edu.biz.schoolroll.entity.Student;
 
 public interface StudentDao extends BaseDao<Student> {
 
+	Student findTopByClassroomIdOrderByNoDesc(Long classroomId);
+
 }
