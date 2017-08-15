@@ -28,6 +28,9 @@ public class FacultySpecification implements Specification<Faculty> {
 			if (conditions.containsKey("name")) {
 				list.add(cb.like(root.get("name"), "%"+this.conditions.get("name")+"%"));
 			}
+			if (conditions.containsKey("status")) {
+				list.add(cb.equal(root.get("status").as(String.class), this.conditions.get("status")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
