@@ -1,0 +1,1 @@
+ALTER TABLE `classroom_member` ADD `seq` int NOT NULL DEFAULT 1 COMMENT '序号' AFTER `student_id`;
