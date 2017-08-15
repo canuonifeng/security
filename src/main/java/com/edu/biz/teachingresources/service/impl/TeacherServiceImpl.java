@@ -1,0 +1,55 @@
+package com.edu.biz.teachingresources.service.impl;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.edu.biz.base.BaseService;
+import com.edu.biz.teachingresources.dao.TeacherDao;
+import com.edu.biz.teachingresources.entity.Teacher;
+import com.edu.biz.teachingresources.service.TeacherService;
+import com.edu.biz.teachingresources.specification.TeacherSpecification;
+import com.edu.core.exception.NotFoundException;
+import com.edu.core.util.BeanUtils;
+
+@Service
+public class TeacherServiceImpl extends BaseService implements TeacherService {
+	@Autowired
+	private TeacherDao teacherDao;
+	
+	@Override
+	public Teacher createTeacher(Teacher teacher) {
+		return teacherDao.save(teacher);
+	}
+
+	@Override
+	public Teacher updateTeacher(Teacher teacher) {
+		Teacher saveTeacher = teacherDao.findOne(teacher.getId());
+		if (null == saveTeacher) {
+			throw new NotFoundException("该学生不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(teacher, saveTeacher, "no", "name", "gender", "status", "start_work_time");
+
+		return teacherDao.save(teacher);
+	}
+
+	@Override
+	public Boolean deleteTeacher(Long id) {
+		teacherDao.delete(id);
+		return null == teacherDao.findOne(id);
+	}
+
+	@Override
+	public Teacher getTeacher(Long id) {
+		return teacherDao.findOne(id);
+	}
+
+	@Override
+	public Page<Teacher> searchTeachers(Map<String, Object> conditions, Pageable pageable) {
+		return teacherDao.findAll(new TeacherSpecification(conditions), pageable);
+	}
+
+}
