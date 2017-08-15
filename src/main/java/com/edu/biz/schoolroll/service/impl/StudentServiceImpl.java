@@ -3,16 +3,18 @@ package com.edu.biz.schoolroll.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.dao.StudentDao;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
-import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.schoolroll.specification.StudentSpecification;
 import com.edu.core.exception.NotFoundException;
@@ -35,7 +37,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 		if (null == saveStudent) {
 			throw new NotFoundException("该学生不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent, "classroom");
+		BeanUtils.copyPropertiesWithCopyProperties(student, saveStudent, "classroom", "seq");
 
 		return studentDao.save(student);
 	}
@@ -63,7 +65,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
 	@Override
 	public List<Student> findStudents(Map<String, Object> conditions) {
-		return studentDao.findAll(new StudentSpecification(conditions));
+		return studentDao.findAll(new StudentSpecification(conditions), new Sort(Direction.ASC,"seq"));
 	}
 
 	@Override
