@@ -30,7 +30,7 @@ public class Student extends BaseEntity {
 	private Gender gender = Gender.secret;
 	
 	@ApiModelProperty(value="入学年月")
-	private String admission_time;
+	private String admissionTime;
 	
 	@ApiModelProperty(value="年级")
 	private String grade;
@@ -55,7 +55,7 @@ public class Student extends BaseEntity {
 	
 	@NotEmpty(message = "籍贯不能为空")
 	@ApiModelProperty(value = "籍贯")
-	private String native_place;
+	private String nativePlace;
 	
 	@NotEmpty(message = "证件号码不能为空")
 	@ApiModelProperty(value = "身份证号")
@@ -186,12 +186,12 @@ public class Student extends BaseEntity {
 		this.origin = origin;
 	}
 
-	public String getNative_place() {
-		return native_place;
+	public String getNativePlace() {
+		return nativePlace;
 	}
 
-	public void setNative_place(String native_place) {
-		this.native_place = native_place;
+	public void setNativePlace(String nativePlace) {
+		this.nativePlace = nativePlace;
 	}
 
 	public String getIdcard() {
@@ -210,12 +210,12 @@ public class Student extends BaseEntity {
 		this.remark = remark;
 	}
 
-	public String getAdmission_time() {
-		return admission_time;
+	public String getAdmissionTime() {
+		return admissionTime;
 	}
 
-	public void setAdmission_time(String admission_time) {
-		this.admission_time = admission_time;
+	public void setAdmissionTime(String admissionTime) {
+		this.admissionTime = admissionTime;
 	}
 
 	public int getSeq() {
