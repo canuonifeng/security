@@ -12,7 +12,6 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.teachingresources.entity.Course;
-import com.edu.biz.teachingresources.entity.Teacher;
 
 public class CourseSpecification implements Specification<Course> {
 	private Map<String, Object> conditions;

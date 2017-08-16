@@ -31,12 +31,12 @@ public class CourseServiceImpl extends BaseService implements CourseService {
 	public Course updateCourse(Course course) {
 		Course saveCourse = courseDao.findOne(course.getId());
 		if (null == saveCourse) {
-			throw new NotFoundException("该教师不存在");
+			throw new NotFoundException("该课程不存在");
 		}
 		if (!this.checkCode(course.getCode(), course.getId())) {
 			throw new ServiceException("406", "code已被占用");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(course, saveCourse, "code", "name");
+		BeanUtils.copyPropertiesWithCopyProperties(course, saveCourse, "code", "name", "credit", "period");
 
 		return courseDao.save(course);
 	}
