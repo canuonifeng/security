@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.teachingresources.entity.Teacher;
-import com.edu.biz.teachingresources.entity.TeacherStatus;
-import com.edu.biz.teachingresources.service.TeacherService;
+import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.entity.TeacherStatus;
+import com.edu.biz.teachingres.service.TeacherService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
