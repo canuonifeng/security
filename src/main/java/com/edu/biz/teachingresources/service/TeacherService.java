@@ -6,12 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.teachingresources.entity.Teacher;
+import com.edu.biz.teachingresources.entity.TeacherStatus;
 
 public interface TeacherService {
 	
 	public Teacher createTeacher(Teacher teacher);
 	
 	public Teacher updateTeacher(Teacher teacher);
+	
+	public Teacher changeTeacherStatus(Long id, TeacherStatus status);
 	
 	public Boolean deleteTeacher(Long id);
 	

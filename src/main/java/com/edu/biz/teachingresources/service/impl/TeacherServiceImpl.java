@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.teachingresources.dao.TeacherDao;
 import com.edu.biz.teachingresources.entity.Teacher;
+import com.edu.biz.teachingresources.entity.TeacherStatus;
 import com.edu.biz.teachingresources.service.TeacherService;
 import com.edu.biz.teachingresources.specification.TeacherSpecification;
 import com.edu.core.exception.NotFoundException;
@@ -29,11 +30,21 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public Teacher updateTeacher(Teacher teacher) {
 		Teacher saveTeacher = teacherDao.findOne(teacher.getId());
 		if (null == saveTeacher) {
-			throw new NotFoundException("该学生不存在");
+			throw new NotFoundException("该教师不存在");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(teacher, saveTeacher, "no", "name", "gender", "status", "start_work_time");
 
 		return teacherDao.save(teacher);
+	}
+	
+	@Override
+	public Teacher changeTeacherStatus(Long id, TeacherStatus status) {
+		Teacher savedTeacher = teacherDao.findOne(id);
+		if (null == savedTeacher) {
+			throw new NotFoundException("该教师不存在");
+		}
+		savedTeacher.setStatus(status);
+		return teacherDao.save(savedTeacher);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.dict.Gender;
 import com.edu.biz.schoolroll.entity.StudentOrigin;
 import com.edu.biz.schoolroll.entity.StudentStatus;
+import com.edu.biz.teachingresources.entity.TeacherStatus;
 
 import io.swagger.annotations.Api;
 
@@ -38,6 +39,18 @@ public class EnumDictController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("id", studentStatus.name());
 			map.put("name" , studentStatus.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	@RequestMapping(path = "/teacherStatus", method = RequestMethod.GET)
+	public List<Object> getTeacherStatus() {
+		ArrayList<Object> list=new ArrayList<Object>();
+		for(TeacherStatus teacherStatus : TeacherStatus.values()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", teacherStatus.name());
+			map.put("name" , teacherStatus.getName());
 			list.add(map);
 		}
 		return list;
