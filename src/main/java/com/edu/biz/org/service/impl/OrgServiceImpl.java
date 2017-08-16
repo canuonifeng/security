@@ -51,8 +51,8 @@ public class OrgServiceImpl implements OrgService {
 		if (!this.checkCode(org.getCode(), org.getId())) {
 			throw new ServiceException("406", "code已被占用");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(org, savedOrg, "name", "code", "faculty", "parent");
-		org = orgDao.save(org);
+		BeanUtils.copyPropertiesWithCopyProperties(org, savedOrg, "name", "code", "faculty");
+		org = orgDao.save(savedOrg);
 		org = this.updateOrgCode(org, org.getParent());
 		return org;
 	}
