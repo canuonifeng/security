@@ -29,7 +29,7 @@ public class Teacher extends BaseEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
-	private TeacherStatus status;
+	private TeacherStatus status = TeacherStatus.enable;
 	
 	public String getNo() {
 		return no;
