@@ -25,7 +25,7 @@ public class Teacher extends BaseEntity {
 	private Gender gender = Gender.secret;
 	
 	@ApiModelProperty(value="从教时间")
-	private String start_work_time;
+	private String startWorkTime;
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
@@ -59,12 +59,12 @@ public class Teacher extends BaseEntity {
 		this.gender = gender;
 	}
 
-	public String getStart_work_time() {
-		return start_work_time;
+	public String getStartWorkTime() {
+		return startWorkTime;
 	}
 
-	public void setStart_work_time(String start_work_time) {
-		this.start_work_time = start_work_time;
+	public void setStartWorkTime(String startWorkTime) {
+		this.startWorkTime = startWorkTime;
 	}
 	
 	public String getStatusName() {
