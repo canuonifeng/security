@@ -16,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
@@ -89,7 +91,7 @@ public class User extends BaseEntity implements UserDetails {
 	private UserStatus status = UserStatus.enable;
 
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	@ApiModelProperty(value = "角色列表")
 	@JsonView({ JsonViews.Cascade.class })
 	private List<Role> roles;
@@ -98,6 +100,7 @@ public class User extends BaseEntity implements UserDetails {
 	@JoinColumn(name = "org_id")
 	@ApiModelProperty(value = "所属组织机构")
 	@JsonView({ JsonViews.Cascade.class })
+	@NotFound(action = NotFoundAction.IGNORE)
 	private Organization org;
 
 	private String orgCode;

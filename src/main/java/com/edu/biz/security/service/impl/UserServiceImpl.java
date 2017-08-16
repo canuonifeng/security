@@ -100,8 +100,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	}
 
 	private void filterOrg(User user) {
-		if (null != user.getOrg() && null == user.getOrg().getId()) {
+		if (null == user.getOrg() || null == user.getOrg().getId()) {
 			user.setOrg(null);
+			user.setOrgCode(null);
 		}
 
 		if (null != user.getOrg() && null != user.getOrg().getId()) {
