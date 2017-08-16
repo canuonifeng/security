@@ -1,4 +1,4 @@
-package com.edu.biz.teachingresources.service.impl;
+package com.edu.biz.teachingres.service.impl;
 
 import java.util.Map;
 
@@ -8,11 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
-import com.edu.biz.teachingresources.dao.TeacherDao;
-import com.edu.biz.teachingresources.entity.Teacher;
-import com.edu.biz.teachingresources.entity.TeacherStatus;
-import com.edu.biz.teachingresources.service.TeacherService;
-import com.edu.biz.teachingresources.specification.TeacherSpecification;
+import com.edu.biz.teachingres.dao.TeacherDao;
+import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.entity.TeacherStatus;
+import com.edu.biz.teachingres.service.TeacherService;
+import com.edu.biz.teachingres.specification.TeacherSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
 

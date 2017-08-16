@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.dict.Gender;
 import com.edu.biz.schoolroll.entity.StudentOrigin;
 import com.edu.biz.schoolroll.entity.StudentStatus;
-import com.edu.biz.teachingresources.entity.TeacherStatus;
+import com.edu.biz.teachingres.entity.TeacherStatus;
 
 import io.swagger.annotations.Api;
 
