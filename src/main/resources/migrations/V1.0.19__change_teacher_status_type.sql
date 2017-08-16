@@ -1,0 +1,1 @@
+ALTER TABLE `teacher` CHANGE `status` `status` varchar(24)  NOT NULL DEFAULT 'enable' COMMENT '状态，在职，休假，退休，里追，外出学习';
