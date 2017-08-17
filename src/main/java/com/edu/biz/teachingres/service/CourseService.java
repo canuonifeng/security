@@ -1,12 +1,12 @@
-package com.edu.biz.teachingresources.service;
+package com.edu.biz.teachingres.service;
 
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.edu.biz.teachingresources.entity.Course;
-import com.edu.biz.teachingresources.entity.CourseStatus;
+import com.edu.biz.teachingres.entity.Course;
+import com.edu.biz.teachingres.entity.CourseStatus;
 
 public interface CourseService {
 	
