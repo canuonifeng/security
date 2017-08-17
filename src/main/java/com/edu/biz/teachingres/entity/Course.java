@@ -1,4 +1,4 @@
-package com.edu.biz.teachingresources.entity;
+package com.edu.biz.teachingres.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

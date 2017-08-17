@@ -1,4 +1,4 @@
-package com.edu.biz.teachingresources.specification;
+package com.edu.biz.teachingres.specification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.edu.biz.teachingresources.entity.Course;
+import com.edu.biz.teachingres.entity.Course;
 
 public class CourseSpecification implements Specification<Course> {
 	private Map<String, Object> conditions;

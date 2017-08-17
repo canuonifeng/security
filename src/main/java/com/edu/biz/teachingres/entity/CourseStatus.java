@@ -1,4 +1,4 @@
-package com.edu.biz.teachingresources.entity;
+package com.edu.biz.teachingres.entity;
 
 public enum CourseStatus {
 	enable("正常"), disable("禁用"),delete("删除");
