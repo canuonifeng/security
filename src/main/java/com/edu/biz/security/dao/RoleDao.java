@@ -10,6 +10,8 @@ import com.edu.biz.security.entity.Role;
 
 @Repository
 public interface RoleDao extends BaseDao<Role> {
-
+	
+	public Role getByCode(String code);
+	
 	public List<Role> findByCodeIn(Set<String> codes);
 }

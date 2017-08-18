@@ -30,6 +30,17 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	public Role updateRole(Role role) {
 		return this.roleDao.save(role);
 	}
+	
+	public Boolean checkCode(String code, Long roleId) {
+		Role role = roleDao.getByCode(code);
+		if(null == role) {
+			return true;
+		}
+		if(role.getId().equals(roleId)) {
+			return true;
+		}
+		return false;
+	}
 
 	public boolean deleteRole(Long id) {
 		roleDao.delete(id);

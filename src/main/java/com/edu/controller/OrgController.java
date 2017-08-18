@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.org.entity.OrgJsonViews;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.org.service.OrgService;
-import com.edu.biz.security.entity.User;
-import com.edu.biz.security.service.UserService;
 import com.edu.biz.validgroup.Update;
 import com.edu.biz.viewgroup.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -35,9 +33,6 @@ import io.swagger.annotations.ApiParam;
 public class OrgController extends BaseController<Organization> {
 	@Autowired
 	private OrgService orgService;
-	
-	@Autowired
-	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('org', 'add')")
