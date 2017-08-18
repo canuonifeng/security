@@ -31,6 +31,9 @@ public class CourseSpecification implements Specification<Course> {
 			if (conditions.containsKey("code")) {
 				list.add(cb.equal(root.get("code"), this.conditions.get("code")));
 			}
+			if (conditions.containsKey("notCourseIds")) {
+				list.add(cb.not(root.get("id").as(Long.class).in(this.conditions.get("notCourseIds"))));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];

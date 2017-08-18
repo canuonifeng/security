@@ -21,21 +21,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.Program;
+import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.pojo.ProgramVo;
 import com.edu.biz.teaching.service.ProgramService;
+import com.edu.biz.teachingres.entity.Course;
 import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/api/plan")
-@Api("班级")
+@Api("教学计划")
 public class ProgramController extends BaseController<Program> {
 	@Autowired
 	private ProgramService programService;
 	@Autowired
 	private ClassroomService classroomService;
-
+	
+	@RequestMapping(method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('major', 'add')")
+	public Program add(@RequestBody Program program) {
+		return programService.createProgram(program);
+	}
+	
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('program', 'edit')")
 	public Program edit(@PathVariable Long id, @RequestBody Program program) {
@@ -74,5 +82,19 @@ public class ProgramController extends BaseController<Program> {
 
 		Page<ProgramVo> programVoPage = new PageImpl<>(programVos, pageable, page.getTotalElements());
 		return programVoPage;
+	}
+	@RequestMapping(path = "/findCourses", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('classroom', 'get')")
+	public Page<ProgramCourse> coursePager(@RequestParam Map<String, Object> conditions,
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+		Page<ProgramCourse> programCourse = programService.searchProgramCourse(conditions, pageable);
+		return programCourse;
+	}
+
+	@RequestMapping(path = "/{programId}/add_course", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('course', 'get')")
+	public Page<Course> showNotAddCourses(@PathVariable Long programId,
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+		return programService.searchNotAddCourses(programId,  pageable);
 	}
 }

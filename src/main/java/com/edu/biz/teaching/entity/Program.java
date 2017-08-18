@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.schoolroll.entity.Major;
-import com.edu.biz.teachingresources.entity.Course;
+import com.edu.biz.teachingres.entity.Course;
 
 import io.swagger.annotations.ApiModelProperty;
 
