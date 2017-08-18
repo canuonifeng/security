@@ -19,6 +19,7 @@ import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.service.RoleService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
@@ -45,6 +46,12 @@ public class RoleController extends BaseController<Role> {
 	@PreAuthorize("hasPermission('role', 'delete')")
 	public boolean delete(@PathVariable @ApiParam(name = "id", value = "角色ID", required = true) Long id) {
 		return roleService.deleteRole(id);
+	}
+	
+	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@ApiOperation(value = "检查角色代码是否重复", notes = "根据角色代码检查是否重复")
+	public Boolean checkCode(String code,  Long roleId){
+		 return roleService.checkCode(code, roleId);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)

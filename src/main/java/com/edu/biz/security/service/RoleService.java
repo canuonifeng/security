@@ -14,6 +14,8 @@ public interface RoleService {
 	public Role updateRole(Role role);
 
 	public boolean deleteRole(Long id);
+	
+	public Boolean checkCode(String code, Long id);
 
 	public Role getRole(Long id);
 
