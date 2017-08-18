@@ -34,7 +34,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(teacher, saveTeacher, "no", "name", "gender", "status", "start_work_time");
 
-		return teacherDao.save(teacher);
+		return teacherDao.save(saveTeacher);
 	}
 	
 	@Override
