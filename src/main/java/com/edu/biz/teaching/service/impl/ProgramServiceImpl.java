@@ -76,9 +76,10 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		map.put("programId", programId);
 		List<ProgramCourse> existCourses = new ArrayList<ProgramCourse>();
 		existCourses  = programCourseDao.findAll(new ProgramCourseSpecification(map));
-		Long[] notCourseIds = new Long[existCourses.size()];
+//		Long[] notCourseIds = new Long[existCourses.size()];
+		List<Long> notCourseIds = new ArrayList<>();
 		for (int i = 0; i < existCourses.size(); i++) {
-			notCourseIds[i] = existCourses.get(i).getId();
+			notCourseIds.add(existCourses.get(i).getId()) ;
 		}
 		map.clear();
 		map.put("notCourseIds", notCourseIds);
