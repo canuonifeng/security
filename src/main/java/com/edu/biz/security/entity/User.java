@@ -286,7 +286,6 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setGender(String gender) {
 		this.gender = new Gender();
-		this.gender.setDictKey("gender");
-		this.gender.setDictValue(gender);
+		this.gender.setDictKey(gender);
 	}
 }
