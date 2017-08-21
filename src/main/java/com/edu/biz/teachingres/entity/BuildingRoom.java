@@ -1,11 +1,14 @@
 package com.edu.biz.teachingres.entity;
 
+import javax.persistence.Entity;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.edu.biz.base.BaseEntity;
 
 import io.swagger.annotations.ApiModelProperty;
 
+@Entity
 public class BuildingRoom extends BaseEntity {
 	@ApiModelProperty(value = " 层数")
 	private String floor;
