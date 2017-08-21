@@ -34,7 +34,9 @@ public class CourseSpecification implements Specification<Course> {
 			if (conditions.containsKey("notCourseIds")) {
 				List<Long> ids = (List<Long>) this.conditions.get("notCourseIds");
 //				root.get("id").in(ids.toArray());
-				list.add(cb.not(root.get("id").in(ids.toArray())));
+				if(ids.size()>0) {
+					list.add(cb.not(root.get("id").in(ids.toArray())));
+				}
 			}
 		}
 
