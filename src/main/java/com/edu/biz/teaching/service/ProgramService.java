@@ -22,7 +22,7 @@ public interface ProgramService {
 
 	public Page<ProgramCourse> searchProgramCourse(Map<String, Object> conditions, Pageable pageable);
 
-	public Page<Course> searchNotAddCourses(Long programId, Map<String, Object> conditions, Pageable pageable);
+	public Page<Course> searchCoursesNotInProgram(Long programId, Map<String, Object> conditions, Pageable pageable);
 
 	public Boolean joinProgram(Course course, Program program);
 	

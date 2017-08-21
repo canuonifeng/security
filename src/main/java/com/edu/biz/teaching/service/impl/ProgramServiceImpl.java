@@ -85,7 +85,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	}
 
 	@Override
-	public Page<Course> searchNotAddCourses(Long programId, Map<String, Object> conditions, Pageable pageable) {
+	public Page<Course> searchCoursesNotInProgram(Long programId, Map<String, Object> conditions, Pageable pageable) {
 		List<ProgramCourse> existCourses = new ArrayList<ProgramCourse>();
 		existCourses  = programCourseDao.findAll(new ProgramCourseSpecification(conditions));
 //		Long[] notCourseIds = new Long[existCourses.size()];

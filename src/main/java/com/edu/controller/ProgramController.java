@@ -102,9 +102,9 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{programId}/add_course", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('course', 'get')")
-	public Page<Course> showNotAddCourses(@PathVariable Long programId, @RequestParam Map<String, Object> conditions,
+	public Page<Course> showCoursesNotInProgram(@PathVariable Long programId, @RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		return programService.searchNotAddCourses(programId, conditions, pageable);
+		return programService.searchCoursesNotInProgram(programId, conditions, pageable);
 	}
 	
 	@RequestMapping(path = "/join/{programId}/program", method = RequestMethod.POST)
