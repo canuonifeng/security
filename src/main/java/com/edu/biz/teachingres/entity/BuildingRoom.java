@@ -1,6 +1,9 @@
 package com.edu.biz.teachingres.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -18,7 +21,9 @@ public class BuildingRoom extends BaseEntity {
 	private String name;
 	
 	@ApiModelProperty(value = "教室类型")
-	private String roomType;
+	@ManyToOne(targetEntity = RoomType.class, fetch = FetchType.EAGER)
+	@JoinColumn(name = "room-type",referencedColumnName="dictKey")
+	private RoomType roomType;
 	
 	@ApiModelProperty(value = "座位数")
 	private String seatNum;
@@ -39,19 +44,24 @@ public class BuildingRoom extends BaseEntity {
 		this.name = name;
 	}
 
-	public String getRoomType() {
-		return roomType;
-	}
-
-	public void setRoomType(String roomType) {
-		this.roomType = roomType;
-	}
-
 	public String getSeatNum() {
 		return seatNum;
 	}
 
 	public void setSeatNum(String seatNum) {
 		this.seatNum = seatNum;
+	}
+
+	public RoomType getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(RoomType roomType) {
+		this.roomType = roomType;
+	}
+	
+	public void setRoomType(String roomType) {
+		this.roomType = new RoomType();
+		this.roomType.setDictKey(roomType);
 	}
 }
