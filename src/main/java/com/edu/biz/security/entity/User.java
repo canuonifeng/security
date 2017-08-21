@@ -25,7 +25,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
-import com.edu.biz.dict.Gender;
+import com.edu.biz.common.entity.Dict;
+import com.edu.biz.common.entity.Gender;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.validgroup.Create;
@@ -53,8 +54,12 @@ public class User extends BaseEntity implements UserDetails {
 	@ApiModelProperty(value = "电话")
 	private String phone;
 
-	@Enumerated(EnumType.STRING)
-	@ApiModelProperty(value = " 性别")
+//	@Enumerated(EnumType.STRING)
+//	@ApiModelProperty(value = " 性别")
+//	private Gender gender;
+	
+	@ManyToOne(targetEntity = Gender.class, fetch = FetchType.EAGER)
+	@JoinColumn(name = "gender",referencedColumnName="dictKey")
 	private Gender gender;
 
 	@JsonProperty(access = Access.READ_ONLY)
@@ -227,17 +232,17 @@ public class User extends BaseEntity implements UserDetails {
 		this.phone = phone;
 	}
 
-	public Gender getGender() {
-		return gender;
-	}
-
-	public String getGenderName() {
-		return gender.getName();
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}
+//	public Gender getGender() {
+//		return gender;
+//	}
+//
+//	public String getGenderName() {
+//		return gender.getName();
+//	}
+//
+//	public void setGender(Gender gender) {
+//		this.gender = gender;
+//	}
 
 	public Date getLastLoginTime() {
 		return lastLoginTime;
@@ -271,4 +276,17 @@ public class User extends BaseEntity implements UserDetails {
 		this.org = org;
 	}
 
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = new Gender();
+		this.gender.setDictKey("gender");
+		this.gender.setDictValue(gender);
+	}
 }
