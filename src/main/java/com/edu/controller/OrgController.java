@@ -66,13 +66,13 @@ public class OrgController extends BaseController<Organization> {
 		return orgService.getOrg(org.getId());
 	}
 	
-	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@RequestMapping(path = "/checkcode",method = RequestMethod. GET)
 	@ApiOperation(value = "检查组织机构编号是否重复", notes = "根据组织机构编号检查是否重复")
 	public Boolean checkCode(String code,  Long orgId){
 		 return orgService.checkCode(code, orgId);
 	}
 	
-	@RequestMapping(path = "/findOrgs", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	public List<Organization> findMajors(@RequestParam Map<String, Object> conditions) {
 		List<Organization> list = orgService.findOrgs(conditions);
 		
