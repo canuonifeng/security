@@ -32,7 +32,11 @@ public class CourseSpecification implements Specification<Course> {
 				list.add(cb.equal(root.get("code"), this.conditions.get("code")));
 			}
 			if (conditions.containsKey("notCourseIds")) {
-				list.add(cb.not(root.get("id").as(Long.class).in(this.conditions.get("notCourseIds"))));
+				List<Long> ids = (List<Long>) this.conditions.get("notCourseIds");
+//				root.get("id").in(ids.toArray());
+				if(ids.size()>0) {
+					list.add(cb.not(root.get("id").in(ids.toArray())));
+				}
 			}
 		}
 
