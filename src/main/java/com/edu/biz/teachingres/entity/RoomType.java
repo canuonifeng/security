@@ -8,5 +8,5 @@ import com.edu.biz.common.entity.Dict;
 @Entity
 @DiscriminatorValue("room-type")
 public class RoomType extends Dict {
-
+	
 }
