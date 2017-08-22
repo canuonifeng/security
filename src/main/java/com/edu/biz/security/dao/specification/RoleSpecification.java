@@ -27,7 +27,7 @@ public class RoleSpecification implements Specification<Role> {
 
 		if (null != conditions) {
 			if (conditions.containsKey("name")) {
-				list.add(cb.equal(root.get("name").as(String.class), this.conditions.get("name")));
+				list.add(cb.like(root.get("name").as(String.class), "%"+this.conditions.get("name")+"%"));
 			}
 
 			if (conditions.containsKey("roleCodes")) {
