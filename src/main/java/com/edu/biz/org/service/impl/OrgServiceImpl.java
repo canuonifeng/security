@@ -1,5 +1,6 @@
 package com.edu.biz.org.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.org.service.OrgService;
+import com.edu.biz.schoolroll.specification.MajorSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
@@ -122,5 +124,9 @@ public class OrgServiceImpl implements OrgService {
 		org.setOrgCode(orgCode);
 		orgDao.save(org);
 		return org;
+	}
+	@Override
+	public List<Organization> findOrgs(Map<String, Object> conditions) {
+		return orgDao.findAll(new OrgSpecification(conditions));
 	}
 }

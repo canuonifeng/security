@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
+import com.edu.biz.schoolroll.specification.MajorSpecification;
 import com.edu.biz.security.dao.RoleDao;
 import com.edu.biz.security.dao.specification.RoleSpecification;
 import com.edu.biz.security.entity.Permission;
@@ -68,5 +69,10 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 			}
 		}
 		return permissionCodes;
+	}
+	
+	@Override
+	public List<Role> findRoles(Map<String, Object> conditions) {
+		return roleDao.findAll(new RoleSpecification(conditions));
 	}
 }

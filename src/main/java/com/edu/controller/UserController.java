@@ -62,8 +62,9 @@ public class UserController extends BaseController<User> {
 
 	@RequestMapping(path = "{userId}/remove_org", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('user', 'edit')")
-	public User removeOrgUser(@PathVariable Long userId, @Validated( { Update.class }) @RequestBody User user) {
-		user.setId(userId);
+	public User removeOrgUser(@PathVariable Long userId) {
+		User user = userService.getUserById(userId);
+		user.setOrg(null);
 		return userService.updateUser(user);
 	}
 	
