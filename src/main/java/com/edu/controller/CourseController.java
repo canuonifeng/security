@@ -50,7 +50,7 @@ public class CourseController extends BaseController<Course> {
 		return courseService.getCourse(id);
 	}
 	
-	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@RequestMapping(path = "/checkcode",method = RequestMethod. GET)
 	@ApiOperation(value = "检查课程编号是否重复", notes = "根据课程编号检查是否重复")
 	public Boolean checkCode(String code,  Long courseId){
 		 return courseService.checkCode(code, courseId);
