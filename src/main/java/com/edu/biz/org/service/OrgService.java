@@ -1,5 +1,6 @@
 package com.edu.biz.org.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -20,4 +21,6 @@ public interface OrgService {
 	Page<Organization> searchOrgs(Map<String, Object> conditions, Pageable pageable);
 
 	public Boolean checkCode(String code,Long id);
+
+	List<Organization> findOrgs(Map<String, Object> conditions);
 }

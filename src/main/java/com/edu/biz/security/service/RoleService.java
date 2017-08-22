@@ -1,5 +1,6 @@
 package com.edu.biz.security.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,4 +23,6 @@ public interface RoleService {
 	public Page<Role> searchRoles(Map<String, Object> conditions, Pageable pageable);
 
 	public Set<String> findByPermissionCodes(Set<String> roleCodes);
+
+	public List<Role> findRoles(Map<String, Object> conditions);
 }
