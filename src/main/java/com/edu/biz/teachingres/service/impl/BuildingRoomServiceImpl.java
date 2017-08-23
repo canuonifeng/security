@@ -1,5 +1,6 @@
 package com.edu.biz.teachingres.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.teachingres.dao.BuildingRoomDao;
 import com.edu.biz.teachingres.entity.BuildingRoom;
+import com.edu.biz.teachingres.entity.CountRoomType;
 import com.edu.biz.teachingres.service.BuildingRoomService;
 import com.edu.biz.teachingres.specification.BuildingRoomSpecification;
 import com.edu.core.exception.NotFoundException;
@@ -23,6 +25,11 @@ public class BuildingRoomServiceImpl extends BaseService implements BuildingRoom
 	@Override
 	public BuildingRoom createBuildingRoom(BuildingRoom buildingRoom) {
 		return buildingRoomDao.save(buildingRoom);
+	}
+	
+	@Override
+	public List<CountRoomType> getRoomNum() {
+		return buildingRoomDao.countGroupByRoomType();
 	}
 
 	@Override

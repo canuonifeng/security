@@ -15,6 +15,7 @@ import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.teachingres.entity.CourseCategory;
 import com.edu.biz.teachingres.entity.CourseNature;
 import com.edu.biz.teachingres.entity.CourseTestWay;
+import com.edu.biz.teachingres.entity.RoomType;
 import com.edu.biz.teachingres.entity.TeacherStatus;
 
 import io.swagger.annotations.Api;
@@ -95,8 +96,20 @@ public class EnumDictController {
 		return list;
 	}
 
-	@RequestMapping(path = "/courseTestWay", method = RequestMethod.GET)
+	@RequestMapping(path = "/roomtype", method = RequestMethod.GET)
 	public List<Object> getCourseTestWay() {
+		ArrayList<Object> list=new ArrayList<Object>();
+		for(RoomType roomType : RoomType.values()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", roomType.name());
+			map.put("name" , roomType.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	@RequestMapping(path = "/courseTestWay", method = RequestMethod.GET)
+	public List<Object> getRoomType() {
 		ArrayList<Object> list=new ArrayList<Object>();
 		for(CourseTestWay courseTestWay : CourseTestWay.values()) {
 			Map<String, String> map = new HashMap<String, String>();

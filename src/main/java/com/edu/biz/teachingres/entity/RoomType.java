@@ -1,12 +1,14 @@
 package com.edu.biz.teachingres.entity;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
-import com.edu.biz.common.entity.Dict;
-
-@Entity
-@DiscriminatorValue("room-type")
-public class RoomType extends Dict {
+public enum RoomType {
+	normal("普通教室"), multimedia("多媒体教室"),ladder("阶梯教室"),practice("实训教室");
 	
+	private String name;
+    private RoomType(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return this.name;
+    }
 }

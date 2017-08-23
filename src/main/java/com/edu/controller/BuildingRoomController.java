@@ -1,5 +1,8 @@
 package com.edu.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.teachingres.entity.BuildingRoom;
+import com.edu.biz.teachingres.entity.CountRoomType;
+import com.edu.biz.teachingres.entity.RoomType;
 import com.edu.biz.teachingres.service.BuildingRoomService;
 
 import io.swagger.annotations.Api;
@@ -60,5 +65,25 @@ public class BuildingRoomController extends BaseController<BuildingRoom> {
 	public Page<BuildingRoom> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return buildingRoomService.searchBuildingRooms(conditions, pageable);
+	}
+	
+	@RequestMapping(path = "/numofroomtype",method = RequestMethod.GET)
+	public List<CountRoomType> getRoomNum() {
+		List<CountRoomType> list = new ArrayList<CountRoomType>();
+		list = buildingRoomService.getRoomNum();
+		for (RoomType type : RoomType.values()) {
+			boolean isHas = false;
+			for (CountRoomType roomType : list) {
+				if(type.equals(roomType.getRoomType())) {
+					isHas = true;
+					break;
+				}
+			}
+			if(!isHas) {
+				CountRoomType countRoomType = new CountRoomType(type, 0);
+				list.add(countRoomType);
+			}
+		}
+		return list;
 	}
 }
