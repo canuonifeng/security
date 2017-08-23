@@ -84,6 +84,7 @@ public class ProgramController extends BaseController<Program> {
 			BeanUtils.copyPropertiesWithIgnoreProperties(program, programVo);
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("majorId", program.getMajor().getId());
+			map.put("grade", program.getGrade());
 			Long classroomNum = classroomService.countClassroom(map);
 			programVo.setClassroomNum(classroomNum);
 			programVos.add(programVo);
