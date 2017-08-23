@@ -28,6 +28,8 @@ public interface ProgramService {
 	
 	public ProgramCourse createProgramCourse(ProgramCourse programCourse);
 
+	public ProgramCourse updateProgramCourse(ProgramCourse programCourse);
+	
 	public Boolean deleteProgramCourse(Long programCourseId);
 
 }
