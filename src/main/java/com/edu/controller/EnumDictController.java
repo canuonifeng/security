@@ -23,7 +23,7 @@ import io.swagger.annotations.Api;
 @RequestMapping("/api/enum/dict")
 @Api("枚举数据字典")
 public class EnumDictController {
-	@RequestMapping(path = "/studentFrom", method = RequestMethod.GET)
+	@RequestMapping(path = "/studentfrom", method = RequestMethod.GET)
 	public List<Object> getStudentFrom() {
 		ArrayList<Object> list=new ArrayList<Object>();
 		for(StudentOrigin studentFrom : StudentOrigin.values()) {
@@ -35,7 +35,7 @@ public class EnumDictController {
 		return list;
 	}
 	
-	@RequestMapping(path = "/studentStatus", method = RequestMethod.GET)
+	@RequestMapping(path = "/studentstatus", method = RequestMethod.GET)
 	public List<Object> getStudentStatus() {
 		ArrayList<Object> list=new ArrayList<Object>();
 		for(StudentStatus studentStatus : StudentStatus.values()) {
@@ -47,7 +47,7 @@ public class EnumDictController {
 		return list;
 	}
 	
-	@RequestMapping(path = "/teacherStatus", method = RequestMethod.GET)
+	@RequestMapping(path = "/teacherstatus", method = RequestMethod.GET)
 	public List<Object> getTeacherStatus() {
 		ArrayList<Object> list=new ArrayList<Object>();
 		for(TeacherStatus teacherStatus : TeacherStatus.values()) {
@@ -71,7 +71,7 @@ public class EnumDictController {
 		return list;
 	}
 
-	@RequestMapping(path = "/courseCategory", method = RequestMethod.GET)
+	@RequestMapping(path = "/coursecategory", method = RequestMethod.GET)
 	public List<Object> getCourseCategory() {
 		ArrayList<Object> list=new ArrayList<Object>();
 		for(CourseCategory courseCategory : CourseCategory.values()) {
@@ -83,7 +83,7 @@ public class EnumDictController {
 		return list;
 	}
 	
-	@RequestMapping(path = "/courseNature", method = RequestMethod.GET)
+	@RequestMapping(path = "/coursenature", method = RequestMethod.GET)
 	public List<Object> getCourseNature() {
 		ArrayList<Object> list=new ArrayList<Object>();
 		for(CourseNature courseNature : CourseNature.values()) {
@@ -95,7 +95,7 @@ public class EnumDictController {
 		return list;
 	}
 
-	@RequestMapping(path = "/courseTestWay", method = RequestMethod.GET)
+	@RequestMapping(path = "/coursetestway", method = RequestMethod.GET)
 	public List<Object> getCourseTestWay() {
 		ArrayList<Object> list=new ArrayList<Object>();
 		for(CourseTestWay courseTestWay : CourseTestWay.values()) {

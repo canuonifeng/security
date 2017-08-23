@@ -59,7 +59,7 @@ public class TermController extends BaseController<Term> {
 		return termService.deleteTerm(id);
 	}
 	
-	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@RequestMapping(path = "/checkcode",method = RequestMethod. GET)
 	@ApiOperation(value = "检查代码是否重复", notes = "根据学期代码检查是否重复")
 	public Boolean checkCode(String code,  Long termId){
 		 return termService.checkCode(code, termId);

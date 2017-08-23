@@ -135,7 +135,7 @@ public class ClassroomController extends BaseController<Classroom> {
 		return classroomVoPage;
 	}
 
-	@RequestMapping(path = "/find/un_assign_num", method = RequestMethod.GET)
+	@RequestMapping(path = "/unassignnum", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	public List<Classroom> findUnAssignNumClassroom() {
 		HashMap<String, Object> conditions = new HashMap<String, Object>();
