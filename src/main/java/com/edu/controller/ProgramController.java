@@ -54,6 +54,13 @@ public class ProgramController extends BaseController<Program> {
 		return programService.updateProgram(program);
 	}
 
+	@RequestMapping(path = "/{id}/course", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('program', 'edit')")
+	public ProgramCourse editProgramCourse(@PathVariable Long id, @RequestBody ProgramCourse programCourse) {
+		programCourse.setId(id);
+		return programService.updateProgramCourse(programCourse);
+	}
+	
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('program', 'delete')")
 	public boolean delete(@PathVariable Long id) {
