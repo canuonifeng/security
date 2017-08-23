@@ -24,7 +24,11 @@ public class ProgramSpecification implements Specification<Program> {
 	@Override
 	public Predicate toPredicate(Root<Program> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
-
+		if (null != conditions) {
+			if (conditions.containsKey("majorId")) {
+				list.add(cb.equal(root.get("major").get("id"), this.conditions.get("majorId")));
+			}
+		}
 
 		Predicate[] p = new Predicate[list.size()];
 		return cb.and(list.toArray(p));

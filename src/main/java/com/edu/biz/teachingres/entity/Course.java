@@ -25,8 +25,11 @@ public class Course extends BaseEntity {
 	@ApiModelProperty(value="学分")
 	private String credit;
 	
-	@ApiModelProperty(value="学时")
-	private Long period;
+	@ApiModelProperty(value="理论学时")
+	private int theoryPeriod;
+
+	@ApiModelProperty(value="实践学时")
+	private int practicePeriod;
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
@@ -56,20 +59,28 @@ public class Course extends BaseEntity {
 		this.credit = credit;
 	}
 
-	public Long getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(Long period) {
-		this.period = period;
-	}
-
 	public CourseStatus getStatus() {
 		return status;
 	}
 
 	public void setStatus(CourseStatus status) {
 		this.status = status;
+	}
+
+	public int getTheoryPeriod() {
+		return theoryPeriod;
+	}
+
+	public void setTheoryPeriod(int theoryPeriod) {
+		this.theoryPeriod = theoryPeriod;
+	}
+
+	public int getPracticePeriod() {
+		return practicePeriod;
+	}
+
+	public void setPracticePeriod(int practicePeriod) {
+		this.practicePeriod = practicePeriod;
 	}
 	
 

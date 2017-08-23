@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.schoolroll.entity.Major;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.service.RoleService;
 
@@ -67,5 +69,12 @@ public class RoleController extends BaseController<Role> {
 	public Page<Role> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return roleService.searchRoles(conditions, pageable);
+	}
+	
+	@RequestMapping(path = "/findRoles", method = RequestMethod.GET)
+	public List<Role> findRoles(@RequestParam Map<String, Object> conditions) {
+		List<Role> list = roleService.findRoles(conditions);
+		
+		return list;
 	}
 }
