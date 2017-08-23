@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.schoolroll.entity.Major;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.service.RoleService;
 
@@ -50,7 +49,7 @@ public class RoleController extends BaseController<Role> {
 		return roleService.deleteRole(id);
 	}
 	
-	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@RequestMapping(path = "/checkcode",method = RequestMethod. GET)
 	@ApiOperation(value = "检查角色代码是否重复", notes = "根据角色代码检查是否重复")
 	public Boolean checkCode(String code,  Long roleId){
 		 return roleService.checkCode(code, roleId);
@@ -71,7 +70,7 @@ public class RoleController extends BaseController<Role> {
 		return roleService.searchRoles(conditions, pageable);
 	}
 	
-	@RequestMapping(path = "/findRoles", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	public List<Role> findRoles(@RequestParam Map<String, Object> conditions) {
 		List<Role> list = roleService.findRoles(conditions);
 		

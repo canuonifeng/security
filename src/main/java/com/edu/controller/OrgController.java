@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.org.entity.OrgJsonViews;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.org.service.OrgService;
-import com.edu.biz.schoolroll.entity.Major;
 import com.edu.biz.validgroup.Update;
 import com.edu.biz.viewgroup.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -66,15 +65,15 @@ public class OrgController extends BaseController<Organization> {
 		return orgService.getOrg(org.getId());
 	}
 	
-	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@RequestMapping(path = "/checkcode",method = RequestMethod. GET)
 	@ApiOperation(value = "检查组织机构编号是否重复", notes = "根据组织机构编号检查是否重复")
 	public Boolean checkCode(String code,  Long orgId){
 		 return orgService.checkCode(code, orgId);
 	}
 	
-	@RequestMapping(path = "/findOrgs", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('org', 'get')")
-	@JsonView(OrgJsonViews.CascadeChildren.class)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
+@PreAuthorize("hasPermission('org', 'get')")
+@JsonView(OrgJsonViews.CascadeChildren.class)
 	public List<Organization> findOrgs(@RequestParam Map<String, Object> conditions) {
 		List<Organization> list = orgService.findOrgs(conditions);
 		

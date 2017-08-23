@@ -92,7 +92,7 @@ public class StudentController extends BaseController<Student> {
 		return true;
 	}
 
-	@RequestMapping(path = "/{classroomId}/assgin_num", method = RequestMethod.PUT)
+	@RequestMapping(path = "/{classroomId}/assginnum", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('student', 'put')")
 	public Boolean assginNum(@PathVariable Long classroomId, @RequestBody Map<Integer, String> studentIds) {
 		Classroom classroom = classroomService.getClassroom(classroomId);
@@ -110,7 +110,7 @@ public class StudentController extends BaseController<Student> {
 		return true;
 	}
 
-	@RequestMapping(path = "/{classroomId}/student_sort", method = RequestMethod.PUT)
+	@RequestMapping(path = "/{classroomId}/studentssort", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('student', 'put')")
 	public Boolean studentSort(@RequestBody Map<Integer, String> studentIds) {
 		for (Integer i = 0, seq = 1; i < studentIds.size(); i++) {
@@ -129,7 +129,7 @@ public class StudentController extends BaseController<Student> {
 		return studentService.searchStudents(conditions, pageable);
 	}
 
-	@RequestMapping(path = "/findStudents", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
 	public List<Student> findStudents(@RequestParam Map<String, Object> conditions) {
 		List<Student> list = studentService.findStudents(conditions);

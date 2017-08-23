@@ -48,7 +48,7 @@ public class FacultyController extends BaseController<Faculty> {
 		return facultyService.createFaculty(faculty);
 	}
 	
-	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@RequestMapping(path = "/checkcode",method = RequestMethod. GET)
 	@ApiOperation(value = "检查院系编号是否重复", notes = "根据院系编号检查是否重复")
 	public Boolean checkCode(String code,  Long facultyId){
 		 return facultyService.checkCode(code, facultyId);
@@ -85,7 +85,7 @@ public class FacultyController extends BaseController<Faculty> {
 		return facultyService.getFaculty(faculty.getId());
 	}
 	
-	@RequestMapping(path = "/findFacultys", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	public List<Faculty> findFacultys(@RequestParam Map<String, Object> conditions) {
 		List<Faculty> list = facultyService.findFacultys(conditions);
 		

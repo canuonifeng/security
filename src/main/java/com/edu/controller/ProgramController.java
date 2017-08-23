@@ -100,7 +100,7 @@ public class ProgramController extends BaseController<Program> {
 		Page<ProgramVo> programVoPage = new PageImpl<>(programVos, pageable, page.getTotalElements());
 		return programVoPage;
 	}
-	@RequestMapping(path = "/findCourses", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	public Page<ProgramCourse> coursePager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
@@ -108,7 +108,7 @@ public class ProgramController extends BaseController<Program> {
 		return programCourse;
 	}
 
-	@RequestMapping(path = "/{programId}/add_course", method = RequestMethod.GET)
+	@RequestMapping(path = "/{programId}/addcourse", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('course', 'get')")
 	public Page<Course> showCoursesNotInProgram(@PathVariable Long programId, @RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
