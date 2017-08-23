@@ -1,8 +1,28 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-    <USER id="1" name="姓名1" gender="female" phone="15868837690" username="admin" nickname="管理员" email="admin@edusoho.com" password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz" status="enable" />
-    <USER id="2" name="姓名2" gender="male" phone="15868837691" username="test1" nickname="测试用户1" email="test1@edusoho.com" password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz" status="enable" />
-    <USER id="3" name="姓名3" gender="male" phone="15868837692" username="test2" nickname="测试用户2" email="test2@edusoho.com" password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz" status="enable" />
-    <USER id="4" name="姓名4" gender="secret" phone="15868837693" username="test3" nickname="测试用户3" email="test3@edusoho.com" password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz" status="enable" />
-	<USER id="5" name="姓名5" gender="secret" phone="15868837694" username="test4" nickname="测试用户4" email="test4@edusoho.com" password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz" status="disable" />
+	<FACULTY id="1" code="jsj" name="计算机系" status="enable"/>
+	<FACULTY id="2" code="tumu" name="土木工程系" status="enable"/>
+	<organization id="1" name="总校教务处" code="zongjiaowuchu" org_code="1."/>
+	<organization id="2" name="总校后勤部" code="zonghouqin" org_code="2." />
+	<organization id="3" name="计算机系教务处" code="jsjiaowu" faculty_id="1" org_code="3."/>
+	<USER id="1" name="姓名1" gender="female" phone="15868837690"
+		username="admin" nickname="管理员" email="admin@edusoho.com"
+		password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz"
+		status="enable" />
+	<USER id="2" name="姓名2" gender="male" phone="15868837691"
+		username="test1" nickname="测试用户1" email="test1@edusoho.com"
+		password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz"
+		status="enable" org_id="3" faculty_id="1"/>
+	<USER id="3" name="姓名3" gender="male" phone="15868837692"
+		username="test2" nickname="测试用户2" email="test2@edusoho.com"
+		password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz"
+		status="enable" />
+	<USER id="4" name="姓名4" gender="secret" phone="15868837693"
+		username="test3" nickname="测试用户3" email="test3@edusoho.com"
+		password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz"
+		status="enable" />
+	<USER id="5" name="姓名5" gender="secret" phone="15868837694"
+		username="test4" nickname="测试用户4" email="test4@edusoho.com"
+		password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz"
+		status="disable" />
 </dataset>

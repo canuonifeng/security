@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.edu.biz.dict.Gender;
+import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.entity.Organization;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.service.UserService;
@@ -25,30 +27,24 @@ public class UserServiceTest extends BaseServiceTest {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	private User initUser() {
-		User user = new User();
-		user.setEmail("testuser001@test1.com");
-		user.setPassword("test110");
-		user.setNickname("test001");
-		user.setName("test001");
-		user.setUsername("testuser001");
-		user.setPhone("1999999999");
-		user.setGender(Gender.female);
-		user.setStatus(UserStatus.enable);
-		return userService.createUser(user);
-	}
-
 	@Test
+	@ExpectedDatabase(value = "userService.createUser.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
 	public void testCreateUser() {
 		User user = new User();
-		user.setEmail("test110@test1.com");
+		user.setEmail("test5@edusoho.com");
 		user.setPassword("test110");
-		user.setNickname("test110");
-		user.setName("test110");
-		user.setUsername("test110");
-		user.setPhone("1999999999");
+		user.setNickname("新用户");
+		user.setName("新用户");
+		user.setUsername("test5");
+		user.setPhone("13212345678");
 		user.setGender(Gender.female);
 		user.setStatus(UserStatus.enable);
+		Organization org = new Organization();
+		org.setId(3L);
+		Faculty faculty = new Faculty();
+		faculty.setId(1L);
+		user.setOrg(org);
+		user.setFaculty(faculty);
 		User savedUser = userService.createUser(user);
 
 		Assert.assertNotNull(savedUser.getId());
