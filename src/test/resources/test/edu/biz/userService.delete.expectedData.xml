@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <USER id="1" name="姓名1" gender="female" phone="15868837690" username="admin" nickname="管理员" email="admin@edusoho.com" password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz" status="enable" />
+    <USER id="4" name="姓名4" gender="secret" phone="15868837693" username="test3" nickname="测试用户3" email="test3@edusoho.com" password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz" status="enable" />
+	<USER id="5" name="姓名5" gender="secret" phone="15868837694" username="test4" nickname="测试用户4" email="test4@edusoho.com" password="56e88fcd763ee7a36c409ef6cf852aea" salt="ujQAwILUUuVemyxz" status="disable" />
+</dataset>
