@@ -106,7 +106,8 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		programCourse.setCourse(course);
 		programCourse.setProgram(program);
 		programCourse.setCredit(course.getCredit());
-		programCourse.setPeriod(course.getPracticePeriod()+course.getTheoryPeriod());
+		programCourse.setPracticePeriod(course.getPracticePeriod());
+		programCourse.setTheoryPeriod(course.getTheoryPeriod());
 		createProgramCourse(programCourse);
 		return true;
 	}
