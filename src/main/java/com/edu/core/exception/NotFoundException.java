@@ -2,11 +2,11 @@ package com.edu.core.exception;
 
 public class NotFoundException extends ServiceException {
 	public NotFoundException() {
-		super();
+		super("404");
 	}
 
 	public NotFoundException(String message) {
-		super(message);
+		super("404",message);
 	}
 
 	public NotFoundException(String message, Throwable cause) {
