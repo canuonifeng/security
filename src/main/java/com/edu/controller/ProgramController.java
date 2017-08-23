@@ -54,6 +54,13 @@ public class ProgramController extends BaseController<Program> {
 		return programService.updateProgram(program);
 	}
 
+	@RequestMapping(path = "/{id}/course", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('program', 'edit')")
+	public ProgramCourse editProgramCourse(@PathVariable Long id, @RequestBody ProgramCourse programCourse) {
+		programCourse.setId(id);
+		return programService.updateProgramCourse(programCourse);
+	}
+	
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('program', 'delete')")
 	public boolean delete(@PathVariable Long id) {
@@ -84,6 +91,7 @@ public class ProgramController extends BaseController<Program> {
 			BeanUtils.copyPropertiesWithIgnoreProperties(program, programVo);
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("majorId", program.getMajor().getId());
+			map.put("grade", program.getGrade());
 			Long classroomNum = classroomService.countClassroom(map);
 			programVo.setClassroomNum(classroomNum);
 			programVos.add(programVo);
