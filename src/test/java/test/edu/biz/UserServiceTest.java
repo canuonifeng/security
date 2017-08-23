@@ -10,12 +10,18 @@ import com.edu.biz.dict.Gender;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.service.UserService;
+import com.edu.core.exception.NotFoundException;
+import com.edu.core.exception.ServiceException;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 
+@DatabaseSetup("userService.data.xml")
 public class UserServiceTest extends BaseServiceTest {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private UserDetailsService userDetailsService;
 
@@ -80,43 +86,62 @@ public class UserServiceTest extends BaseServiceTest {
 		Assert.assertEquals(user.getGender(), savedUser.getGender());
 		Assert.assertEquals(user.getStatus(), savedUser.getStatus());
 	}
+	
+	@Test(expected=NotFoundException.class)
+	public void test修改不存在的用户()
+	{
+		User user = new User();
+		user.setName("test002");
+		user.setEmail("test002@test1.com");
+		user.setId(1000L);
+		userService.updateUser(user);
+	}
+	
+	@Test(expected=ServiceException.class)
+	public void test修改用户用户名被占用了()
+	{
+		User user = new User();
+		user.setName("test002");
+		user.setEmail("test002@test1.com");
+		user.setUsername("admin");
+		user.setId(5L);
+		userService.updateUser(user);
+	}
 
 	@Test
-	public void testChecUserStatus() {
-		User initUser = initUser();
-		User user = userService.changeUserStatus(initUser.getId(), UserStatus.disable);
-		Assert.assertEquals(user.getStatus(), UserStatus.disable);
-		Assert.assertNotNull(user.getPassword());
-		Assert.assertNotEquals(user.getStatus(), UserStatus.enable);
+	@ExpectedDatabase(value = "userService.changeUserStatus.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+	public void testChangeUserStatus() {
+		userService.changeUserStatus(2L, UserStatus.disable);
+		userService.changeUserStatus(5L, UserStatus.enable);
 	}
 
 	@Test
 	public void testCheckUserName() {
-		User initUser = initUser();
-		Assert.assertFalse(userService.checkUserName("testuser001", null));
-		Assert.assertTrue(userService.checkUserName("testuser001", initUser.getId()));
-		Assert.assertTrue(userService.checkUserName("testuser002", initUser.getId()));
+		Assert.assertFalse(userService.checkUserName("admin", null));
+		Assert.assertTrue(userService.checkUserName("admin", 1L));
+		Assert.assertTrue(userService.checkUserName("test1",2L));
+		Assert.assertTrue(userService.checkUserName("test100",2L));
+		Assert.assertTrue(userService.checkUserName("test100",null));
 	}
 
 	@Test
+	@ExpectedDatabase(value = "userService.delete.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
 	public void testDeleteUser() {
-		User initUser = initUser();
-		Assert.assertFalse(userService.checkUserName("testuser001", null));
-		userService.deleteUser(initUser.getId());
-		Assert.assertTrue(userService.checkUserName("testuser001", null));
+		Assert.assertTrue(userService.deleteUser(2L));
+		Assert.assertTrue(userService.deleteUser(3L));
 	}
-	
+
 	@Test
-	public void testGetUser(){
-		User initUser = initUser();
-		User user = userService.getUserById(initUser.getId());
-		Assert.assertEquals(initUser,user);
+	public void testGetUser() {
+		User user = userService.getUserById(1L);
+		Assert.assertEquals("admin", user.getUsername());
+		user = userService.getUserById(2L);
+		Assert.assertEquals("test1", user.getUsername());
 	}
-	
+
 	@Test
 	public void testLoadUserByUsername() {
-		initUser();
-		UserDetails user =  userDetailsService.loadUserByUsername("testuser001");
-		Assert.assertEquals("testuser001", user.getUsername());
+		UserDetails user = userDetailsService.loadUserByUsername("admin");
+		Assert.assertEquals("admin", user.getUsername());
 	}
 }
