@@ -21,5 +21,11 @@ public interface BuildingRoomService {
 	
 	public List<CountRoomType> getRoomNum();
 	
+	public List<CountRoomType> getRoomNumByBuildingId(Long buildingId);
+	
 	public Page<BuildingRoom> searchBuildingRooms(Map<String, Object> conditions, Pageable pageable);
+	
+	public Long countBuildingRoom(Map<String, Object> conditions);
+	
+	public Long getFloorNum();
 }

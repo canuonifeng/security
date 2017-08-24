@@ -1,9 +1,13 @@
 package com.edu.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -16,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.teachingres.entity.Building;
+import com.edu.biz.teachingres.entity.CountRoomType;
+import com.edu.biz.teachingres.entity.pojo.BuildingVo;
+import com.edu.biz.teachingres.service.BuildingRoomService;
 import com.edu.biz.teachingres.service.BuildingService;
+import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 
@@ -26,6 +34,9 @@ import io.swagger.annotations.Api;
 public class BuildingController extends BaseController<Building> {
 	@Autowired
 	private BuildingService buildingService;
+	
+	@Autowired
+	private BuildingRoomService buildingRoomService;
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('building', 'add')")
@@ -56,8 +67,24 @@ public class BuildingController extends BaseController<Building> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
-	public Page<Building> pager(@RequestParam Map<String, Object> conditions,
+	public Page<BuildingVo> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		return buildingService.searchBuildings(conditions, pageable);
+		Page<Building> page = buildingService.searchBuildings(conditions, pageable);
+		List<BuildingVo> buildingVos = new ArrayList<BuildingVo>();
+		for (Building building : page.getContent()) {
+			BuildingVo buildingVo = new BuildingVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(building, buildingVo);
+			HashMap<String,Object> map=new HashMap<String,Object>();
+			map.put("buildingId", building.getId());
+			Long buildingRoomNum = buildingRoomService.countBuildingRoom(map);
+			Long floorNum = buildingRoomService.getFloorNum();
+			List<CountRoomType> roomType = buildingRoomService.getRoomNumByBuildingId(building.getId());
+			buildingVo.setRoomDetail(roomType);
+			buildingVo.setFloorNum(floorNum.intValue());
+			buildingVo.setClassroomNum(buildingRoomNum.intValue());
+			buildingVos.add(buildingVo);
+		}
+		Page<BuildingVo> buildingVoPage = new PageImpl<>(buildingVos, pageable, page.getTotalElements());
+		return buildingVoPage;
 	}
 }

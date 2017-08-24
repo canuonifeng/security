@@ -31,6 +31,11 @@ public class BuildingRoomServiceImpl extends BaseService implements BuildingRoom
 	public List<CountRoomType> getRoomNum() {
 		return buildingRoomDao.countGroupByRoomType();
 	}
+	
+	@Override
+	public List<CountRoomType> getRoomNumByBuildingId(Long buildingId) {
+		return buildingRoomDao.countGroupByRoomTypeByBuildingId(buildingId);
+	}
 
 	@Override
 	public BuildingRoom updateBuildingRoom(BuildingRoom buildingRoom) {
@@ -58,5 +63,14 @@ public class BuildingRoomServiceImpl extends BaseService implements BuildingRoom
 	public Page<BuildingRoom> searchBuildingRooms(Map<String, Object> conditions, Pageable pageable) {
 		return buildingRoomDao.findAll(new BuildingRoomSpecification(conditions), pageable);
 	}
-
+	
+	@Override
+	public Long countBuildingRoom(Map<String, Object> conditions) {
+		return buildingRoomDao.count(new BuildingRoomSpecification(conditions));
+	}
+	
+	@Override
+	public Long getFloorNum() {
+		return buildingRoomDao.countDistinctFloor();
+	}
 }
