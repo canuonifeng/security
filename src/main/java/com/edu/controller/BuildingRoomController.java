@@ -50,6 +50,12 @@ public class BuildingRoomController extends BaseController<BuildingRoom> {
 		return buildingRoomService.deleteBuildingRoom(id);
 	}
 	
+	@RequestMapping(path = "/floor/{floor}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('buildingRoom', 'delete')")
+	public boolean deleteFloor(@PathVariable Long floor) {
+		return buildingRoomService.deleteBuildingRoomByFloor(floor);
+	}
+	
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('buildingRoom', 'get')")
 	public BuildingRoom get(@PathVariable Long id) {
@@ -57,6 +63,13 @@ public class BuildingRoomController extends BaseController<BuildingRoom> {
 		buildingRoom.setId(id);
 		return buildingRoomService.getBuildingRoom(
 				buildingRoom.getId());
+	}
+	
+	@RequestMapping(path = "/all",method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('buildingRoom', 'get')")
+	public Map<String, List<BuildingRoom>> findAllBuildingRoom(@RequestParam Map<String, Object> conditions) {
+		
+		return buildingRoomService.findBuildingRooms(conditions);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)

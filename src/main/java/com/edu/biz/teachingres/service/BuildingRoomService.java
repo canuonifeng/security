@@ -17,6 +17,8 @@ public interface BuildingRoomService {
 	
 	public Boolean deleteBuildingRoom(Long id);
 	
+	public Boolean deleteBuildingRoomByFloor(Long floor);
+	
 	public BuildingRoom getBuildingRoom(Long id);
 	
 	public List<CountRoomType> getRoomNum();
@@ -27,5 +29,7 @@ public interface BuildingRoomService {
 	
 	public Long countBuildingRoom(Map<String, Object> conditions);
 	
-	public Long getFloorNum();
+	public Long getFloorNum(Long id);
+	
+	public Map<String, List<BuildingRoom>> findBuildingRooms(Map<String, Object> conditions);
 }

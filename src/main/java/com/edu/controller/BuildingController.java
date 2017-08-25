@@ -77,7 +77,7 @@ public class BuildingController extends BaseController<Building> {
 			HashMap<String,Object> map=new HashMap<String,Object>();
 			map.put("buildingId", building.getId());
 			Long buildingRoomNum = buildingRoomService.countBuildingRoom(map);
-			Long floorNum = buildingRoomService.getFloorNum();
+			Long floorNum = buildingRoomService.getFloorNum(building.getId());
 			List<CountRoomType> roomType = buildingRoomService.getRoomNumByBuildingId(building.getId());
 			buildingVo.setRoomDetail(roomType);
 			buildingVo.setFloorNum(floorNum.intValue());

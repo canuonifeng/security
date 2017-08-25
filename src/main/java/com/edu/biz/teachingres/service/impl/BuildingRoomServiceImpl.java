@@ -1,7 +1,10 @@
 package com.edu.biz.teachingres.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,6 +56,14 @@ public class BuildingRoomServiceImpl extends BaseService implements BuildingRoom
 		buildingRoomDao.delete(id);
 		return null == buildingRoomDao.findOne(id);
 	}
+	
+	@Override
+	public Boolean deleteBuildingRoomByFloor(Long floor) {
+		buildingRoomDao.deleteByFloor(floor);
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("floor", floor);
+		return null == buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
+	}
 
 	@Override
 	public BuildingRoom getBuildingRoom(Long id) {
@@ -70,7 +81,24 @@ public class BuildingRoomServiceImpl extends BaseService implements BuildingRoom
 	}
 	
 	@Override
-	public Long getFloorNum() {
-		return buildingRoomDao.countDistinctFloor();
+	public Long getFloorNum(Long id) {
+		return buildingRoomDao.countDistinctFloor(id);
+	}
+	
+	@Override
+	public Map<String, List<BuildingRoom>> findBuildingRooms(Map<String, Object> conditions) {
+		List<BuildingRoom> buildingRooms = buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
+		Map<String, List<BuildingRoom>> map = new TreeMap<>();
+		for (BuildingRoom room : buildingRooms) {
+			if (map.containsKey(room.getFloor().toString())) {
+				map.get(room.getFloor().toString()).add(room);
+			} else {
+				List<BuildingRoom> list = new ArrayList<>();
+				list.add(room);
+				map.put(room.getFloor().toString(), list);
+			}
+		}
+		
+		return map;
 	}
 }
