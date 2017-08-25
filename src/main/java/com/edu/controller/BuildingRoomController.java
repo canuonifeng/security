@@ -52,8 +52,8 @@ public class BuildingRoomController extends BaseController<BuildingRoom> {
 	
 	@RequestMapping(path = "/floor/{floor}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('buildingRoom', 'delete')")
-	public boolean deleteFloor(@PathVariable Long floor) {
-		return buildingRoomService.deleteBuildingRoomByFloor(floor);
+	public void deleteFloor(@PathVariable Long floor) {
+		buildingRoomService.deleteBuildingRoomByFloor(floor);
 	}
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)

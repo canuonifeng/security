@@ -17,7 +17,7 @@ public interface BuildingRoomService {
 	
 	public Boolean deleteBuildingRoom(Long id);
 	
-	public Boolean deleteBuildingRoomByFloor(Long floor);
+	public void deleteBuildingRoomByFloor(Long floor);
 	
 	public BuildingRoom getBuildingRoom(Long id);
 	

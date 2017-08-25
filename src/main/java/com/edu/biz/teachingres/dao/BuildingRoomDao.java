@@ -21,6 +21,5 @@ public interface BuildingRoomDao extends BaseDao<BuildingRoom> {
 	public List<CountRoomType> countGroupByRoomTypeByBuildingId(@Param("buildingId") Long buildingId);
 	
 	@Modifying
-	@Query(value="delete from BuildingRoom b where b.floor=:floor")
-	public void deleteByFloor(@Param("floor") Long floor);
+	public void deleteByFloor(Long floor);
 }
