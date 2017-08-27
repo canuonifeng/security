@@ -20,9 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.teachingres.entity.Building;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.CountRoomType;
+import com.edu.biz.teachingres.entity.RoomType;
 import com.edu.biz.teachingres.entity.pojo.BuildingVo;
-import com.edu.biz.teachingres.service.BuildingRoomService;
 import com.edu.biz.teachingres.service.BuildingService;
 import com.edu.core.util.BeanUtils;
 
@@ -31,38 +32,76 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping("/api/building")
 @Api("建筑")
-public class BuildingController extends BaseController<Building> {
+public class BuildingController extends BaseController<Object> {
 	@Autowired
 	private BuildingService buildingService;
 	
-	@Autowired
-	private BuildingRoomService buildingRoomService;
-	
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('building', 'add')")
-	public Building add(@RequestBody Building building) {
+	public Building addBuilding(@RequestBody Building building) {
 		return buildingService.createBuilding(building);
+	}
+	
+	@RequestMapping(path = "/room",method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('building', 'add')")
+	public BuildingRoom addBuildingRoom(@RequestBody BuildingRoom buildingRoom) {
+		return buildingService.createBuildingRoom(buildingRoom);
 	}
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('building', 'edit')")
-	public Building edit(@PathVariable Long id, @RequestBody Building building) {
+	public Building editBuilding(@PathVariable Long id, @RequestBody Building building) {
 		building.setId(id);
 		return buildingService.updateBuilding(building);
 	}
 	
+	@RequestMapping(path = "/room/{roomId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('building', 'edit')")
+	public BuildingRoom editBuildingRoom(@PathVariable Long roomId, @RequestBody BuildingRoom buildingRoom) {
+		buildingRoom.setId(roomId);
+		return buildingService.updateBuildingRoom(buildingRoom);
+	}
+	
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('building', 'delete')")
-	public boolean delete(@PathVariable Long id) {
+	public boolean deleteBuilding(@PathVariable Long id) {
 		return buildingService.deleteBuilding(id);
+	}
+	
+	@RequestMapping(path = "/room/{roomId}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('building', 'delete')")
+	public boolean deleteBuildingRoom(@PathVariable Long roomId) {
+		return buildingService.deleteBuildingRoom(roomId);
+	}
+	
+	@RequestMapping(path = "/room/floor/{floor}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('building', 'delete')")
+	public void deleteFloor(@PathVariable Long floor) {
+		buildingService.deleteBuildingRoomByFloor(floor);
 	}
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
-	public Building get(@PathVariable Long id) {
+	public Building getBuilding(@PathVariable Long id) {
 		Building Building = new Building();
 		Building.setId(id);
 		return buildingService.getBuilding(Building.getId());
+	}
+	
+	@RequestMapping(path = "/room/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('building', 'get')")
+	public BuildingRoom getBuildingRoom(@PathVariable Long id) {
+		BuildingRoom buildingRoom = new BuildingRoom();
+		buildingRoom.setId(id);
+		return buildingService.getBuildingRoom(
+				buildingRoom.getId());
+	}
+	
+	@RequestMapping(path = "/room/all",method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('building', 'get')")
+	public Map<String, List<BuildingRoom>> findAllBuildingRoom(@RequestParam Map<String, Object> conditions) {
+		
+		return buildingService.findBuildingRooms(conditions);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -76,9 +115,9 @@ public class BuildingController extends BaseController<Building> {
 			BeanUtils.copyPropertiesWithIgnoreProperties(building, buildingVo);
 			HashMap<String,Object> map=new HashMap<String,Object>();
 			map.put("buildingId", building.getId());
-			Long buildingRoomNum = buildingRoomService.countBuildingRoom(map);
-			Long floorNum = buildingRoomService.getFloorNum(building.getId());
-			List<CountRoomType> roomType = buildingRoomService.getRoomNumByBuildingId(building.getId());
+			Long buildingRoomNum = buildingService.countBuildingRoom(map);
+			Long floorNum = buildingService.getFloorNum(building.getId());
+			List<CountRoomType> roomType = buildingService.getRoomNumByBuildingId(building.getId());
 			buildingVo.setRoomDetail(roomType);
 			buildingVo.setFloorNum(floorNum.intValue());
 			buildingVo.setClassroomNum(buildingRoomNum.intValue());
@@ -86,5 +125,25 @@ public class BuildingController extends BaseController<Building> {
 		}
 		Page<BuildingVo> buildingVoPage = new PageImpl<>(buildingVos, pageable, page.getTotalElements());
 		return buildingVoPage;
+	}
+	
+	@RequestMapping(path = "/room/numoftype",method = RequestMethod.GET)
+	public List<CountRoomType> getRoomNum() {
+		List<CountRoomType> list = new ArrayList<CountRoomType>();
+		list = buildingService.getRoomNum();
+		for (RoomType type : RoomType.values()) {
+			boolean isHas = false;
+			for (CountRoomType roomType : list) {
+				if(type.equals(roomType.getRoomType())) {
+					isHas = true;
+					break;
+				}
+			}
+			if(!isHas) {
+				CountRoomType countRoomType = new CountRoomType(type, 0);
+				list.add(countRoomType);
+			}
+		}
+		return list;
 	}
 }
