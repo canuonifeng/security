@@ -49,14 +49,24 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	public Program updateProgram(Program program) {
 		Program saveProgram = programDao.findOne(program.getId());
 		if (null == saveProgram) {
-			throw new NotFoundException("该教师不存在");
+			throw new NotFoundException("该教学计划不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(program, saveProgram, "no", "name", "gender", "status",
-				"start_work_time");
+		BeanUtils.copyPropertiesWithCopyProperties(program, saveProgram, "grade", "major");
 
 		return programDao.save(saveProgram);
 	}
 
+	@Override
+	public ProgramCourse updateProgramCourse(ProgramCourse programCourse) {
+		ProgramCourse saveProgramCourse = programCourseDao.findOne(programCourse.getId());
+		if (null == saveProgramCourse) {
+			throw new NotFoundException("该教学计划课程不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay");
+
+		return programCourseDao.save(saveProgramCourse);
+	}
+	
 	@Override
 	public Boolean deleteProgram(Long id) {
 		programDao.delete(id);
@@ -106,7 +116,8 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		programCourse.setCourse(course);
 		programCourse.setProgram(program);
 		programCourse.setCredit(course.getCredit());
-		programCourse.setPeriod(course.getPracticePeriod()+course.getTheoryPeriod());
+		programCourse.setPracticePeriod(course.getPracticePeriod());
+		programCourse.setTheoryPeriod(course.getTheoryPeriod());
 		createProgramCourse(programCourse);
 		return true;
 	}

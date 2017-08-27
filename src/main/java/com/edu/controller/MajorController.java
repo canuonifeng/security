@@ -44,7 +44,7 @@ public class MajorController extends BaseController<Major> {
 		return majorService.createMajor(major);
 	}
 	
-	@RequestMapping(path = "/check_code",method = RequestMethod. GET)
+	@RequestMapping(path = "/checkcode",method = RequestMethod. GET)
 	@ApiOperation(value = "检查专业代码是否重复", notes = "根据专业代码检查是否重复")
 	public Boolean checkCode(String code,  Long majorId){
 		 return majorService.checkCode(code, majorId);
@@ -113,7 +113,7 @@ public class MajorController extends BaseController<Major> {
 		return majorVo;
 	}
 	
-	@RequestMapping(path = "/findMajors", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	public List<Major> findMajors(@RequestParam Map<String, Object> conditions) {
 		List<Major> list = majorService.findMajors(conditions);
 		

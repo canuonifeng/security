@@ -102,7 +102,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	private void filterOrg(User user) {
 		if (null == user.getOrg() || null == user.getOrg().getId()) {
 			user.setOrg(null);
-			user.setOrgCode(null);
 		}
 
 		if (null != user.getOrg() && null != user.getOrg().getId()) {
@@ -111,7 +110,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 				throw new NotFoundException("组织机构#"+user.getOrg().getId()+"不存在") ;
 			}
 			user.setOrg(org);
-			user.setOrgCode(org.getOrgCode());
 		}
 	}
 	

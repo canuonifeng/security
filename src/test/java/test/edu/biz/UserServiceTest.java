@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.edu.biz.dict.Gender;
+import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.org.entity.Organization;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.service.UserService;
@@ -25,30 +27,24 @@ public class UserServiceTest extends BaseServiceTest {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	private User initUser() {
-		User user = new User();
-		user.setEmail("testuser001@test1.com");
-		user.setPassword("test110");
-		user.setNickname("test001");
-		user.setName("test001");
-		user.setUsername("testuser001");
-		user.setPhone("1999999999");
-		user.setGender(Gender.female);
-		user.setStatus(UserStatus.enable);
-		return userService.createUser(user);
-	}
-
 	@Test
+	@ExpectedDatabase(value = "userService.createUser.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
 	public void testCreateUser() {
 		User user = new User();
-		user.setEmail("test110@test1.com");
+		user.setEmail("test5@edusoho.com");
 		user.setPassword("test110");
-		user.setNickname("test110");
-		user.setName("test110");
-		user.setUsername("test110");
-		user.setPhone("1999999999");
+		user.setNickname("新用户");
+		user.setName("新用户");
+		user.setUsername("test5");
+		user.setPhone("13212345678");
 		user.setGender(Gender.female);
 		user.setStatus(UserStatus.enable);
+		Organization org = new Organization();
+		org.setId(3L);
+		Faculty faculty = new Faculty();
+		faculty.setId(1L);
+		user.setOrg(org);
+		user.setFaculty(faculty);
 		User savedUser = userService.createUser(user);
 
 		Assert.assertNotNull(savedUser.getId());
@@ -63,28 +59,18 @@ public class UserServiceTest extends BaseServiceTest {
 	}
 
 	@Test
+	@ExpectedDatabase(value = "userService.updateUser.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
 	public void testUpdateUser() {
-		User initUser = initUser();
 		User user = new User();
-		user.setName("test002");
-		user.setEmail("test002@test1.com");
-		user.setNickname("test001");
-		user.setName("test002");
-		user.setUsername("testuser002");
+		user.setName("张三");
+		user.setEmail("13312345678");
+		user.setNickname("张三的昵称");
+		user.setUsername("test1");
 		user.setPhone("13312345678");
-		user.setGender(Gender.male);
-		user.setStatus(UserStatus.disable);
-		user.setId(initUser.getId());
-		User savedUser = userService.updateUser(user);
-		Assert.assertNotNull(savedUser.getId());
-		Assert.assertEquals(user.getName(), savedUser.getName());
-		Assert.assertNotNull(savedUser.getPassword());
-		Assert.assertEquals(user.getNickname(), savedUser.getNickname());
-		Assert.assertEquals(user.getUsername(), savedUser.getUsername());
-		Assert.assertEquals(user.getName(), savedUser.getName());
-		Assert.assertEquals(user.getPhone(), savedUser.getPhone());
-		Assert.assertEquals(user.getGender(), savedUser.getGender());
-		Assert.assertEquals(user.getStatus(), savedUser.getStatus());
+		user.setGender(Gender.female);
+		user.setEmail("zhangsan@edusoho.com");
+		user.setId(2L);
+		userService.updateUser(user);
 	}
 	
 	@Test(expected=NotFoundException.class)

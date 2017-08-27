@@ -103,22 +103,6 @@ public class User extends BaseEntity implements UserDetails {
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Organization org;
 
-	private String orgCode;
-
-	public String getOrgCode() {
-		if (null != org) {
-			orgCode = org.getOrgCode();
-		}
-		return orgCode;
-	}
-
-	public void setOrgCode(String orgCode) {
-		if (null != org) {
-			orgCode = org.getOrgCode();
-		}
-		this.orgCode = orgCode;
-	}
-
 	public String getUsername() {
 		return username;
 	}
