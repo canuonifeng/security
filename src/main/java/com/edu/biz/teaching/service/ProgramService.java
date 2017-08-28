@@ -1,5 +1,6 @@
 package com.edu.biz.teaching.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
+import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teachingres.entity.Course;
 
 public interface ProgramService {
@@ -31,5 +33,9 @@ public interface ProgramService {
 	public ProgramCourse updateProgramCourse(ProgramCourse programCourse);
 	
 	public Boolean deleteProgramCourse(Long programCourseId);
+
+	public Map<String, Map<String, List<ProgramCourse>>> showCourseTable(Long id);
+
+	public List<Term> getProgramTerm(Long id);
 
 }

@@ -15,7 +15,6 @@ import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.org.service.OrgService;
-import com.edu.biz.schoolroll.specification.MajorSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
