@@ -40,11 +40,11 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	public Building updateBuilding(Building building) {
 		Building saveBuilding = buildingDao.findOne(building.getId());
 		if (null == saveBuilding) {
-			throw new NotFoundException("该课程不存在");
+			throw new NotFoundException("该建筑不存在");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(building, saveBuilding, "name");
 
-		return buildingDao.save(building);
+		return buildingDao.save(saveBuilding);
 	}
 	
 	@Override
