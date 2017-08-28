@@ -15,12 +15,13 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class BuildingRoom extends BaseEntity {
+	@NotEmpty(message = "名称不能为空")
 	@ApiModelProperty(value = " 层数")
 	private Integer floor;
 	
 	@NotEmpty(message = "名称不能为空")
 	@ApiModelProperty(value = "教室名称")
-	private String name = "教室1";
+	private String name;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "building_id")
@@ -35,6 +36,7 @@ public class BuildingRoom extends BaseEntity {
 		this.building = building;
 	}
 
+	@NotEmpty(message = "名称不能为空")
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = "教室类型")
 	private RoomType roomType;
