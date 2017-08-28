@@ -254,5 +254,4 @@ public class User extends BaseEntity implements UserDetails {
 	public void setOrg(Organization org) {
 		this.org = org;
 	}
-
 }
