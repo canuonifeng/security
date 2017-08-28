@@ -16,13 +16,13 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 public class BuildingRoom extends BaseEntity {
 	@ApiModelProperty(value = " 层数")
-	private Long floor;
+	private Integer floor;
 	
 	@NotEmpty(message = "名称不能为空")
 	@ApiModelProperty(value = "教室名称")
-	private String name;
+	private String name = "教室1";
 	
-	@ManyToOne(targetEntity = Building.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = Building.class,  fetch = FetchType.LAZY)
 	@JoinColumn(name = "building_id")
 	@ApiModelProperty(value = "建筑")
 	private Building building;
@@ -40,13 +40,13 @@ public class BuildingRoom extends BaseEntity {
 	private RoomType roomType;
 	
 	@ApiModelProperty(value = "座位数")
-	private String seatNum;
+	private Integer seatNum;
 
-	public Long getFloor() {
+	public Integer getFloor() {
 		return floor;
 	}
 
-	public void setFloor(Long floor) {
+	public void setFloor(Integer floor) {
 		this.floor = floor;
 	}
 
@@ -58,11 +58,11 @@ public class BuildingRoom extends BaseEntity {
 		this.name = name;
 	}
 
-	public String getSeatNum() {
+	public Integer getSeatNum() {
 		return seatNum;
 	}
 
-	public void setSeatNum(String seatNum) {
+	public void setSeatNum(Integer seatNum) {
 		this.seatNum = seatNum;
 	}
 	

@@ -51,7 +51,6 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	@Transactional
 	public Boolean deleteBuilding(Long id) {
 		buildingDao.delete(id);
-		buildingRoomDao.deleteByBuildingId(id);
 		return null == buildingDao.findOne(id);
 	}
 

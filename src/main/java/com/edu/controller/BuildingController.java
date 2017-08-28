@@ -83,9 +83,9 @@ public class BuildingController extends BaseController<Object> {
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
 	public Building getBuilding(@PathVariable Long id) {
-		Building Building = new Building();
-		Building.setId(id);
-		return buildingService.getBuilding(Building.getId());
+		Building building = new Building();
+		building.setId(id);
+		return buildingService.getBuilding(building.getId());
 	}
 	
 	@RequestMapping(path = "/room/{id}", method = RequestMethod.GET)
