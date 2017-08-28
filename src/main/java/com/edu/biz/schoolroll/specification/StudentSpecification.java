@@ -39,7 +39,7 @@ public class StudentSpecification implements Specification<Student> {
 				list.add(cb.isNull(root.get("classroom").get("id")));
 			}
 			if (conditions.containsKey("yearMonth")) {
-				list.add(cb.equal(root.get("admission_time"), this.conditions.get("yearMonth")));
+				list.add(cb.equal(root.get("admissionTime"), this.conditions.get("yearMonth")));
 			}
 			if (conditions.containsKey("facultyId")) {
 				list.add(cb.equal(root.get("major").get("faculty").get("id"), this.conditions.get("facultyId")));
