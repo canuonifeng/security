@@ -45,6 +45,7 @@ public class ThrowableHandler{
 	@ExceptionHandler(Throwable.class)
 	@ResponseBody
 	public ResponseWrapper throwableHandler(HttpServletRequest req, Throwable e) throws Exception {
+		e.printStackTrace();
 		ResponseWrapper err = new ResponseWrapper(e.getMessage());
 		err.setMessage("服务器异常");
 		err.setStatus(String.valueOf(HttpServletResponse.SC_INTERNAL_SERVER_ERROR));
