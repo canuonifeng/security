@@ -22,7 +22,7 @@ public class BuildingRoom extends BaseEntity {
 	@ApiModelProperty(value = "教室名称")
 	private String name = "教室1";
 	
-	@ManyToOne(targetEntity = Building.class,  fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "building_id")
 	@ApiModelProperty(value = "建筑")
 	private Building building;

@@ -18,6 +18,9 @@ public class ProgramCourse extends BaseEntity {
 	private String credit;
 	private int practicePeriod;
 	private int theoryPeriod;
+	private String termCode;
+	private Integer termNum;
+	private Integer weekPeriod;
 	
 	@ManyToOne
 	@JoinColumn(name = "course_id")
@@ -89,5 +92,29 @@ public class ProgramCourse extends BaseEntity {
 
 	public void setTheoryPeriod(int theoryPeriod) {
 		this.theoryPeriod = theoryPeriod;
+	}
+
+	public String getTermCode() {
+		return termCode;
+	}
+
+	public void setTermCode(String termCode) {
+		this.termCode = termCode;
+	}
+
+	public Integer getTermNum() {
+		return termNum;
+	}
+
+	public void setTermNum(Integer termNum) {
+		this.termNum = termNum;
+	}
+
+	public Integer getWeekPeriod() {
+		return weekPeriod;
+	}
+
+	public void setWeekPeriod(Integer weekPeriod) {
+		this.weekPeriod = weekPeriod;
 	}
 }

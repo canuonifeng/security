@@ -21,10 +21,10 @@ public class Building extends BaseEntity {
 	@ApiModelProperty(value = " 名称")
 	private String name;
 	
-	@JsonIgnore
 	@OneToMany(cascade = CascadeType.REMOVE,targetEntity = BuildingRoom.class,  fetch = FetchType.LAZY)
-	@ApiModelProperty(hidden=true)
+	@ApiModelProperty(value = "教室")
 	@JoinColumn(name = "building_id")
+	@JsonIgnore
 	private List<BuildingRoom> buildingRoom;
 
 	public List<BuildingRoom> getBuildingRoom() {

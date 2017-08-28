@@ -11,13 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
-import com.edu.biz.schoolroll.entity.Classroom;
-import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.teaching.dao.ProgramCourseDao;
 import com.edu.biz.teaching.dao.ProgramDao;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
+import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.ProgramService;
+import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.ProgramCourseSpecification;
 import com.edu.biz.teaching.specification.ProgramSpecification;
 import com.edu.biz.teachingres.dao.CourseDao;
@@ -33,6 +33,8 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	private ProgramDao programDao;
 	@Autowired
 	private ProgramCourseDao programCourseDao;
+	@Autowired
+	private TermService termService;
 	@Autowired
 	private CourseDao courseDao;
 	@Override
@@ -62,7 +64,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		if (null == saveProgramCourse) {
 			throw new NotFoundException("该教学计划课程不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay");
+		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay", "weekPeriod", "termNum", "termCode");
 
 		return programCourseDao.save(saveProgramCourse);
 	}
@@ -122,6 +124,96 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		return true;
 	}
 
+	@Override
+	public Map<String, Map<String, List<ProgramCourse>>> showCourseTable(Long id) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("programId", id);
+		List<ProgramCourse> courses = programCourseDao.findAll(new ProgramCourseSpecification(map));
+		return generateTable(courses);
+	}
+	
+	private Map<String, Map<String, List<ProgramCourse>>> generateTable(List<ProgramCourse> courses) {
+		HashMap<String, Map<String, List<ProgramCourse>>> map = new HashMap<>();
+
+		for (ProgramCourse programCourse : courses) {
+			if(map.containsKey(programCourse.getCategory())) {
+				if(map.get(programCourse.getCategory()).containsKey(programCourse.getNature())) {
+					map.get(programCourse.getCategory()).get(programCourse.getNature()).add(programCourse);
+				} else {
+					List<ProgramCourse> result = new ArrayList<ProgramCourse>();
+					result.add(programCourse);
+					map.get(programCourse.getCategory()).put(programCourse.getNature(), result);
+				}
+			} else {
+				List<ProgramCourse> result = new ArrayList<ProgramCourse>();
+				Map<String, List<ProgramCourse>> type =  new HashMap<>();
+				result.add(programCourse);
+				type.put(programCourse.getNature(), result);
+				map.put(programCourse.getCategory(), type);
+			}
+		}
+		return map;
+	}
+	
+	@Override
+	public List<Term> getProgramTerm(Long id) {
+		Program program = getProgram(id);
+		String prefix = program.getGrade().substring(program.getGrade().length() - 2);
+		String firstCodePrefix = prefix+"-"+(Integer.parseInt(prefix)+1);
+		Map<String, Object> conditions = new HashMap<>();
+		List<String> codes = new ArrayList<>();
+		for (int i = 1; i <= 2; i++) {
+			codes.add(firstCodePrefix+"-"+i) ;
+		}
+		String secondCodePrefix = (Integer.parseInt(prefix)+1)+"-"+(Integer.parseInt(prefix)+2);
+		for (int i = 1; i <= 2; i++) {
+			codes.add(secondCodePrefix+"-"+i) ;
+		}
+		String thirdCodePrefix = (Integer.parseInt(prefix)+2)+"-"+(Integer.parseInt(prefix)+3);
+		for (int i = 1; i <= 2; i++) {
+			codes.add(thirdCodePrefix+"-"+i) ;
+		}
+		conditions.put("inCodes", codes);
+		List<Term> terms = termService.findTerms(conditions);
+		if(terms.size() == 6) {
+			return terms;
+		} else {
+			dealTerms(terms, codes);
+			return termService.findTerms(conditions);
+		}
+	}
+	
+	private Boolean dealTerms(List<Term> terms, List<String> codes){
+		for (int i = 0; i < codes.size(); i++) {
+			for (int j = 0; j < terms.size(); j++) {
+				if(terms.get(j).getCode().equals(codes.get(i))) {
+					break;
+				}
+				if(terms.size()-1 == j) {
+					createTerm(codes.get(i));
+				}
+			}
+		}
+		return true;
+	}
+	
+	private Boolean createTerm(String code) {
+		String[] codeArray = code.split("-");
+		String longCode = "20"+codeArray[0]+"-"+"20"+codeArray[1]+"-"+codeArray[2];
+		String title = "";
+		if(codeArray[2].equals("1")) {
+			title = "20"+codeArray[0]+"-"+"20"+codeArray[1]+"学年第一学期";
+		} else {
+			title = "20"+codeArray[0]+"-"+"20"+codeArray[1]+"学年第二学期";
+		}
+		Term term = new Term();
+		term.setCode(code);
+		term.setLongCode(longCode);
+		term.setTitle(title);
+		termService.createTerm(term);
+		return true;
+	}
+	
 	private Boolean canJoinProgram(Course course, Program program) {
 		if (course == null) {
 			return false;
