@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
+import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.entity.pojo.ProgramVo;
 import com.edu.biz.teaching.service.ProgramService;
 import com.edu.biz.teachingres.entity.Course;
@@ -103,14 +104,14 @@ public class ProgramController extends BaseController<Program> {
 	
 	@RequestMapping(path = "show/{id}/coursetable", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
-	public Map showCourseTable(@PathVariable Long id) {
-		Map result = programService.showCourseTable(id);
+	public Map<String, Map<String, List<ProgramCourse>>> showCourseTable(@PathVariable Long id) {
+		Map<String, Map<String, List<ProgramCourse>>> result = programService.showCourseTable(id);
 		return result;
 	}
 	@RequestMapping(path = "{id}/terms", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
-	public List getProgramTerm(@PathVariable Long id) {
-		List result = programService.getProgramTerm(id);
+	public List<Term> getProgramTerm(@PathVariable Long id) {
+		List<Term> result = programService.getProgramTerm(id);
 		return result;
 	}
 	

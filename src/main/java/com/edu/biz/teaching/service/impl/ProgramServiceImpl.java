@@ -125,14 +125,14 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	}
 
 	@Override
-	public Map showCourseTable(Long id) {
+	public Map<String, Map<String, List<ProgramCourse>>> showCourseTable(Long id) {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("programId", id);
 		List<ProgramCourse> courses = programCourseDao.findAll(new ProgramCourseSpecification(map));
 		return generateTable(courses);
 	}
 	
-	private Map generateTable(List<ProgramCourse> courses) {
+	private Map<String, Map<String, List<ProgramCourse>>> generateTable(List<ProgramCourse> courses) {
 		HashMap<String, Map<String, List<ProgramCourse>>> map = new HashMap<>();
 
 		for (ProgramCourse programCourse : courses) {

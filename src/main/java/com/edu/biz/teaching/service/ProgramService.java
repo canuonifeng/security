@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
+import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teachingres.entity.Course;
 
 public interface ProgramService {
@@ -33,8 +34,8 @@ public interface ProgramService {
 	
 	public Boolean deleteProgramCourse(Long programCourseId);
 
-	public Map showCourseTable(Long id);
+	public Map<String, Map<String, List<ProgramCourse>>> showCourseTable(Long id);
 
-	public List getProgramTerm(Long id);
+	public List<Term> getProgramTerm(Long id);
 
 }
