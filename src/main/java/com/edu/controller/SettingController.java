@@ -14,7 +14,7 @@ import com.edu.biz.common.entity.Setting;
 import io.swagger.annotations.Api;
 
 @RestController
-@RequestMapping("/api/system")
+@RequestMapping("/api/syssetting")
 @Api("系统设置")
 public class SettingController extends BaseController<System> {
 	@Autowired

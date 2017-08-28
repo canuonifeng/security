@@ -7,7 +7,6 @@ import com.edu.biz.base.BaseService;
 import com.edu.biz.common.dao.SettingDao;
 import com.edu.biz.common.dao.service.SettingService;
 import com.edu.biz.common.entity.Setting;
-import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
 
 @Service
