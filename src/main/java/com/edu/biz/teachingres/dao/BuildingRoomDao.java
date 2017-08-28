@@ -22,6 +22,4 @@ public interface BuildingRoomDao extends BaseDao<BuildingRoom> {
 	
 	@Modifying
 	public void deleteByFloor(Long floor);
-	
-	public void deleteByBuildingId(Long buildingId);
 }

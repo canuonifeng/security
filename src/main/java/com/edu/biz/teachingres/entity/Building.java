@@ -23,14 +23,14 @@ public class Building extends BaseEntity {
 	
 	@OneToMany(cascade = CascadeType.REMOVE,targetEntity = BuildingRoom.class,  fetch = FetchType.LAZY)
 	@ApiModelProperty(value = "教室")
-	@JoinColumn(name = "building_id")
+	@JoinColumn(name = "building_id",insertable = false, updatable = false)
 	@JsonIgnore
 	private List<BuildingRoom> buildingRoom;
 
 	public List<BuildingRoom> getBuildingRoom() {
 		return buildingRoom;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
