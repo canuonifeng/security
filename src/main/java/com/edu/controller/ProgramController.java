@@ -100,6 +100,20 @@ public class ProgramController extends BaseController<Program> {
 		Page<ProgramVo> programVoPage = new PageImpl<>(programVos, pageable, page.getTotalElements());
 		return programVoPage;
 	}
+	
+	@RequestMapping(path = "show/{id}/coursetable", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('program', 'get')")
+	public Map showCourseTable(@PathVariable Long id) {
+		Map result = programService.showCourseTable(id);
+		return result;
+	}
+	@RequestMapping(path = "{id}/terms", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('program', 'get')")
+	public List getProgramTerm(@PathVariable Long id) {
+		List result = programService.getProgramTerm(id);
+		return result;
+	}
+	
 	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	public Page<ProgramCourse> coursePager(@RequestParam Map<String, Object> conditions,

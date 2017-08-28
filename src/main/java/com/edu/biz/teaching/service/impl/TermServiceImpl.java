@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
@@ -75,9 +77,19 @@ public class TermServiceImpl extends BaseService implements TermService {
 	public Term getTerm(Long id) {
 		return termDao.findOne(id);
 	}
+	
+	@Override
+	public Term getTermByCode(String code) {
+		return termDao.getByCode(code);
+	}
 
 	@Override
 	public Page<Term> searchTerms(Map<String, Object> conditions, Pageable pageable) {
 		return termDao.findAll(new TermSpecification(conditions), pageable);
+	}
+	
+	@Override
+	public List<Term> findTerms(Map<String, Object> conditions) {
+		return termDao.findAll(new TermSpecification(conditions), new Sort(Direction.ASC,"code"));
 	}
 }

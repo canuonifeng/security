@@ -1,5 +1,6 @@
 package com.edu.biz.teaching.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -22,4 +23,8 @@ public interface TermService {
 	public Term getTerm(Long id);
 	
 	public Page<Term> searchTerms(Map<String, Object> conditions, Pageable pageable);
+	
+	public List<Term> findTerms(Map<String, Object> conditions);
+	
+	public Term getTermByCode(String code);
 }

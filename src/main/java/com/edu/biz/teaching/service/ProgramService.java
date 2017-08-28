@@ -1,5 +1,6 @@
 package com.edu.biz.teaching.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -31,5 +32,9 @@ public interface ProgramService {
 	public ProgramCourse updateProgramCourse(ProgramCourse programCourse);
 	
 	public Boolean deleteProgramCourse(Long programCourseId);
+
+	public Map showCourseTable(Long id);
+
+	public List getProgramTerm(Long id);
 
 }
