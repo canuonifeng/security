@@ -30,7 +30,7 @@ public class Building extends BaseEntity {
 	public List<BuildingRoom> getBuildingRoom() {
 		return buildingRoom;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
