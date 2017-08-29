@@ -6,6 +6,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -15,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class BuildingRoom extends BaseEntity {
-	@NotEmpty(message = "层数不能为空")
+	@NotNull(message = "层数不能为空")
 	@ApiModelProperty(value = " 层数")
 	private Integer floor;
 	
@@ -40,7 +41,7 @@ public class BuildingRoom extends BaseEntity {
 	@ApiModelProperty(value = "教室类型")
 	private RoomType roomType = RoomType.normal;
 	
-	@NotEmpty(message = "座位数不能为空")
+	@NotNull(message = "座位数不能为空")
 	@ApiModelProperty(value = "座位数")
 	private Integer seatNum;
 
