@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -126,6 +128,6 @@ public class OrgServiceImpl implements OrgService {
 	}
 	@Override
 	public List<Organization> findOrgs(Map<String, Object> conditions) {
-		return orgDao.findAll(new OrgSpecification(conditions));
+		return orgDao.findAll(new OrgSpecification(conditions), new Sort(Direction.DESC, "createdTime"));
 	}
 }

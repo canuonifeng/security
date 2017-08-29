@@ -72,8 +72,8 @@ public class OrgController extends BaseController<Organization> {
 	}
 	
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
-@PreAuthorize("hasPermission('org', 'get')")
-@JsonView(OrgJsonViews.CascadeChildren.class)
+	@PreAuthorize("hasPermission('org', 'get')")
+	@JsonView(OrgJsonViews.CascadeChildren.class)
 	public List<Organization> findOrgs(@RequestParam Map<String, Object> conditions) {
 		List<Organization> list = orgService.findOrgs(conditions);
 		
