@@ -73,6 +73,12 @@ public class UserController extends BaseController<User> {
 	public Boolean checkUserName(String userName, Long userId) {
 		return userService.checkUserName(userName, userId);
 	}
+	
+	@RequestMapping(path = "/checkemail", method = RequestMethod.GET)
+	@ApiOperation(value = "检查邮箱是否重复", notes = "根据邮箱检查是否重复")
+	public Boolean checkEmail(String email, Long userId) {
+		return userService.checkEmail(email, userId);
+	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('user', 'add')")

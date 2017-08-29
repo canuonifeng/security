@@ -232,4 +232,16 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 		return false;
 	}
+	
+	@Override
+	public Boolean checkEmail(String email,Long userId) {
+		User user = userDao.getByEmail(email);
+		if (null == user) {
+			return true;
+		}
+		if (user.getId().equals(userId)) {
+			return true;
+		}
+		return false;
+	}
 }
