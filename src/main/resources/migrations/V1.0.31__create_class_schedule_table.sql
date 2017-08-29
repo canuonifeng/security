@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS `class_schedule` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `term` varchar(32) NOT NULL COMMENT '学期代码',
+  `course_id` int(10) UNSIGNED NOT NULL COMMENT '课程',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `schedule_calssroom` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `schedule_id` int(10) UNSIGNED NOT NULL COMMENT '排课按排',
+  `classroom_id` int(10) UNSIGNED COMMENT '班级',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `schedule_teacher` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `schedule_id` int(10) UNSIGNED NOT NULL COMMENT '排课按排',
+  `teacher_id` int(10) UNSIGNED COMMENT '教师',
+  `master` TINYINT(1) UNSIGNED DEFAULT 0 COMMENT '是否主带老师',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `schedule_cycle` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `schedule_id` int(10) UNSIGNED NOT NULL COMMENT '排课按排',
+  `building_room_id` int(10) UNSIGNED COMMENT '教室',
+  `week` TINYINT(1) UNSIGNED NOT NULL COMMENT '星期',
+  `period` varchar(32) NOT NULL COMMENT '课节',
+  `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
