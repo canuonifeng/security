@@ -20,6 +20,8 @@ public interface UserService {
 	public User changeUserStatus(Long id, UserStatus status);
 	
 	public Boolean checkUserName(String userName,Long userId);
+	
+	public Boolean checkEmail(String email,Long userId);
 
 	public boolean deleteUser(Long id);
 	
