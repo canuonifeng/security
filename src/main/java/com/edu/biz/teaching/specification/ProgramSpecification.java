@@ -12,7 +12,6 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.teaching.entity.Program;
-import com.edu.biz.teachingres.entity.Teacher;
 
 public class ProgramSpecification implements Specification<Program> {
 	private Map<String, Object> conditions;

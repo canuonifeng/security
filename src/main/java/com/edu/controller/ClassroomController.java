@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Major;
-import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomForm;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
@@ -135,12 +134,10 @@ public class ClassroomController extends BaseController<Classroom> {
 		return classroomVoPage;
 	}
 
-	@RequestMapping(path = "/unassignnum", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
-	public List<Classroom> findUnAssignNumClassroom() {
-		HashMap<String, Object> conditions = new HashMap<String, Object>();
-		conditions.put("isAssignNum", 0);
-		List<Classroom> list = classroomService.findUnAssignNumClassroom(conditions);
+	public List<Classroom> findAllClassroom(@RequestParam Map<String, Object> conditions) {
+		List<Classroom> list = classroomService.findAllClassroom(conditions);
 		return list;
 	}
 }

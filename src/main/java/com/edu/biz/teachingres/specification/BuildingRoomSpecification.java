@@ -10,6 +10,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
+
 import com.edu.biz.teachingres.entity.BuildingRoom;
 
 public class BuildingRoomSpecification implements Specification<BuildingRoom> {

@@ -108,7 +108,7 @@ public class EnumDictController {
 		return list;
 	}
 	
-	@RequestMapping(path = "/courseTestWay", method = RequestMethod.GET)
+	@RequestMapping(path = "/coursetestway", method = RequestMethod.GET)
 	public List<Object> getRoomType() {
 		ArrayList<Object> list=new ArrayList<Object>();
 		for(CourseTestWay courseTestWay : CourseTestWay.values()) {
