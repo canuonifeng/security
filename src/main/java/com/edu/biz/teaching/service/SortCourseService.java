@@ -11,4 +11,6 @@ public interface SortCourseService {
 	public ScheduleCycle createScheduleCycle(ScheduleCycle scheduleCycle);
 	
 	public ScheduleClassroom createScheduleClassroom(ScheduleClassroom scheduleCalssroom);
+	
+	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId);
 }
