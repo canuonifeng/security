@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
@@ -65,7 +67,7 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 	
 	@Override
 	public List<Major> findMajors(Map<String, Object> conditions) {
-		return majorDao.findAll(new MajorSpecification(conditions));
+		return majorDao.findAll(new MajorSpecification(conditions), new Sort(Direction.DESC, "createdTime"));
 	}
 
 	@Override
