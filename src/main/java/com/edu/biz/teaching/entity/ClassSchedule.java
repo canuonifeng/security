@@ -26,9 +26,13 @@ public class ClassSchedule extends BaseEntity {
 	@ApiModelProperty(value = "课程")
 	private Course course;
 	
-	@ManyToMany(targetEntity = Classroom.class, fetch = FetchType.EAGER)
+	@ManyToMany(targetEntity = Classroom.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "schedule_calssroom", joinColumns = @JoinColumn(name = "schedule_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "classroom_id", referencedColumnName = "id"))
 	private List<Classroom> classrooms;
+
+	@ManyToMany(targetEntity = ScheduleCycle.class, fetch = FetchType.LAZY)
+	@JoinColumn(name="schedule_id")
+	private List<ScheduleCycle> scheduleCycles;
 
 	public Course getCourse() {
 		return course;
@@ -52,6 +56,14 @@ public class ClassSchedule extends BaseEntity {
 
 	public void setClassrooms(List<Classroom> classrooms) {
 		this.classrooms = classrooms;
+	}
+
+	public List<ScheduleCycle> getScheduleCycles() {
+		return scheduleCycles;
+	}
+
+	public void setScheduleCycles(List<ScheduleCycle> scheduleCycles) {
+		this.scheduleCycles = scheduleCycles;
 	}
 	
 }

@@ -37,6 +37,7 @@ public class SortCourseController extends BaseController<Course> {
 	private ClassroomService classroomService;
 	@Autowired
 	private SortCourseService sortCourseService;
+	
 	@RequestMapping(path = "/{classroomId}", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classroom', 'add')")
 	public Boolean sortCourse(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
@@ -52,6 +53,12 @@ public class SortCourseController extends BaseController<Course> {
 		
 		createScheduleClassroom(conditions, classSchedule, classroomId);
 		
+		return true;
+	}
+	
+	@RequestMapping(path = "/{classroomId}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('classroom', 'get')")
+	public Boolean getCourseArrange(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
 		return true;
 	}
 	
@@ -86,4 +93,5 @@ public class SortCourseController extends BaseController<Course> {
 		scheduleCalssroom.setClassSchedule(classSchedule);
 		return sortCourseService.createScheduleClassroom(scheduleCalssroom);
 	}
+
 }
