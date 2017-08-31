@@ -62,5 +62,17 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public Page<Teacher> searchTeachers(Map<String, Object> conditions, Pageable pageable) {
 		return teacherDao.findAll(new TeacherSpecification(conditions), pageable);
 	}
+	
+	@Override
+	public Boolean checkNo(String no,Long teacherId) {
+		Teacher teacher = teacherDao.getByNo(no);
+		if (null == teacher) {
+			return true;
+		}
+		if (teacher.getId().equals(teacherId)) {
+			return true;
+		}
+		return false;
+	}
 
 }
