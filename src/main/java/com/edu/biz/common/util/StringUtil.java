@@ -3,7 +3,9 @@ package com.edu.biz.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TermCodeUtil {
+import com.edu.core.exception.ServiceException;
+
+public class StringUtil {
 
 	public static String getTermCode(String grade, Integer termNum) {
 		String prefix = grade.substring(grade.length()  - 2);
@@ -47,4 +49,26 @@ public class TermCodeUtil {
     private static  boolean isOdd(int i){  
         return i%2==1;  
     } 
+    
+    public static String getCoursePeriod(String period, String type) {
+    	String prefix = getPeriodPrefix(type);
+    	if(prefix == null) {
+			throw new ServiceException("404","前缀不能为空");
+    	}
+    	
+    	return (prefix+"-"+period);
+    }
+    
+    private static String getPeriodPrefix(String type) {
+    	if(type.equals("morning")) {
+    		return "1";
+    	}
+    	if(type.equals("afternoon")) {
+    		return "2";
+    	}
+    	if(type.equals("night")) {
+    		return "3";
+    	}
+    	return null;
+    }
 }

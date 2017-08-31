@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.common.util.TermCodeUtil;
+import com.edu.biz.common.util.StringUtil;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
@@ -79,7 +79,7 @@ public class ProgramController extends BaseController<Program> {
 		ProgramVo programVo = new ProgramVo();
 		BeanUtils.copyPropertiesWithIgnoreProperties(program, programVo);
 
-		String code = TermCodeUtil.getTermCode(program.getGrade(), Integer.parseInt(conditions.get("termNum")));
+		String code = StringUtil.getTermCode(program.getGrade(), Integer.parseInt(conditions.get("termNum")));
 		Term term = termService.getTermByCode(code);
 		programVo.setTerm(term);
 
