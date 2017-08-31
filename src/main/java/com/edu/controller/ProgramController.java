@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.common.util.StringUtil;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.entity.pojo.ProgramVo;
 import com.edu.biz.teaching.service.ProgramService;
+import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.service.CourseService;
 import com.edu.core.util.BeanUtils;
@@ -41,13 +43,15 @@ public class ProgramController extends BaseController<Program> {
 	private ClassroomService classroomService;
 	@Autowired
 	private CourseService courseService;
-	
+	@Autowired
+	private TermService termService;
+
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('major', 'add')")
 	public Program add(@RequestBody Program program) {
 		return programService.createProgram(program);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('program', 'edit')")
 	public Program edit(@PathVariable Long id, @RequestBody Program program) {
@@ -61,11 +65,25 @@ public class ProgramController extends BaseController<Program> {
 		programCourse.setId(id);
 		return programService.updateProgramCourse(programCourse);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('program', 'delete')")
 	public boolean delete(@PathVariable Long id) {
 		return programService.deleteProgram(id);
+	}
+
+	@RequestMapping(path = "/{id}/term", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('program', 'get')")
+	public ProgramVo getTermProgram(@PathVariable Long id, @RequestParam Map<String, String> conditions) {
+		Program program = programService.getProgram(id);
+		ProgramVo programVo = new ProgramVo();
+		BeanUtils.copyPropertiesWithIgnoreProperties(program, programVo);
+
+		String code = StringUtil.getTermCode(program.getGrade(), Integer.parseInt(conditions.get("termNum")));
+		Term term = termService.getTermByCode(code);
+		programVo.setTerm(term);
+
+		return programVo;
 	}
 
 	@RequestMapping(path = "/{programCourseId}/course", method = RequestMethod.DELETE)
@@ -73,7 +91,7 @@ public class ProgramController extends BaseController<Program> {
 	public boolean deleteCourse(@PathVariable Long programCourseId) {
 		return programService.deleteProgramCourse(programCourseId);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	public Program get(@PathVariable Long id) {
@@ -101,21 +119,22 @@ public class ProgramController extends BaseController<Program> {
 		Page<ProgramVo> programVoPage = new PageImpl<>(programVos, pageable, page.getTotalElements());
 		return programVoPage;
 	}
-	
+
 	@RequestMapping(path = "show/{id}/coursetable", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
 	public Map<String, Map<String, List<ProgramCourse>>> showCourseTable(@PathVariable Long id) {
 		Map<String, Map<String, List<ProgramCourse>>> result = programService.showCourseTable(id);
 		return result;
 	}
+
 	@RequestMapping(path = "{id}/terms", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
 	public List<Term> getProgramTerm(@PathVariable Long id) {
 		List<Term> result = programService.getProgramTerm(id);
 		return result;
 	}
-	
-	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
+
+	@RequestMapping(path = "/pagecourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	public Page<ProgramCourse> coursePager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
@@ -123,13 +142,21 @@ public class ProgramController extends BaseController<Program> {
 		return programCourse;
 	}
 
+	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('classroom', 'get')")
+	public List<ProgramCourse> termCourses(@RequestParam Map<String, Object> conditions) {
+		List<ProgramCourse> programCourse = programService.searchAllProgramCourse(conditions);
+		return programCourse;
+	}
+
 	@RequestMapping(path = "/{programId}/addcourse", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('course', 'get')")
-	public Page<Course> showCoursesNotInProgram(@PathVariable Long programId, @RequestParam Map<String, Object> conditions,
+	public Page<Course> showCoursesNotInProgram(@PathVariable Long programId,
+			@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return programService.searchCoursesNotInProgram(programId, conditions, pageable);
 	}
-	
+
 	@RequestMapping(path = "/join/{programId}/program", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('program', 'post')")
 	public Boolean joinProgram(@PathVariable Long programId, @RequestBody Map<String, String> courseIds) {

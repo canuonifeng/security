@@ -21,14 +21,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.common.util.StringUtil;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Major;
-import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomForm;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.MajorService;
 import com.edu.biz.schoolroll.service.StudentService;
+import com.edu.biz.teaching.entity.Term;
+import com.edu.biz.teaching.service.TermService;
 import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
@@ -39,6 +41,9 @@ import io.swagger.annotations.Api;
 public class ClassroomController extends BaseController<Classroom> {
 	@Autowired
 	private ClassroomService classroomService;
+	
+	@Autowired
+	private TermService termService;
 
 	@Autowired
 	private MajorService majorService;
@@ -77,6 +82,7 @@ public class ClassroomController extends BaseController<Classroom> {
 		return true;
 	}
 
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classroom', 'edit')")
 	public Classroom edit(@PathVariable Long id, @RequestBody Classroom classroom) {
@@ -96,17 +102,17 @@ public class ClassroomController extends BaseController<Classroom> {
 		Classroom classroom = classroomService.getClassroom(id);
 		ClassroomVo classroomVo = new ClassroomVo();
 		BeanUtils.copyPropertiesWithIgnoreProperties(classroom, classroomVo);
-		HashMap<String, Object> map = new HashMap<String ,Object>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("classroomId", classroom.getId());
 		Long studentNum = studentService.countStudent(map);
 		classroomVo.setStudentNum(studentNum);
-		
+
 		map.clear();
 		map.put("classroomId", classroom.getId());
 		map.put("gender", "male");
 		Long maleNum = studentService.countStudent(map);
 		classroomVo.setMaleNum(maleNum);
-		
+
 		map.clear();
 		map.put("classroomId", classroom.getId());
 		map.put("gender", "female");
@@ -135,12 +141,10 @@ public class ClassroomController extends BaseController<Classroom> {
 		return classroomVoPage;
 	}
 
-	@RequestMapping(path = "/unassignnum", method = RequestMethod.GET)
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
-	public List<Classroom> findUnAssignNumClassroom() {
-		HashMap<String, Object> conditions = new HashMap<String, Object>();
-		conditions.put("isAssignNum", 0);
-		List<Classroom> list = classroomService.findUnAssignNumClassroom(conditions);
+	public List<Classroom> findAllClassroom(@RequestParam Map<String, Object> conditions) {
+		List<Classroom> list = classroomService.findAllClassroom(conditions);
 		return list;
 	}
 }

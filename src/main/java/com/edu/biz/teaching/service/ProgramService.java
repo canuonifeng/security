@@ -38,4 +38,6 @@ public interface ProgramService {
 
 	public List<Term> getProgramTerm(Long id);
 
+	public List<ProgramCourse> searchAllProgramCourse(Map<String, Object> conditions);
+
 }
