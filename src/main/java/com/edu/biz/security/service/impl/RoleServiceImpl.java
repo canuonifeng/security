@@ -8,6 +8,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
@@ -73,6 +75,6 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	
 	@Override
 	public List<Role> findRoles(Map<String, Object> conditions) {
-		return roleDao.findAll(new RoleSpecification(conditions));
+		return roleDao.findAll(new RoleSpecification(conditions), new Sort(Direction.DESC, "createdTime"));
 	}
 }
