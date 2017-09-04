@@ -137,8 +137,8 @@ public class ClassroomController extends BaseController<Classroom> {
 
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
-	public List<Classroom> findAllClassroom(@RequestParam Map<String, Object> conditions) {
-		List<Classroom> list = classroomService.findAllClassroom(conditions);
+	public List<Classroom> findClassrooms(@RequestParam Map<String, Object> conditions) {
+		List<Classroom> list = classroomService.findClassrooms(conditions);
 		return list;
 	}
 }

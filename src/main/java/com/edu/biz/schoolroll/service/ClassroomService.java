@@ -25,6 +25,6 @@ public interface ClassroomService {
 	public Page<Classroom> searchClassroom(Map<String, Object> conditions, Pageable pageable);
 	
 	public Long countClassroom(Map<String, Object> conditions);
-	
-	public List<Classroom> findAllClassroom(Map<String, Object> conditions);
+
+	public List<Classroom> findClassrooms(Map<String, Object> conditions);
 }

@@ -26,7 +26,10 @@ import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.service.CourseArrangeService;
+import com.edu.core.exception.ServiceException;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -36,7 +39,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 
 	@Autowired
 	private ScheduleCycleDao scheduleCycleDao;
-	
+
 	@Autowired
 	private SettingService settingService;
 
@@ -73,38 +76,48 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 			}
 		});
 	}
-	
+
 	@Override
 	public ScheduleCycle createScheduleCycle(ScheduleCycle scheduleCycle) {
 		return scheduleCycleDao.save(scheduleCycle);
 	}
 
-	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(String term, Long classroomId){
+	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(String term, Long classroomId) {
 		HashMap<Integer, Map<String, ClassSchedule>> map = new HashMap<>();
 		Setting setting = settingService.getSettingByCode("course_arrange_limit");
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> limit = new HashMap<String, Object>();
 
-		try {
-			limit = mapper.readValue(setting.getValue(), new TypeReference<Map<String, Object>>(){});
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+			try {
+				limit = mapper.readValue(setting.getValue(), new TypeReference<Map<String, Object>>() {
+				});
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+				throw new ServiceException("json生成异常");
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+				throw new ServiceException("json映射异常");
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new ServiceException("I/O异常");
+			}
+
 		List<ClassSchedule> classSchedules = findClassSchedules(term, classroomId);
-		
+
 		for (int i = 1; i <= 7; i++) {
 			Map<String, ClassSchedule> weekSchedules = new LinkedHashMap<>();
-			for (int courseNum = 1,  prefix = 1; courseNum <= Integer.parseInt(limit.get("morning").toString()); courseNum++) {
-				weekSchedules.put(prefix+"-"+courseNum, null);
+			for (int courseNum = 1, prefix = 1; courseNum <= Integer
+					.parseInt(limit.get("morning").toString()); courseNum++) {
+				weekSchedules.put(prefix + "-" + courseNum, null);
 			}
-			for (int courseNum = 1, prefix = 2; courseNum <= Integer.parseInt(limit.get("afternoon").toString()); courseNum++) {
-				weekSchedules.put(prefix+"-"+courseNum, null);
+			for (int courseNum = 1, prefix = 2; courseNum <= Integer
+					.parseInt(limit.get("afternoon").toString()); courseNum++) {
+				weekSchedules.put(prefix + "-" + courseNum, null);
 			}
-			for (int courseNum = 1, prefix = 3; courseNum <= Integer.parseInt(limit.get("night").toString()); courseNum++) {
-				weekSchedules.put(prefix+"-"+courseNum, null);
+			for (int courseNum = 1, prefix = 3; courseNum <= Integer
+					.parseInt(limit.get("night").toString()); courseNum++) {
+				weekSchedules.put(prefix + "-" + courseNum, null);
 			}
 			map.put(i, weekSchedules);
 		}
