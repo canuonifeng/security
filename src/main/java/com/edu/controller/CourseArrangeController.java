@@ -1,5 +1,7 @@
 package com.edu.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +10,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.common.util.StringUtil;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.ClassSchedule;
-import com.edu.biz.teaching.entity.ScheduleClassroom;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.Term;
-import com.edu.biz.teaching.service.SortCourseService;
+import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.service.CourseService;
@@ -26,9 +28,9 @@ import com.edu.core.exception.NotFoundException;
 import io.swagger.annotations.Api;
 
 @RestController
-@RequestMapping("/api/sortcourse")
+@RequestMapping("/api/coursearrange")
 @Api("排课")
-public class SortCourseController extends BaseController<Course> {
+public class CourseArrangeController extends BaseController<Course> {
 	@Autowired
 	private TermService termService;
 	@Autowired
@@ -36,24 +38,27 @@ public class SortCourseController extends BaseController<Course> {
 	@Autowired
 	private ClassroomService classroomService;
 	@Autowired
-	private SortCourseService sortCourseService;
+	private CourseArrangeService sortCourseService;
 	
 	@RequestMapping(path = "/{classroomId}", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classroom', 'add')")
-	public Boolean sortCourse(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
-//		String grade = conditions.get("grade");
-//		Integer termNum = Integer.parseInt(conditions.get("termNum"));
-//		String code = StringUtil.getTermCode(grade, termNum);
-		
-//		ClassSchedule schedule = sortCourseService.getClassDcheduleByClassroomIdAndCourseId(Long classroomId, );
-		
-		ClassSchedule classSchedule = createClassSchedule(conditions);
+	public Boolean courseArrange(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
+
+		ClassSchedule classSchedule = sortCourseService.getClassSchedule(conditions.get("code"), Long.parseLong(conditions.get("courseId")), classroomId);
+		if(classSchedule == null) {
+			classSchedule = createClassSchedule(conditions, classroomId);
+		}
 
 		createScheduleCycle(conditions, classSchedule);
 		
-		createScheduleClassroom(conditions, classSchedule, classroomId);
-		
 		return true;
+	}
+	
+	@RequestMapping(path = "/classroom", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('classroom', 'get')")
+	public Map<Integer, Map<String, ClassSchedule>> findAllClassroom(@RequestParam Map<String, String> conditions) {
+		Map<Integer, Map<String, ClassSchedule>> list = sortCourseService.getCourseTable(conditions.get("code"), Long.parseLong(conditions.get("classroomId")));
+		return list;
 	}
 	
 	@RequestMapping(path = "/{classroomId}", method = RequestMethod.GET)
@@ -62,15 +67,19 @@ public class SortCourseController extends BaseController<Course> {
 		return true;
 	}
 	
-	private ClassSchedule createClassSchedule(Map<String, String> conditions) {
+	private ClassSchedule createClassSchedule(Map<String, String> conditions, Long classroomId) {
 		Term term = termService.getTermByCode(conditions.get("code"));
 		Course course = courseService.getCourse(Long.parseLong(conditions.get("courseId")));
 		if(term == null) {
 			throw new NotFoundException("该学期不存在");
 		}
 		ClassSchedule classSchedule = new ClassSchedule();
+		Classroom classroom = classroomService.getClassroom(classroomId);
+		List<Classroom> classrooms = new ArrayList<Classroom>();
+		classrooms.add(classroom);
 		classSchedule.setTerm(term.getCode());
 		classSchedule.setCourse(course);
+		classSchedule.setClassrooms(classrooms);
 		
 		return sortCourseService.createClassSchedule(classSchedule);		
 	}
@@ -81,17 +90,6 @@ public class SortCourseController extends BaseController<Course> {
 		scheduleCycle.setWeek(Integer.parseInt(conditions.get("week")));
 		scheduleCycle.setClassSchedule(classSchedule);
 		return sortCourseService.createScheduleCycle(scheduleCycle);	
-	}
-	
-	private ScheduleClassroom createScheduleClassroom(Map<String, String> conditions, ClassSchedule classSchedule, Long classroomId) {
-		Classroom classroom = classroomService.getClassroom(classroomId);
-		if(classroom == null) {
-			throw new NotFoundException("该班级不存在");
-		}
-		ScheduleClassroom scheduleCalssroom = new ScheduleClassroom();
-		scheduleCalssroom.setClassroom(classroom);
-		scheduleCalssroom.setClassSchedule(classSchedule);
-		return sortCourseService.createScheduleClassroom(scheduleCalssroom);
 	}
 
 }

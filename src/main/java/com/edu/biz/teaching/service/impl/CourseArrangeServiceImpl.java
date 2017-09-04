@@ -1,7 +1,9 @@
 package com.edu.biz.teaching.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -19,23 +22,20 @@ import com.edu.biz.common.dao.service.SettingService;
 import com.edu.biz.common.entity.Setting;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.dao.ClassScheduleDao;
-import com.edu.biz.teaching.dao.ScheduleClassroomDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
-import com.edu.biz.teaching.entity.ScheduleClassroom;
 import com.edu.biz.teaching.entity.ScheduleCycle;
-import com.edu.biz.teaching.service.SortCourseService;
+import com.edu.biz.teaching.service.CourseArrangeService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class SortCourseServiceImpl extends BaseService implements SortCourseService {
+public class CourseArrangeServiceImpl extends BaseService implements CourseArrangeService {
 	@Autowired
 	private ClassScheduleDao classScheduleDao;
 
 	@Autowired
 	private ScheduleCycleDao scheduleCycleDao;
-
-	@Autowired
-	private ScheduleClassroomDao scheduleClassroomDao;
 	
 	@Autowired
 	private SettingService settingService;
@@ -60,56 +60,59 @@ public class SortCourseServiceImpl extends BaseService implements SortCourseServ
 		});
 	}
 
+	public List<ClassSchedule> findClassSchedules(String term, Long classroomId) {
+		return classScheduleDao.findAll(new Specification<ClassSchedule>() {
+			@Override
+			public Predicate toPredicate(Root<ClassSchedule> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> list = new ArrayList<Predicate>();
+				list.add(cb.equal(root.get("term").as(String.class), term));
+				Join<ClassSchedule, Classroom> join = root.join("classrooms");
+				list.add(cb.equal(join.get("id").as(Long.class), classroomId));
+				Predicate[] p = new Predicate[list.size()];
+				return cb.and(list.toArray(p));
+			}
+		});
+	}
+	
 	@Override
 	public ScheduleCycle createScheduleCycle(ScheduleCycle scheduleCycle) {
 		return scheduleCycleDao.save(scheduleCycle);
 	}
 
-	@Override
-	public ScheduleClassroom createScheduleClassroom(ScheduleClassroom scheduleCalssroom) {
-		return scheduleClassroomDao.save(scheduleCalssroom);
-	}
-
-	private Map<Integer, Map<String, ClassSchedule>> getCourseTable(){
+	public Map<Integer, Map<String, ClassSchedule>> getCourseTable(String term, Long classroomId){
 		HashMap<Integer, Map<String, ClassSchedule>> map = new HashMap<>();
-		Setting setting = settingService.getSettingByCode("sort_course_limit");
+		Setting setting = settingService.getSettingByCode("course_arrange_limit");
 		
-		List<ClassSchedule> classSchedules = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> limit = new HashMap<String, Object>();
+
+		try {
+			limit = mapper.readValue(setting.getValue(), new TypeReference<Map<String, Object>>(){});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-//		for (ClassSchedule classSchedule : classSchedules) {
-//			for (ScheduleCycle scheduleCycle : classSchedule.getScheduleCycles()) {
-//				if(map.containsKey(scheduleCycle.getWeek())) {
-//					map.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), classSchedule);
-//				} else {
-//					Map<String, ClassSchedule> result = new HashMap<>();
-//					result.put(scheduleCycle.getPeriod(), classSchedule);
-//					map.put(scheduleCycle.getWeek(), result);
-//				}
-//			}
-//		}
-		
-		
-		
+		List<ClassSchedule> classSchedules = findClassSchedules(term, classroomId);
 		
 		for (int i = 1; i <= 7; i++) {
-			Map<String, ClassSchedule> map1 = new HashMap<>();
-			for (int a = 1,  prefix = 1; a <= 4; a++) {
-				map1.put(prefix+"-"+a, new ClassSchedule());
+			Map<String, ClassSchedule> weekSchedules = new LinkedHashMap<>();
+			for (int courseNum = 1,  prefix = 1; courseNum <= Integer.parseInt(limit.get("morning").toString()); courseNum++) {
+				weekSchedules.put(prefix+"-"+courseNum, null);
 			}
-			for (int b = 1, prefix = 2; b <= 4; b++) {
-				map1.put(prefix+"-"+b, new ClassSchedule());
+			for (int courseNum = 1, prefix = 2; courseNum <= Integer.parseInt(limit.get("afternoon").toString()); courseNum++) {
+				weekSchedules.put(prefix+"-"+courseNum, null);
 			}
-			for (int c = 1, prefix = 3; c <= 4; c++) {
-				map1.put(prefix+"-"+c, new ClassSchedule());
+			for (int courseNum = 1, prefix = 3; courseNum <= Integer.parseInt(limit.get("night").toString()); courseNum++) {
+				weekSchedules.put(prefix+"-"+courseNum, null);
 			}
-			map.put(i, map1);
+			map.put(i, weekSchedules);
 		}
 		for (ClassSchedule classSchedule : classSchedules) {
 			for (ScheduleCycle scheduleCycle : classSchedule.getScheduleCycles()) {
 				map.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), classSchedule);
 			}
 		}
-		
-		return null;
+		return map;
 	}
 }
