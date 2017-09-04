@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.edu.core.exception.ServiceException;
 
-public class StringUtil {
+public class TermCodeUtil {
 
 	public static String getTermCode(String grade, Integer termNum) {
 		String prefix = grade.substring(grade.length()  - 2);

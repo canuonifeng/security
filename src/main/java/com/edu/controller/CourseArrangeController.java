@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.common.util.StringUtil;
+import com.edu.biz.common.util.TermCodeUtil;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.ClassSchedule;
@@ -86,7 +86,7 @@ public class CourseArrangeController extends BaseController<Course> {
 	
 	private ScheduleCycle createScheduleCycle(Map<String, String> conditions, ClassSchedule classSchedule) {
 		ScheduleCycle scheduleCycle = new ScheduleCycle();
-		scheduleCycle.setPeriod(StringUtil.getCoursePeriod(conditions.get("period"), conditions.get("type")));
+		scheduleCycle.setPeriod(TermCodeUtil.getCoursePeriod(conditions.get("period"), conditions.get("type")));
 		scheduleCycle.setWeek(Integer.parseInt(conditions.get("week")));
 		scheduleCycle.setClassSchedule(classSchedule);
 		return sortCourseService.createScheduleCycle(scheduleCycle);	
