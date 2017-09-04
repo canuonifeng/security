@@ -44,7 +44,7 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	}
 	
 	@Override
-	public List<Classroom> findAllClassroom(Map<String, Object> conditions) {
+	public List<Classroom> findClassrooms(Map<String, Object> conditions) {
 		return classroomDao.findAll(new ClassroomSpecification(conditions));
 	}
 

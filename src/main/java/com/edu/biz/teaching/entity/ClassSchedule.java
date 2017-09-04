@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.edu.biz.base.BaseEntity;
@@ -29,6 +30,10 @@ public class ClassSchedule extends BaseEntity {
 	@ManyToMany(targetEntity = Classroom.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "schedule_calssroom", joinColumns = @JoinColumn(name = "schedule_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "classroom_id", referencedColumnName = "id"))
 	private List<Classroom> classrooms;
+
+	@OneToMany(targetEntity = ScheduleCycle.class, fetch = FetchType.LAZY)
+	@JoinColumn(name="schedule_id")
+	private List<ScheduleCycle> scheduleCycles;
 
 	public Course getCourse() {
 		return course;
@@ -52,6 +57,14 @@ public class ClassSchedule extends BaseEntity {
 
 	public void setClassrooms(List<Classroom> classrooms) {
 		this.classrooms = classrooms;
+	}
+
+	public List<ScheduleCycle> getScheduleCycles() {
+		return scheduleCycles;
+	}
+
+	public void setScheduleCycles(List<ScheduleCycle> scheduleCycles) {
+		this.scheduleCycles = scheduleCycles;
 	}
 	
 }

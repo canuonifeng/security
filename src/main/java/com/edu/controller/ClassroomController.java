@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.common.util.StringUtil;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Major;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomForm;
@@ -29,8 +28,6 @@ import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.MajorService;
 import com.edu.biz.schoolroll.service.StudentService;
-import com.edu.biz.teaching.entity.Term;
-import com.edu.biz.teaching.service.TermService;
 import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
@@ -41,9 +38,6 @@ import io.swagger.annotations.Api;
 public class ClassroomController extends BaseController<Classroom> {
 	@Autowired
 	private ClassroomService classroomService;
-	
-	@Autowired
-	private TermService termService;
 
 	@Autowired
 	private MajorService majorService;
@@ -143,8 +137,8 @@ public class ClassroomController extends BaseController<Classroom> {
 
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
-	public List<Classroom> findAllClassroom(@RequestParam Map<String, Object> conditions) {
-		List<Classroom> list = classroomService.findAllClassroom(conditions);
+	public List<Classroom> findClassrooms(@RequestParam Map<String, Object> conditions) {
+		List<Classroom> list = classroomService.findClassrooms(conditions);
 		return list;
 	}
 }
