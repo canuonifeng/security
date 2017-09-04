@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
-import com.edu.biz.schoolroll.specification.MajorSpecification;
 import com.edu.biz.security.dao.RoleDao;
 import com.edu.biz.security.dao.specification.RoleSpecification;
 import com.edu.biz.security.entity.Permission;

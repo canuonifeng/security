@@ -156,6 +156,11 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	}
 	
 	@Override
+	public List<ProgramCourse> searchAllProgramCourse(Map<String, Object> conditions) {
+		return programCourseDao.findAll(new ProgramCourseSpecification(conditions));
+	}
+	
+	@Override
 	public List<Term> getProgramTerm(Long id) {
 		Program program = getProgram(id);
 		String prefix = program.getGrade().substring(program.getGrade().length() - 2);

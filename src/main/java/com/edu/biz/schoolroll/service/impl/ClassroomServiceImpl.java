@@ -11,10 +11,8 @@ import org.springframework.stereotype.Service;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.dao.ClassroomDao;
 import com.edu.biz.schoolroll.entity.Classroom;
-import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.specification.ClassroomSpecification;
-import com.edu.biz.schoolroll.specification.StudentSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
@@ -46,7 +44,7 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	}
 	
 	@Override
-	public List<Classroom> findUnAssignNumClassroom(Map<String, Object> conditions) {
+	public List<Classroom> findClassrooms(Map<String, Object> conditions) {
 		return classroomDao.findAll(new ClassroomSpecification(conditions));
 	}
 
