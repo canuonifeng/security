@@ -13,5 +13,5 @@ public interface CourseArrangeService {
 	
 	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId);
 	
-	public Map<Integer, Map<String, ClassSchedule>> getCourseTable(String term, Long classroomId);
+	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(String term, Long classroomId);
 }

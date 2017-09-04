@@ -54,17 +54,11 @@ public class CourseArrangeController extends BaseController<Course> {
 		return true;
 	}
 	
-	@RequestMapping(path = "/classroom", method = RequestMethod.GET)
+	@RequestMapping(path = "/classroom/{classroomId}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
-	public Map<Integer, Map<String, ClassSchedule>> findAllClassroom(@RequestParam Map<String, String> conditions) {
-		Map<Integer, Map<String, ClassSchedule>> list = sortCourseService.getCourseTable(conditions.get("code"), Long.parseLong(conditions.get("classroomId")));
+	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(@PathVariable Long classroomId, @RequestParam Map<String, String> conditions) {
+		Map<Integer, Map<String, ClassSchedule>> list = sortCourseService.getCourseArrange(conditions.get("code"), classroomId);
 		return list;
-	}
-	
-	@RequestMapping(path = "/{classroomId}", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('classroom', 'get')")
-	public Boolean getCourseArrange(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
-		return true;
 	}
 	
 	private ClassSchedule createClassSchedule(Map<String, String> conditions, Long classroomId) {

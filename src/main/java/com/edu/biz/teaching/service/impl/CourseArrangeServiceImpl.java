@@ -79,7 +79,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return scheduleCycleDao.save(scheduleCycle);
 	}
 
-	public Map<Integer, Map<String, ClassSchedule>> getCourseTable(String term, Long classroomId){
+	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(String term, Long classroomId){
 		HashMap<Integer, Map<String, ClassSchedule>> map = new HashMap<>();
 		Setting setting = settingService.getSettingByCode("course_arrange_limit");
 		
