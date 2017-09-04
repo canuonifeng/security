@@ -29,7 +29,7 @@ public interface BuildingService {
 	
 	public Boolean deleteBuildingRoom(Long id);
 	
-	public void deleteBuildingRoomByFloor(Long floor);
+	public void deleteBuildingRoomByFloor(Long buildingId, Integer floor);
 	
 	public BuildingRoom getBuildingRoom(Long id);
 	

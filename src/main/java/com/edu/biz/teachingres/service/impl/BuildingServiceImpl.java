@@ -98,8 +98,8 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	
 	@Override
 	@Transactional
-	public void deleteBuildingRoomByFloor(Long floor) {
-		buildingRoomDao.deleteByFloor(floor);
+	public void deleteBuildingRoomByFloor(Long buildingId, Integer floor) {
+		buildingRoomDao.deleteByBuildingIdAndFloor(buildingId, floor);
 	}
 
 	@Override
