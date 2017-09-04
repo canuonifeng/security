@@ -78,7 +78,7 @@ public class User extends BaseEntity implements UserDetails {
 	private Faculty faculty;
 
 	@NotEmpty(message = "email不能为空")
-//	@Email(message = "email格式不正确")
+	@Email(message = "email格式不正确")
 	@ApiModelProperty(value = "邮件")
 	private String email;
 
