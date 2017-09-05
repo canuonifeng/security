@@ -1,5 +1,6 @@
 package com.edu.biz.teachingres.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import com.edu.core.util.BeanUtils;
 public class TeacherServiceImpl extends BaseService implements TeacherService {
 	@Autowired
 	private TeacherDao teacherDao;
-	
+
 	@Override
 	public Teacher createTeacher(Teacher teacher) {
 		return teacherDao.save(teacher);
@@ -32,11 +33,12 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (null == saveTeacher) {
 			throw new NotFoundException("该教师不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(teacher, saveTeacher, "no", "name", "gender", "status", "start_work_time");
+		BeanUtils.copyPropertiesWithCopyProperties(teacher, saveTeacher, "no", "name", "gender", "status",
+				"start_work_time");
 
 		return teacherDao.save(saveTeacher);
 	}
-	
+
 	@Override
 	public Teacher changeTeacherStatus(Long id, TeacherStatus status) {
 		Teacher savedTeacher = teacherDao.findOne(id);
@@ -61,6 +63,11 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	@Override
 	public Page<Teacher> searchTeachers(Map<String, Object> conditions, Pageable pageable) {
 		return teacherDao.findAll(new TeacherSpecification(conditions), pageable);
+	}
+
+	@Override
+	public List<Teacher> findTeachers(Map<String, Object> conditions) {
+		return teacherDao.findAll(new TeacherSpecification(conditions));
 	}
 
 }

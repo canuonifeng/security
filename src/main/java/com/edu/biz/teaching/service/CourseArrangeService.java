@@ -1,5 +1,6 @@
 package com.edu.biz.teaching.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.edu.biz.teaching.entity.ClassSchedule;
@@ -13,5 +14,13 @@ public interface CourseArrangeService {
 	
 	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId);
 	
-	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(String term, Long classroomId);
+	public Map<Integer, Map<String, ScheduleCycle>> getCourseArrange(String term, Long classroomId);
+
+	public Boolean deleteScheduleCycle(Long id);
+
+	public ScheduleCycle getScheduleCycle(Long id);
+
+	public List<ScheduleCycle> findScheduleCycles(Map<String, Object> map);
+
+	public Boolean deleteClassSchedule(Long id);
 }

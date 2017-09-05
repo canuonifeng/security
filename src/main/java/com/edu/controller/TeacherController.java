@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,11 @@ public class TeacherController extends BaseController<Teacher> {
 	public Page<Teacher> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return teacherService.searchTeachers(conditions, pageable);
+	}
+
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('teacher', 'get')")
+	public List<Teacher> findTeachers(@RequestParam Map<String, Object> conditions) {
+		return teacherService.findTeachers(conditions);
 	}
 }

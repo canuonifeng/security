@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teachingres.entity.Course;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -27,12 +29,13 @@ public class ClassSchedule extends BaseEntity {
 	@ApiModelProperty(value = "课程")
 	private Course course;
 	
-	@ManyToMany(targetEntity = Classroom.class, fetch = FetchType.EAGER)
+	@ManyToMany(targetEntity = Classroom.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "schedule_calssroom", joinColumns = @JoinColumn(name = "schedule_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "classroom_id", referencedColumnName = "id"))
 	private List<Classroom> classrooms;
 
 	@OneToMany(targetEntity = ScheduleCycle.class, fetch = FetchType.LAZY)
 	@JoinColumn(name="schedule_id")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<ScheduleCycle> scheduleCycles;
 
 	public Course getCourse() {
