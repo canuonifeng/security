@@ -129,4 +129,9 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		classScheduleDao.delete(id);
 		return null == classScheduleDao.findOne(id);
 	}
+	
+	@Override
+	public ClassSchedule getClassSchedule(Long id) {
+		return classScheduleDao.findOne(id);
+	}
 }

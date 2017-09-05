@@ -24,6 +24,7 @@ import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.service.CourseService;
+import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
 
 import io.swagger.annotations.Api;
@@ -55,6 +56,21 @@ public class CourseArrangeController extends BaseController<Course> {
 		return scheduleCycle;
 	}
 	
+	@RequestMapping(path = "/updatecoursearrange/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('classroom', 'update')")
+	public ScheduleCycle updateCourseArrange(@PathVariable Long id, @RequestBody Map<String, String> conditions) {
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(id);
+		if(scheduleCycle == null) {
+			throw new NotFoundException("该排课周期不存在");
+		}
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleCycle.getClassSchedule().getId());
+		if(!classSchedule.getCourse().getId().equals(Long.parseLong(conditions.get("courseId")))) {
+			throw new InvalidParameterException("拖动课程不一致");
+		}
+		courseArrangeService.deleteScheduleCycle(scheduleCycle.getId());
+		return  createScheduleCycle(conditions, classSchedule);
+	}
+	
 	@RequestMapping(path = "/removecoursearrange/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('classroom', 'delete')")
 	public Boolean removeCourseArrange(@PathVariable Long id) {
@@ -72,7 +88,6 @@ public class CourseArrangeController extends BaseController<Course> {
 		}
 		return true;
 	}
-	
 	
 	@RequestMapping(path = "/classroom/{classroomId}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
