@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,8 @@ import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.service.CourseArrangeService;
-import com.edu.biz.teachingres.specification.ClassScheduleSpecification;
+import com.edu.biz.teaching.specification.ClassScheduleSpecification;
+import com.edu.biz.teaching.specification.ScheduleCycleSpecification;
 import com.edu.core.exception.ServiceException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -61,31 +61,31 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return scheduleCycleDao.save(scheduleCycle);
 	}
 
-	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(String term, Long classroomId) {
-		HashMap<Integer, Map<String, ClassSchedule>> map = new HashMap<>();
+	public Map<Integer, Map<String, ScheduleCycle>> getCourseArrange(String term, Long classroomId) {
+		HashMap<Integer, Map<String, ScheduleCycle>> map = new HashMap<>();
 		Setting setting = settingService.getSettingByCode("course_arrange_limit");
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> limit = new HashMap<String, Object>();
 
-			try {
-				limit = mapper.readValue(setting.getValue(), new TypeReference<Map<String, Object>>() {
-				});
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-				throw new ServiceException("json生成异常");
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-				throw new ServiceException("json映射异常");
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new ServiceException("I/O异常");
-			}
+		try {
+			limit = mapper.readValue(setting.getValue(), new TypeReference<Map<String, Object>>() {
+			});
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+			throw new ServiceException("json生成异常");
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			throw new ServiceException("json映射异常");
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ServiceException("I/O异常");
+		}
 
 		List<ClassSchedule> classSchedules = findClassSchedules(term, classroomId);
 
 		for (int i = 1; i <= 7; i++) {
-			Map<String, ClassSchedule> weekSchedules = new LinkedHashMap<>();
+			Map<String, ScheduleCycle> weekSchedules = new LinkedHashMap<>();
 			for (int courseNum = 1, prefix = 1; courseNum <= Integer
 					.parseInt(limit.get("morning").toString()); courseNum++) {
 				weekSchedules.put(prefix + "-" + courseNum, null);
@@ -102,9 +102,31 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		}
 		for (ClassSchedule classSchedule : classSchedules) {
 			for (ScheduleCycle scheduleCycle : classSchedule.getScheduleCycles()) {
-				map.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), classSchedule);
+				map.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), scheduleCycle);
 			}
 		}
 		return map;
+	}
+
+	@Override
+	public Boolean deleteScheduleCycle(Long id) {
+		scheduleCycleDao.delete(id);
+		return null == scheduleCycleDao.findOne(id);
+	}
+
+	@Override
+	public ScheduleCycle getScheduleCycle(Long id) {
+		return scheduleCycleDao.findOne(id);
+	}
+
+	@Override
+	public List<ScheduleCycle> findScheduleCycles(Map<String, Object> map) {
+		return scheduleCycleDao.findAll(new ScheduleCycleSpecification(map));
+	}
+
+	@Override
+	public Boolean deleteClassSchedule(Long id) {
+		classScheduleDao.delete(id);
+		return null == classScheduleDao.findOne(id);
 	}
 }

@@ -1,6 +1,7 @@
 package com.edu.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,26 +39,45 @@ public class CourseArrangeController extends BaseController<Course> {
 	@Autowired
 	private ClassroomService classroomService;
 	@Autowired
-	private CourseArrangeService sortCourseService;
+	private CourseArrangeService courseArrangeService;
 	
 	@RequestMapping(path = "/{classroomId}", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classroom', 'add')")
-	public Boolean courseArrange(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
+	public ScheduleCycle courseArrange(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
 
-		ClassSchedule classSchedule = sortCourseService.getClassSchedule(conditions.get("code"), Long.parseLong(conditions.get("courseId")), classroomId);
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(conditions.get("code"), Long.parseLong(conditions.get("courseId")), classroomId);
 		if(classSchedule == null) {
 			classSchedule = createClassSchedule(conditions, classroomId);
 		}
 
-		createScheduleCycle(conditions, classSchedule);
+		ScheduleCycle scheduleCycle =  createScheduleCycle(conditions, classSchedule);
 		
+		return scheduleCycle;
+	}
+	
+	@RequestMapping(path = "/removecoursearrange/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('classroom', 'delete')")
+	public Boolean removeCourseArrange(@PathVariable Long id) {
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(id);
+		if(scheduleCycle == null) {
+			throw new NotFoundException("该排课周期不存在");
+		}
+		courseArrangeService.deleteScheduleCycle(scheduleCycle.getId());
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("scheduleId", scheduleCycle.getClassSchedule().getId());
+		List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(map);
+		if(scheduleCycles.size() == 0) {
+			courseArrangeService.deleteClassSchedule(scheduleCycle.getClassSchedule().getId());
+		}
 		return true;
 	}
 	
+	
 	@RequestMapping(path = "/classroom/{classroomId}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
-	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(@PathVariable Long classroomId, @RequestParam Map<String, String> conditions) {
-		Map<Integer, Map<String, ClassSchedule>> list = sortCourseService.getCourseArrange(conditions.get("code"), classroomId);
+	public Map<Integer, Map<String, ScheduleCycle>> getCourseArrange(@PathVariable Long classroomId, @RequestParam Map<String, String> conditions) {
+		Map<Integer, Map<String, ScheduleCycle>> list = courseArrangeService.getCourseArrange(conditions.get("code"), classroomId);
 		return list;
 	}
 	
@@ -75,7 +95,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		classSchedule.setCourse(course);
 		classSchedule.setClassrooms(classrooms);
 		
-		return sortCourseService.createClassSchedule(classSchedule);		
+		return courseArrangeService.createClassSchedule(classSchedule);		
 	}
 	
 	private ScheduleCycle createScheduleCycle(Map<String, String> conditions, ClassSchedule classSchedule) {
@@ -83,7 +103,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		scheduleCycle.setPeriod(TermCodeUtil.getCoursePeriod(conditions.get("period"), conditions.get("type")));
 		scheduleCycle.setWeek(Integer.parseInt(conditions.get("week")));
 		scheduleCycle.setClassSchedule(classSchedule);
-		return sortCourseService.createScheduleCycle(scheduleCycle);	
+		return courseArrangeService.createScheduleCycle(scheduleCycle);
 	}
 
 }
