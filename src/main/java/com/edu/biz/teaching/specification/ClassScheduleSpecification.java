@@ -1,4 +1,4 @@
-package com.edu.biz.teachingres.specification;
+package com.edu.biz.teaching.specification;
 
 import java.util.ArrayList;
 import java.util.List;

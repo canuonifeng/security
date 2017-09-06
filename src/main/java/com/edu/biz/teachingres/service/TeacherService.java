@@ -1,5 +1,6 @@
 package com.edu.biz.teachingres.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -23,4 +24,6 @@ public interface TeacherService {
 	public Teacher getTeacher(Long id);
 	
 	public Page<Teacher> searchTeachers(Map<String, Object> conditions, Pageable pageable);
+
+	public List<Teacher> findTeachers(Map<String, Object> conditions);
 }

@@ -9,7 +9,8 @@ public class TermCodeUtil {
 
 	public static String getTermCode(String grade, Integer termNum) {
 		String prefix = grade.substring(grade.length() - 2);
-		Integer num = (int) Math.ceil(termNum / 2);
+		
+		Integer num = (int) Math.ceil(termNum / 2.0);
 		String firstCodePrefix = "";
 		if (num == 1) {
 			firstCodePrefix = prefix + "-" + (Integer.parseInt(prefix) + 1);

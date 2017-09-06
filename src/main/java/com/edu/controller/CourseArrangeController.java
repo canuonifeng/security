@@ -1,6 +1,7 @@
 package com.edu.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.service.CourseService;
+import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
 
 import io.swagger.annotations.Api;
@@ -38,26 +40,59 @@ public class CourseArrangeController extends BaseController<Course> {
 	@Autowired
 	private ClassroomService classroomService;
 	@Autowired
-	private CourseArrangeService sortCourseService;
+	private CourseArrangeService courseArrangeService;
 	
-	@RequestMapping(path = "/{classroomId}", method = RequestMethod.POST)
-	@PreAuthorize("hasPermission('classroom', 'add')")
-	public Boolean courseArrange(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
+	@RequestMapping(path = "/schedule", method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('classSchedule', 'add')")
+	public ScheduleCycle courseArrange( @RequestBody Map<String, String> conditions) {
 
-		ClassSchedule classSchedule = sortCourseService.getClassSchedule(conditions.get("code"), Long.parseLong(conditions.get("courseId")), classroomId);
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(conditions.get("code"), Long.parseLong(conditions.get("courseId")), Long.parseLong(conditions.get("classroomId")));
 		if(classSchedule == null) {
-			classSchedule = createClassSchedule(conditions, classroomId);
+			classSchedule = createClassSchedule(conditions, Long.parseLong(conditions.get("classroomId")));
 		}
 
-		createScheduleCycle(conditions, classSchedule);
+		ScheduleCycle scheduleCycle =  createScheduleCycle(conditions, classSchedule);
 		
+		return scheduleCycle;
+	}
+	
+	@RequestMapping(path = "schedule/{scheduleId}/cycle/{cycleId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('classSchedule', 'update')")
+	public ScheduleCycle updateCourseArrange(@PathVariable Long scheduleId, @PathVariable Long cycleId, @RequestBody Map<String, String> conditions) {
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(cycleId);
+		if(scheduleCycle == null) {
+			throw new NotFoundException("该排课周期不存在");
+		}
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
+		if(!classSchedule.getCourse().getId().equals(Long.parseLong(conditions.get("courseId")))) {
+			throw new InvalidParameterException("拖动课程不一致");
+		}
+		courseArrangeService.deleteScheduleCycle(scheduleCycle.getId());
+		return  createScheduleCycle(conditions, classSchedule);
+	}
+	
+	@RequestMapping(path = "schedule/{scheduleId}/cycle/{cycleId}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('classSchedule', 'delete')")
+	public Boolean removeCourseArrange(@PathVariable Long scheduleId, @PathVariable Long cycleId) {
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(cycleId);
+		if(scheduleCycle == null) {
+			throw new NotFoundException("该排课周期不存在");
+		}
+		courseArrangeService.deleteScheduleCycle(scheduleCycle.getId());
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("scheduleId", scheduleCycle.getClassSchedule().getId());
+		List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(map);
+		if(scheduleCycles.size() == 0) {
+			courseArrangeService.deleteClassSchedule(scheduleCycle.getClassSchedule().getId());
+		}
 		return true;
 	}
 	
-	@RequestMapping(path = "/classroom/{classroomId}", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('classroom', 'get')")
-	public Map<Integer, Map<String, ClassSchedule>> getCourseArrange(@PathVariable Long classroomId, @RequestParam Map<String, String> conditions) {
-		Map<Integer, Map<String, ClassSchedule>> list = sortCourseService.getCourseArrange(conditions.get("code"), classroomId);
+	@RequestMapping(path = "/schedule", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('classSchedule', 'get')")
+	public Map<Integer, Map<String, ScheduleCycle>> getCourseArrange( @RequestParam Map<String, String> conditions) {
+		Map<Integer, Map<String, ScheduleCycle>> list = courseArrangeService.getCourseArrange(conditions.get("code"), Long.parseLong(conditions.get("classroomId")));
 		return list;
 	}
 	
@@ -75,7 +110,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		classSchedule.setCourse(course);
 		classSchedule.setClassrooms(classrooms);
 		
-		return sortCourseService.createClassSchedule(classSchedule);		
+		return courseArrangeService.createClassSchedule(classSchedule);		
 	}
 	
 	private ScheduleCycle createScheduleCycle(Map<String, String> conditions, ClassSchedule classSchedule) {
@@ -83,7 +118,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		scheduleCycle.setPeriod(TermCodeUtil.getCoursePeriod(conditions.get("period"), conditions.get("type")));
 		scheduleCycle.setWeek(Integer.parseInt(conditions.get("week")));
 		scheduleCycle.setClassSchedule(classSchedule);
-		return sortCourseService.createScheduleCycle(scheduleCycle);	
+		return courseArrangeService.createScheduleCycle(scheduleCycle);
 	}
 
 }
