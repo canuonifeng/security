@@ -55,7 +55,7 @@ public class User extends BaseEntity implements UserDetails {
 
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 性别")
-	private Gender gender;
+	private Gender gender = Gender.secret;
 
 	@JsonProperty(access = Access.READ_ONLY)
 	private Date lastLoginTime;

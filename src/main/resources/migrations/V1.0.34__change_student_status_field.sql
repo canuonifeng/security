@@ -1,0 +1,1 @@
+ALTER TABLE `student` CHANGE `status` `status` varchar(32) NOT NULL COMMENT '学生状态';
