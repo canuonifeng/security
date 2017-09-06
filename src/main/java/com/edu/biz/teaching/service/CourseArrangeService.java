@@ -23,4 +23,6 @@ public interface CourseArrangeService {
 	public List<ScheduleCycle> findScheduleCycles(Map<String, Object> map);
 
 	public Boolean deleteClassSchedule(Long id);
+
+	public ClassSchedule getClassSchedule(Long id);
 }
