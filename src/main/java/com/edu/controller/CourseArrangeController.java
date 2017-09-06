@@ -42,7 +42,7 @@ public class CourseArrangeController extends BaseController<Course> {
 	@Autowired
 	private CourseArrangeService courseArrangeService;
 	
-	@RequestMapping(path = "/{classroomId}", method = RequestMethod.POST)
+	@RequestMapping(path = "/classroom/{classroomId}", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classroom', 'add')")
 	public ScheduleCycle courseArrange(@PathVariable Long classroomId, @RequestBody Map<String, String> conditions) {
 
@@ -56,10 +56,10 @@ public class CourseArrangeController extends BaseController<Course> {
 		return scheduleCycle;
 	}
 	
-	@RequestMapping(path = "/updatecoursearrange/{id}", method = RequestMethod.PUT)
+	@RequestMapping(path = "schedule/{scheduleId}/cycle/{cycleId}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classroom', 'update')")
-	public ScheduleCycle updateCourseArrange(@PathVariable Long id, @RequestBody Map<String, String> conditions) {
-		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(id);
+	public ScheduleCycle updateCourseArrange(@PathVariable Long cycleId, @RequestBody Map<String, String> conditions) {
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(cycleId);
 		if(scheduleCycle == null) {
 			throw new NotFoundException("该排课周期不存在");
 		}
@@ -71,10 +71,10 @@ public class CourseArrangeController extends BaseController<Course> {
 		return  createScheduleCycle(conditions, classSchedule);
 	}
 	
-	@RequestMapping(path = "/removecoursearrange/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "schedule/{scheduleId}/cycle/{cycleId}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('classroom', 'delete')")
-	public Boolean removeCourseArrange(@PathVariable Long id) {
-		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(id);
+	public Boolean removeCourseArrange(@PathVariable Long cycleId) {
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(cycleId);
 		if(scheduleCycle == null) {
 			throw new NotFoundException("该排课周期不存在");
 		}
