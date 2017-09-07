@@ -25,4 +25,6 @@ public interface CourseArrangeService {
 	public Boolean deleteClassSchedule(Long id);
 
 	public ClassSchedule getClassSchedule(Long id);
+
+	public Long countScheduleCyle(Map<String, Object> map);
 }
