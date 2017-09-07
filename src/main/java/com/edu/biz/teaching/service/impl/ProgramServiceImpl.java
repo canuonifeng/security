@@ -188,6 +188,14 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		}
 	}
 	
+	@Override
+	public ProgramCourse getProgramCourse(long courseId, String term) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("courseId", courseId);
+		map.put("term", term);
+		return programCourseDao.findOne(new ProgramCourseSpecification(map));
+	}
+	
 	private Boolean dealTerms(List<Term> terms, List<String> codes){
 		for (int i = 0; i < codes.size(); i++) {
 			for (int j = 0; j < terms.size(); j++) {
