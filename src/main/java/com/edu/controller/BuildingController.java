@@ -35,51 +35,51 @@ import io.swagger.annotations.Api;
 public class BuildingController extends BaseController<Object> {
 	@Autowired
 	private BuildingService buildingService;
-	
+
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('building', 'add')")
 	public Building addBuilding(@RequestBody Building building) {
 		return buildingService.createBuilding(building);
 	}
-	
-	@RequestMapping(path = "/room",method = RequestMethod.POST)
+
+	@RequestMapping(path = "/room", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('building', 'add')")
 	public BuildingRoom addBuildingRoom(@RequestBody BuildingRoom buildingRoom) {
 		return buildingService.createBuildingRoom(buildingRoom);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('building', 'edit')")
 	public Building editBuilding(@PathVariable Long id, @RequestBody Building building) {
 		building.setId(id);
 		return buildingService.updateBuilding(building);
 	}
-	
+
 	@RequestMapping(path = "/room/{roomId}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('building', 'edit')")
 	public BuildingRoom editBuildingRoom(@PathVariable Long roomId, @RequestBody BuildingRoom buildingRoom) {
 		buildingRoom.setId(roomId);
 		return buildingService.updateBuildingRoom(buildingRoom);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('building', 'delete')")
 	public boolean deleteBuilding(@PathVariable Long id) {
 		return buildingService.deleteBuilding(id);
 	}
-	
+
 	@RequestMapping(path = "/room/{roomId}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('building', 'delete')")
 	public boolean deleteBuildingRoom(@PathVariable Long roomId) {
 		return buildingService.deleteBuildingRoom(roomId);
 	}
-	
+
 	@RequestMapping(path = "/room/floor/{floor}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('building', 'delete')")
 	public void deleteFloor(@PathVariable Long floor) {
 		buildingService.deleteBuildingRoomByFloor(floor);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
 	public Building getBuilding(@PathVariable Long id) {
@@ -87,23 +87,28 @@ public class BuildingController extends BaseController<Object> {
 		building.setId(id);
 		return buildingService.getBuilding(building.getId());
 	}
-	
+
 	@RequestMapping(path = "/room/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
 	public BuildingRoom getBuildingRoom(@PathVariable Long id) {
 		BuildingRoom buildingRoom = new BuildingRoom();
 		buildingRoom.setId(id);
-		return buildingService.getBuildingRoom(
-				buildingRoom.getId());
+		return buildingService.getBuildingRoom(buildingRoom.getId());
 	}
-	
-	@RequestMapping(path = "/room/all",method = RequestMethod.GET)
+
+//	@RequestMapping(path = "/room/all", method = RequestMethod.GET)
+//	@PreAuthorize("hasPermission('building', 'get')")
+//	public List<BuildingRoom> findBuildingRooms(@RequestParam Map<String, Object> conditions) {
+//		return null;
+//	}
+
+	@RequestMapping(path = "/room/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
 	public Map<String, List<BuildingRoom>> findAllBuildingRoom(@RequestParam Map<String, Object> conditions) {
-		
+
 		return buildingService.findBuildingRooms(conditions);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
 	public Page<BuildingVo> pager(@RequestParam Map<String, Object> conditions,
@@ -113,7 +118,7 @@ public class BuildingController extends BaseController<Object> {
 		for (Building building : page.getContent()) {
 			BuildingVo buildingVo = new BuildingVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(building, buildingVo);
-			HashMap<String,Object> map=new HashMap<String,Object>();
+			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("buildingId", building.getId());
 			Long buildingRoomNum = buildingService.countBuildingRoom(map);
 			Long floorNum = buildingService.getFloorNum(building.getId());
@@ -126,20 +131,20 @@ public class BuildingController extends BaseController<Object> {
 		Page<BuildingVo> buildingVoPage = new PageImpl<>(buildingVos, pageable, page.getTotalElements());
 		return buildingVoPage;
 	}
-	
-	@RequestMapping(path = "/room/numoftype",method = RequestMethod.GET)
+
+	@RequestMapping(path = "/room/numoftype", method = RequestMethod.GET)
 	public List<CountRoomType> getRoomNum() {
 		List<CountRoomType> list = new ArrayList<CountRoomType>();
 		list = buildingService.getRoomNum();
 		for (RoomType type : RoomType.values()) {
 			boolean isHas = false;
 			for (CountRoomType roomType : list) {
-				if(type.equals(roomType.getRoomType())) {
+				if (type.equals(roomType.getRoomType())) {
 					isHas = true;
 					break;
 				}
 			}
-			if(!isHas) {
+			if (!isHas) {
 				CountRoomType countRoomType = new CountRoomType(type, 0);
 				list.add(countRoomType);
 			}

@@ -33,6 +33,12 @@ public class ProgramCourseSpecification implements Specification<ProgramCourse> 
 		if (conditions.containsKey("weekPeriod")) {
 			list.add(cb.equal(root.get("weekPeriod"), this.conditions.get("weekPeriod")));
 		}
+		if (conditions.containsKey("term")) {
+			list.add(cb.equal(root.get("termCode"), this.conditions.get("term")));
+		}
+		if (conditions.containsKey("termNum")) {
+			list.add(cb.equal(root.get("termNum"), this.conditions.get("termNum")));
+		}
 		Predicate[] p = new Predicate[list.size()];
 		return cb.and(list.toArray(p));
 	}

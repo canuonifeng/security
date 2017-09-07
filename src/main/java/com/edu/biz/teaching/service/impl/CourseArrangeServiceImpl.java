@@ -134,4 +134,9 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	public ClassSchedule getClassSchedule(Long id) {
 		return classScheduleDao.findOne(id);
 	}
+	
+	@Override
+	public Long countScheduleCyle(Map<String, Object> map) {
+		return scheduleCycleDao.count(new ScheduleCycleSpecification(map));
+	}
 }
