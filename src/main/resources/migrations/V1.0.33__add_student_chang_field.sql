@@ -1,0 +1,1 @@
+ALTER TABLE `student_change` ADD `keep_year` varchar(32) COMMENT '保留年限' AFTER `refuse_cause`;

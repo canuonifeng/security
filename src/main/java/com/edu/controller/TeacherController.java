@@ -56,6 +56,12 @@ public class TeacherController extends BaseController<Teacher> {
 		return teacherService.changeTeacherStatus(id, status);
 	}
 	
+	@RequestMapping(path = "/checkno", method = RequestMethod.GET)
+	@ApiOperation(value = "检查工号是否重复", notes = "根据工号检查是否重复")
+	public Boolean checkNo(String no, Long teacherId) {
+		return teacherService.checkNo(no, teacherId);
+	}
+	
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
 	@PreAuthorize("hasPermission('teacher', 'delete')")
 	public boolean delete(@PathVariable Long id) {

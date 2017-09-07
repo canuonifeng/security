@@ -1,11 +1,14 @@
 package com.edu.controller;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,11 +21,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.schoolroll.entity.ChangeStatus;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.entity.StudentChange;
+import com.edu.biz.schoolroll.entity.StudentStatus;
+import com.edu.biz.schoolroll.entity.pojo.StudentVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.validgroup.Update;
+import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -124,9 +132,27 @@ public class StudentController extends BaseController<Student> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
-	public Page<Student> pager(@RequestParam Map<String, Object> conditions,
+	public Page<StudentVo> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		return studentService.searchStudents(conditions, pageable);
+		Page<Student> page = studentService.searchStudents(conditions, pageable);
+		
+		List<StudentVo> studentVos = new ArrayList<>();
+		for (Student student : page) {
+			StudentVo studentVo = new StudentVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(student, studentVo);
+			List<StudentChange> changes = studentService.findStudentChangeByStudentId(student.getId());
+			for (StudentChange change : changes) {
+				if (change.getChangeStatus().equals(ChangeStatus.facultyApproving) || change.getChangeStatus().equals(ChangeStatus.schoolApproving)) {
+					studentVo.setIsChanging("是");
+				} else {
+					studentVo.setIsChanging("否");
+				}
+			}
+			studentVos.add(studentVo);
+		}
+		
+		Page<StudentVo> studentVoPage = new PageImpl<>(studentVos, pageable, page.getTotalElements());
+		return studentVoPage;
 	}
 
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
@@ -134,5 +160,42 @@ public class StudentController extends BaseController<Student> {
 	public List<Student> findStudents(@RequestParam Map<String, Object> conditions) {
 		List<Student> list = studentService.findStudents(conditions);
 		return list;
+	}
+	
+	//学籍异动
+	@RequestMapping(path = "/{id}/change", method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('change', 'add')")
+	public StudentChange addChange(@PathVariable Long id, @RequestBody StudentChange studentChange) {
+		Student student = studentService.getStudent(id);
+		studentChange.setStudent(student);
+		return studentService.createStudentChange(studentChange);
+	}
+	
+	@RequestMapping(path = "/{studentId}/change/{changeId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('change', 'edit')")
+	public StudentChange editStudentChange(@PathVariable Long studentId, @PathVariable Long changeId, @RequestBody StudentChange studentChange) {
+		studentChange.setId(changeId);
+		Student student = studentService.getStudent(studentId);
+		studentChange.setStudent(student);
+		return studentService.updateStudentChange(studentChange);
+	}
+	
+	@RequestMapping(path = "/{studentId}/room/{changeId}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('change', 'delete')")
+	public boolean deleteStudentChange(@PathVariable Long changeId) {
+		return studentService.deleteStudentChange(changeId);
+	}
+	
+	@RequestMapping(path = "/change/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('change', 'get')")
+	public StudentChange getStudentChange(@PathVariable Long id) {
+		return studentService.getStudentChange(id);
+	}
+	
+	@RequestMapping(path = "/change", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('major', 'get')")
+	public Page<StudentChange> changePager(@RequestParam Map<String, Object> conditions,
+			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+		return studentService.searchStudentChanges(conditions, pageable);	
 	}
 }

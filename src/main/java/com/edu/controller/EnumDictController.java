@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.dict.Gender;
+import com.edu.biz.dict.IDType;
+import com.edu.biz.dict.Nation;
+import com.edu.biz.schoolroll.entity.ChangeType;
 import com.edu.biz.schoolroll.entity.StudentOrigin;
 import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.teachingres.entity.CourseCategory;
@@ -71,6 +74,30 @@ public class EnumDictController {
 		}
 		return list;
 	}
+	
+	@RequestMapping(path = "/nation", method = RequestMethod.GET)
+	public List<Object> getNation() {
+		ArrayList<Object> list=new ArrayList<Object>();
+		for(Nation nation : Nation.values()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", nation.name());
+			map.put("name" , nation.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	@RequestMapping(path = "/idtype", method = RequestMethod.GET)
+	public List<Object> getIDType() {
+		ArrayList<Object> list=new ArrayList<Object>();
+		for(IDType idtype : IDType.values()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", idtype.name());
+			map.put("name" , idtype.getName());
+			list.add(map);
+		}
+		return list;
+	}
 
 	@RequestMapping(path = "/coursecategory", method = RequestMethod.GET)
 	public List<Object> getCourseCategory() {
@@ -115,6 +142,18 @@ public class EnumDictController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("id", courseTestWay.name());
 			map.put("name" , courseTestWay.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	@RequestMapping(path = "/changetype", method = RequestMethod.GET)
+	public List<Object> getChangeType() {
+		ArrayList<Object> list=new ArrayList<Object>();
+		for(ChangeType changeType : ChangeType.values()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", changeType.name());
+			map.put("name" , changeType.getName());
 			list.add(map);
 		}
 		return list;

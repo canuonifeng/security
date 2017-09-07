@@ -76,7 +76,7 @@ public class TermController extends BaseController<Term> {
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('term', 'get')")
 	public Page<Term> pager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+			@PageableDefault(value = 10, sort = { "longCode" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return termService.searchTerms(conditions, pageable);
 	}
 }

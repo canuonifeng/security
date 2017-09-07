@@ -19,6 +19,8 @@ public interface TeacherService {
 	
 	public Boolean deleteTeacher(Long id);
 	
+	public Boolean checkNo(String no, Long id);
+	
 	public Teacher getTeacher(Long id);
 	
 	public Page<Teacher> searchTeachers(Map<String, Object> conditions, Pageable pageable);

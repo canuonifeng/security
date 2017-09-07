@@ -8,10 +8,13 @@ import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.entity.StudentChange;
 
 public interface StudentService {
 	
 	public Student createStudent(Student student);
+	
+	public Student changeStudentStatus(Student student);
 	
 	public Student updateStudent(Student student);
 	
@@ -30,4 +33,18 @@ public interface StudentService {
 	public Student findByClassroomIdOrderByNoDesc(Long classroomId);
 	
 	public Student AssignStudentNum(Student student);
+	
+	//学籍异动
+	
+	public StudentChange createStudentChange(StudentChange studentChange);
+	
+	public StudentChange updateStudentChange(StudentChange studentChange);
+	
+	public Boolean deleteStudentChange(Long id);
+	
+	public StudentChange getStudentChange(Long id);
+	
+	public List<StudentChange> findStudentChangeByStudentId(Long id);
+	
+	public Page<StudentChange> searchStudentChanges(Map<String, Object> conditions, Pageable pageable);
 }
