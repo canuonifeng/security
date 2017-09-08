@@ -22,6 +22,7 @@ import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.ScheduleTeacher;
 import com.edu.biz.teaching.entity.Term;
+import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.ProgramService;
 import com.edu.biz.teaching.service.TermService;
@@ -33,6 +34,7 @@ import com.edu.biz.teachingres.service.CourseService;
 import com.edu.biz.teachingres.service.TeacherService;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
+import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 
@@ -57,7 +59,7 @@ public class CourseArrangeController extends BaseController<Course> {
 
 	@RequestMapping(path = "/schedule", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classSchedule', 'add')")
-	public ScheduleCycle courseArrange(@RequestBody Map<String, String> conditions) {
+	public ScheduleCycleVo courseArrange(@RequestBody Map<String, String> conditions) {
 
 		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(conditions.get("code"),
 				Long.parseLong(conditions.get("courseId")), Long.parseLong(conditions.get("classroomId")));
@@ -74,9 +76,9 @@ public class CourseArrangeController extends BaseController<Course> {
 			}
 		}
 
-		ScheduleCycle scheduleCycle = createScheduleCycle(conditions, classSchedule);
+		ScheduleCycleVo scheduleCycleVo = createScheduleCycle(conditions, classSchedule);
 
-		return scheduleCycle;
+		return scheduleCycleVo;
 	}
 
 	@RequestMapping(path = "schedule/{scheduleId}/cycle/{cycleId}", method = RequestMethod.PUT)
@@ -115,19 +117,36 @@ public class CourseArrangeController extends BaseController<Course> {
 
 	@RequestMapping(path = "/schedule", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classSchedule', 'get')")
-	public Map<Integer, Map<String, ScheduleCycle>> getCourseArrange(@RequestParam Map<String, String> conditions) {
-		Map<Integer, Map<String, ScheduleCycle>> list = courseArrangeService.getCourseArrange(conditions.get("code"),
+	public Map<Integer, Map<String, ScheduleCycleVo>> getCourseArrange(@RequestParam Map<String, String> conditions) {
+		Map<Integer, Map<String, ScheduleCycleVo>> list = courseArrangeService.getCourseArrange(conditions.get("code"),
 				Long.parseLong(conditions.get("classroomId")));
 		return list;
 	}
 
-	@RequestMapping(path = "/schedule/{scheduleId}/cycle/{cycleId}/set", method = RequestMethod.PUT)
-	@PreAuthorize("hasPermission('classSchedule', 'edit')")
-	public ScheduleCycle setScheduleCycle(@PathVariable Long scheduleId, @PathVariable Long cycleId, @RequestParam Map<String, String> conditions) {
-		createScheduleTeacher(scheduleId, conditions);
-		return updateScheduleCycle(cycleId, conditions);
+	@RequestMapping(path = "/schedule/{scheduleId}/cycle/{cycleId}/setteacher", method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('classSchedule', 'post')")
+	public ScheduleCycle setCourseTeacher(@PathVariable Long scheduleId, @PathVariable Long cycleId, @RequestBody Map<String, Object> conditions) {
+		List<ScheduleTeacher> scheduleTeachers = createScheduleTeachers(scheduleId, conditions);
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(cycleId);
+		
+		ScheduleCycleVo scheduleCycleVo = new ScheduleCycleVo();
+		BeanUtils.copyPropertiesWithIgnoreProperties(scheduleCycle, scheduleCycleVo);
+		scheduleCycleVo.setScheduleTeacher(scheduleTeachers);
+		
+		return scheduleCycleVo;
 	}
 
+	@RequestMapping(path = "/schedule/{scheduleId}/cycle/{cycleId}/setroom", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('classSchedule', 'put')")
+	public ScheduleCycle setCourseRoom(@PathVariable Long scheduleId, @PathVariable Long cycleId, @RequestBody Map<String, Object> conditions) {
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
+		if(classSchedule == null) {
+			throw new NotFoundException("该排课不存在");
+		}
+		
+		return updateScheduleCycle(cycleId, conditions);
+	}
+	
 	private ClassSchedule createClassSchedule(Map<String, String> conditions, Long classroomId) {
 		Term term = termService.getTermByCode(conditions.get("code"));
 		Course course = courseService.getCourse(Long.parseLong(conditions.get("courseId")));
@@ -145,36 +164,50 @@ public class CourseArrangeController extends BaseController<Course> {
 		return courseArrangeService.createClassSchedule(classSchedule);
 	}
 
-	private ScheduleCycle createScheduleCycle(Map<String, String> conditions, ClassSchedule classSchedule) {
+	private ScheduleCycleVo createScheduleCycle(Map<String, String> conditions, ClassSchedule classSchedule) {
 		ScheduleCycle scheduleCycle = new ScheduleCycle();
 		scheduleCycle.setPeriod(TermCodeUtil.getCoursePeriod(conditions.get("period"), conditions.get("type")));
 		scheduleCycle.setWeek(Integer.parseInt(conditions.get("week")));
 		scheduleCycle.setClassSchedule(classSchedule);
-		return courseArrangeService.createScheduleCycle(scheduleCycle);
+		scheduleCycle = courseArrangeService.createScheduleCycle(scheduleCycle);
+		ScheduleCycleVo scheduleCycleVo = new ScheduleCycleVo();
+		BeanUtils.copyPropertiesWithIgnoreProperties(scheduleCycle, scheduleCycleVo);
+		scheduleCycleVo.setScheduleTeacher(null);
+		return scheduleCycleVo;
 	}
 	
-	private ScheduleTeacher createScheduleTeacher(Long scheduleId, Map<String, String> conditions) {
-		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(Long.parseLong(conditions.get("scheduleId")));
+	private List<ScheduleTeacher> createScheduleTeachers(Long scheduleId, Map<String, Object> conditions) {
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
 		if(classSchedule == null) {
 			throw new NotFoundException("该排课不存在");
 		}
-		
-		Teacher teacher = teacherService.getTeacher(Long.parseLong(conditions.get("teacherId")));
-		if(teacher == null) {
-			throw new NotFoundException("该老师不存在");
+		List<ScheduleTeacher> scheduleTeachers = new ArrayList<>();
+		for (String key : conditions.keySet()) {
+			Teacher teacher = teacherService.getTeacher(Long.parseLong(conditions.get(key).toString()));
+			if(teacher == null) {
+				throw new NotFoundException("该老师不存在");
+			}
+			ScheduleTeacher scheduleTeacher = new ScheduleTeacher();
+			scheduleTeacher.setClassSchedule(classSchedule);
+			scheduleTeacher.setTeacher(teacher);
+			if(key.equals("0")) {
+				scheduleTeacher.setMaster(1);
+			} else {
+				scheduleTeacher.setMaster(0);
+			}
+			
+			courseArrangeService.createScheduleTeacher(scheduleTeacher);
+			scheduleTeachers.add(scheduleTeacher);
 		}
-		ScheduleTeacher scheduleTeacher = new ScheduleTeacher();
-		scheduleTeacher.setClassSchedule(classSchedule);
-		scheduleTeacher.setTeacher(teacher);
-		return scheduleTeacher;
+		return scheduleTeachers;
 	}
 	
-	private ScheduleCycle updateScheduleCycle(Long cycleId, Map<String, String> conditions) {
+	private ScheduleCycle updateScheduleCycle(Long cycleId, Map<String, Object> conditions) {
 		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(cycleId);
 		if(scheduleCycle == null) {
 			throw new NotFoundException("该排课周期不存在");
 		}
-		BuildingRoom buildingRoom = buildService.getBuildingRoom(Long.parseLong(conditions.get("roomId")));
+		BuildingRoom buildingRoom = buildService.getBuildingRoom(Long.parseLong(conditions.get("roomId").toString()));
 		if(buildingRoom == null) {
 			throw new NotFoundException("教室不存在");
 		}

@@ -101,7 +101,13 @@ public class BuildingController extends BaseController<Object> {
 		conditions.put("buildingId", id);
 		return buildingService.findBuildingRooms(conditions);
 	}
-
+	
+	@RequestMapping(path = "/all",method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('building', 'get')")
+	public List<Building> findBuildings(@RequestParam Map<String, Object> conditions) {
+		return buildingService.findBuildings(conditions);
+	}
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
 	public Page<BuildingVo> pager(@RequestParam Map<String, Object> conditions,

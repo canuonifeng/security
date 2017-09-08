@@ -6,12 +6,14 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.teachingres.entity.Building;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 
 public class BuildingSpecification implements Specification<Building> {
 	private Map<String, Object> conditions;
@@ -25,7 +27,10 @@ public class BuildingSpecification implements Specification<Building> {
 		List<Predicate> list = new ArrayList<Predicate>();
 
 		if (null != conditions) {
-			
+			if (conditions.containsKey("roomType")) {
+				Join<Building, BuildingRoom> join = root.join("buildingRoom");
+				list.add(cb.equal(join.get("roomType").as(String.class), conditions.get("roomType")));
+			}			
 		}
 
 		Predicate[] p = new Predicate[list.size()];
