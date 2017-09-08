@@ -29,7 +29,7 @@ public class BuildingSpecification implements Specification<Building> {
 		if (null != conditions) {
 			if (conditions.containsKey("roomType")) {
 				Join<Building, BuildingRoom> join = root.join("buildingRoom");
-				list.add(cb.equal(join.get("roomType"), conditions.get("roomType")));
+				list.add(cb.equal(join.get("roomType").as(String.class), conditions.get("roomType")));
 			}			
 		}
 

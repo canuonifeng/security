@@ -14,12 +14,17 @@ import com.edu.biz.common.dao.service.SettingService;
 import com.edu.biz.common.entity.Setting;
 import com.edu.biz.teaching.dao.ClassScheduleDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
+import com.edu.biz.teaching.dao.ScheduleTeacherDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
 import com.edu.biz.teaching.entity.ScheduleCycle;
+import com.edu.biz.teaching.entity.ScheduleTeacher;
+import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.specification.ClassScheduleSpecification;
 import com.edu.biz.teaching.specification.ScheduleCycleSpecification;
+import com.edu.biz.teaching.specification.ScheduleTeacherSpecification;
 import com.edu.core.exception.ServiceException;
+import com.edu.core.util.BeanUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -32,7 +37,8 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 
 	@Autowired
 	private ScheduleCycleDao scheduleCycleDao;
-
+	@Autowired
+	private ScheduleTeacherDao scheduleTeacherDao;
 	@Autowired
 	private SettingService settingService;
 
@@ -61,8 +67,8 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return scheduleCycleDao.save(scheduleCycle);
 	}
 
-	public Map<Integer, Map<String, ScheduleCycle>> getCourseArrange(String term, Long classroomId) {
-		HashMap<Integer, Map<String, ScheduleCycle>> map = new HashMap<>();
+	public Map<Integer, Map<String, ScheduleCycleVo>> getCourseArrange(String term, Long classroomId) {
+		HashMap<Integer, Map<String, ScheduleCycleVo>> map = new HashMap<>();
 		Setting setting = settingService.getSettingByCode("course_arrange_limit");
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -85,7 +91,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		List<ClassSchedule> classSchedules = findClassSchedules(term, classroomId);
 
 		for (int i = 1; i <= 7; i++) {
-			Map<String, ScheduleCycle> weekSchedules = new LinkedHashMap<>();
+			Map<String, ScheduleCycleVo> weekSchedules = new LinkedHashMap<>();
 			for (int courseNum = 1, prefix = 1; courseNum <= Integer
 					.parseInt(limit.get("morning").toString()); courseNum++) {
 				weekSchedules.put(prefix + "-" + courseNum, null);
@@ -102,10 +108,27 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		}
 		for (ClassSchedule classSchedule : classSchedules) {
 			for (ScheduleCycle scheduleCycle : classSchedule.getScheduleCycles()) {
-				map.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), scheduleCycle);
+				ScheduleCycleVo scheduleCycleVo = new ScheduleCycleVo();
+				BeanUtils.copyPropertiesWithIgnoreProperties(scheduleCycle, scheduleCycleVo);
+				HashMap<String, Object> conditions = new HashMap<String, Object>();
+				conditions.put("scheduleId", scheduleCycle.getClassSchedule().getId());
+				List<ScheduleTeacher> scheduleTeachers = findScheduleTeachers(conditions);
+				scheduleCycleVo.setScheduleTeacher(scheduleTeachers);
+
+				map.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), scheduleCycleVo);
 			}
 		}
 		return map;
+	}
+
+	@Override
+	public List<ScheduleTeacher> findScheduleTeachers(HashMap<String, Object> conditions) {
+		return scheduleTeacherDao.findAll(new ScheduleTeacherSpecification(conditions));
+	}
+
+	@Override
+	public ScheduleTeacher createScheduleTeacher(ScheduleTeacher scheduleTeacher) {
+		return scheduleTeacherDao.save(scheduleTeacher);
 	}
 
 	@Override
@@ -129,12 +152,12 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		classScheduleDao.delete(id);
 		return null == classScheduleDao.findOne(id);
 	}
-	
+
 	@Override
 	public ClassSchedule getClassSchedule(Long id) {
 		return classScheduleDao.findOne(id);
 	}
-	
+
 	@Override
 	public Long countScheduleCyle(Map<String, Object> map) {
 		return scheduleCycleDao.count(new ScheduleCycleSpecification(map));

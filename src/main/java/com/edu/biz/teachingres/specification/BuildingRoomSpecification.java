@@ -28,6 +28,9 @@ public class BuildingRoomSpecification implements Specification<BuildingRoom> {
 			if (conditions.containsKey("buildingId")) {
 				list.add(cb.equal(root.get("building").get("id").as(Long.class), this.conditions.get("buildingId")));
 			}
+			if (conditions.containsKey("roomType")) {
+				list.add(cb.equal(root.get("roomType").as(String.class), this.conditions.get("roomType")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
