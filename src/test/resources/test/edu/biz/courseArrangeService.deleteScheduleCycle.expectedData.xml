@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<SCHEDULE_CYCLE id="2" schedule_id="2" building_room_id="2"
+		week="2" period="1-1" />
+</dataset>
