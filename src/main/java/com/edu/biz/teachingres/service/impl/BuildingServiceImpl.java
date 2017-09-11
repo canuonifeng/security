@@ -27,10 +27,10 @@ import com.edu.core.util.BeanUtils;
 public class BuildingServiceImpl extends BaseService implements BuildingService {
 	@Autowired
 	private BuildingDao buildingDao;
-	
+
 	@Autowired
 	private BuildingRoomDao buildingRoomDao;
-	
+
 	@Override
 	public Building createBuilding(Building building) {
 		return buildingDao.save(building);
@@ -46,7 +46,7 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 
 		return buildingDao.save(saveBuilding);
 	}
-	
+
 	@Override
 	@Transactional
 	public Boolean deleteBuilding(Long id) {
@@ -63,17 +63,17 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	public Page<Building> searchBuildings(Map<String, Object> conditions, Pageable pageable) {
 		return buildingDao.findAll(new BuildingSpecification(conditions), pageable);
 	}
-	
+
 	@Override
 	public BuildingRoom createBuildingRoom(BuildingRoom buildingRoom) {
 		return buildingRoomDao.save(buildingRoom);
 	}
-	
+
 	@Override
 	public List<CountRoomType> getRoomNum() {
 		return buildingRoomDao.countGroupByRoomType();
 	}
-	
+
 	@Override
 	public List<CountRoomType> getRoomNumByBuildingId(Long buildingId) {
 		return buildingRoomDao.countGroupByRoomTypeByBuildingId(buildingId);
@@ -85,7 +85,8 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 		if (null == saveBuildingRoom) {
 			throw new NotFoundException("该课程不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(buildingRoom, saveBuildingRoom, "floor", "name", "room_type", "seat_num");
+		BeanUtils.copyPropertiesWithCopyProperties(buildingRoom, saveBuildingRoom, "floor", "name", "room_type",
+				"seat_num");
 
 		return buildingRoomDao.save(buildingRoom);
 	}
@@ -95,7 +96,7 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 		buildingRoomDao.delete(id);
 		return true;
 	}
-	
+
 	@Override
 	@Transactional
 	public void deleteBuildingRoomByFloor(Long buildingId, Integer floor) {
@@ -111,17 +112,22 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	public Page<BuildingRoom> searchBuildingRooms(Map<String, Object> conditions, Pageable pageable) {
 		return buildingRoomDao.findAll(new BuildingRoomSpecification(conditions), pageable);
 	}
-	
+
 	@Override
 	public Long countBuildingRoom(Map<String, Object> conditions) {
 		return buildingRoomDao.count(new BuildingRoomSpecification(conditions));
 	}
-	
+
+	@Override
+	public List<Building> findBuildings(Map<String, Object> conditions) {
+		return buildingDao.findAll(new BuildingSpecification(conditions));
+	}
+
 	@Override
 	public Long getFloorNum(Long id) {
 		return buildingRoomDao.countDistinctFloor(id);
 	}
-	
+
 	@Override
 	public Map<String, List<BuildingRoom>> findBuildingRooms(Map<String, Object> conditions) {
 		List<BuildingRoom> buildingRooms = buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
@@ -135,7 +141,7 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 				map.put(room.getFloor().toString(), list);
 			}
 		}
-		
+
 		return map;
 	}
 
