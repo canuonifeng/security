@@ -34,7 +34,7 @@ public class StudentChangeLog extends BaseEntity {
 	private String remark;
 	
 	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "opUser_id")
+	@JoinColumn(name = "op_user_id")
 	@ApiModelProperty(value = "操作人")
 	private User opUser;
 
