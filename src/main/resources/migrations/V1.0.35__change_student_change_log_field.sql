@@ -1,0 +1,1 @@
+ALTER TABLE `student_change_log` CHANGE `opUser_id` `op_user_id` int(10) UNSIGNED COMMENT '操作人';

@@ -34,6 +34,9 @@ public class StudentChangeSpecification implements Specification<StudentChange> 
 			if (conditions.containsKey("changeType")) {
 				list.add(cb.equal(root.get("changeType").as(String.class), this.conditions.get("changeType")));
 			}
+			if (conditions.containsKey("status")) {
+				list.add(cb.equal(root.get("status").as(String.class), this.conditions.get("status")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
