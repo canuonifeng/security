@@ -2,7 +2,6 @@ package com.edu.controller;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +24,9 @@ import com.edu.biz.schoolroll.entity.ChangeStatus;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.StudentChange;
-import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.schoolroll.entity.pojo.StudentVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
+import com.edu.biz.schoolroll.service.StudentChangeService;
 import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.validgroup.Update;
 import com.edu.core.util.BeanUtils;
@@ -43,6 +42,8 @@ public class StudentController extends BaseController<Student> {
 	private StudentService studentService;
 	@Autowired
 	private ClassroomService classroomService;
+	@Autowired
+	private StudentChangeService studentChangeService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('student', 'add')")
@@ -140,9 +141,9 @@ public class StudentController extends BaseController<Student> {
 		for (Student student : page) {
 			StudentVo studentVo = new StudentVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(student, studentVo);
-			List<StudentChange> changes = studentService.findStudentChangeByStudentId(student.getId());
+			List<StudentChange> changes = studentChangeService.findStudentChangeByStudentId(student.getId());
 			for (StudentChange change : changes) {
-				if (change.getChangeStatus().equals(ChangeStatus.facultyApproving) || change.getChangeStatus().equals(ChangeStatus.schoolApproving)) {
+				if (change.getStatus().equals(ChangeStatus.facultyApproving) || change.getStatus().equals(ChangeStatus.schoolApproving)) {
 					studentVo.setIsChanging("是");
 				} else {
 					studentVo.setIsChanging("否");
@@ -160,42 +161,5 @@ public class StudentController extends BaseController<Student> {
 	public List<Student> findStudents(@RequestParam Map<String, Object> conditions) {
 		List<Student> list = studentService.findStudents(conditions);
 		return list;
-	}
-	
-	//学籍异动
-	@RequestMapping(path = "/{id}/change", method = RequestMethod.POST)
-	@PreAuthorize("hasPermission('change', 'add')")
-	public StudentChange addChange(@PathVariable Long id, @RequestBody StudentChange studentChange) {
-		Student student = studentService.getStudent(id);
-		studentChange.setStudent(student);
-		return studentService.createStudentChange(studentChange);
-	}
-	
-	@RequestMapping(path = "/{studentId}/change/{changeId}", method = RequestMethod.PUT)
-	@PreAuthorize("hasPermission('change', 'edit')")
-	public StudentChange editStudentChange(@PathVariable Long studentId, @PathVariable Long changeId, @RequestBody StudentChange studentChange) {
-		studentChange.setId(changeId);
-		Student student = studentService.getStudent(studentId);
-		studentChange.setStudent(student);
-		return studentService.updateStudentChange(studentChange);
-	}
-	
-	@RequestMapping(path = "/{studentId}/room/{changeId}", method = RequestMethod.DELETE)
-	@PreAuthorize("hasPermission('change', 'delete')")
-	public boolean deleteStudentChange(@PathVariable Long changeId) {
-		return studentService.deleteStudentChange(changeId);
-	}
-	
-	@RequestMapping(path = "/change/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('change', 'get')")
-	public StudentChange getStudentChange(@PathVariable Long id) {
-		return studentService.getStudentChange(id);
-	}
-	
-	@RequestMapping(path = "/change", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('major', 'get')")
-	public Page<StudentChange> changePager(@RequestParam Map<String, Object> conditions,
-			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
-		return studentService.searchStudentChanges(conditions, pageable);	
 	}
 }

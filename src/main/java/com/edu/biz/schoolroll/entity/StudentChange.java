@@ -8,6 +8,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.security.entity.User;
 
@@ -37,11 +40,13 @@ public class StudentChange extends BaseEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = "异动前学生状态")
-	private StudentStatus oldStudentStatus;
+	@NotFound(action = NotFoundAction.IGNORE)
+	private StudentStatus oldStudentStatus = StudentStatus.enable;
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = "异动后学生状态")
-	private StudentStatus newStudentStatus;
+	@NotFound(action = NotFoundAction.IGNORE)
+	private StudentStatus newStudentStatus = StudentStatus.enable;
 	
 	@ApiModelProperty(value = "保留年限")
 	private String keepYear;
@@ -78,8 +83,12 @@ public class StudentChange extends BaseEntity {
 	public void setStudent(Student student) {
 		this.student = student;
 	}
+	
+	public String getChangeTypeName() {
+		return changeType.getName();
+	}
 
-	public ChangeType getChangType() {
+	public ChangeType getChangeType() {
 		return changeType;
 	}
 
@@ -94,8 +103,12 @@ public class StudentChange extends BaseEntity {
 	public void setCause(String cause) {
 		this.cause = cause;
 	}
+	
+	public String getStatusName() {
+		return status.getName();
+	}
 
-	public ChangeStatus getChangeStatus() {
+	public ChangeStatus getStatus() {
 		return status;
 	}
 
@@ -110,6 +123,10 @@ public class StudentChange extends BaseEntity {
 	public void setRefuseCause(String refuseCause) {
 		this.refuseCause = refuseCause;
 	}
+	
+	public String getOldStudentStatusName() {
+		return oldStudentStatus.getName();
+	}
 
 	public StudentStatus getOldStudentStatus() {
 		return oldStudentStatus;
@@ -117,6 +134,10 @@ public class StudentChange extends BaseEntity {
 
 	public void setOldStudentStatus(StudentStatus oldStudentStatus) {
 		this.oldStudentStatus = oldStudentStatus;
+	}
+	
+	public String getNewStudentStatusName() {
+		return newStudentStatus.getName();
 	}
 
 	public StudentStatus getNewStudentStatus() {
