@@ -22,6 +22,7 @@ import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.ScheduleTeacher;
 import com.edu.biz.teaching.entity.Term;
+import com.edu.biz.teaching.entity.pojo.ProgramCourseVo;
 import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.ProgramService;
@@ -115,6 +116,22 @@ public class CourseArrangeController extends BaseController<Course> {
 		return true;
 	}
 
+	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('classroom', 'get')")
+	public List<ProgramCourseVo> termCourses(@RequestParam Map<String, Object> conditions) {
+		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
+		List<ProgramCourseVo> programCourseVos = new ArrayList<>();
+		for (ProgramCourse programCourse : programCourses) {
+			ProgramCourseVo programCourseVo = buildProgramCourseVo(programCourse, conditions);
+			if(programCourseVo.getRemainderCourseNum().equals(0)) {
+				continue;
+			}
+			programCourseVos.add(programCourseVo);
+		}
+		return programCourseVos;
+	}
+	
+	
 	@RequestMapping(path = "/schedule", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classSchedule', 'get')")
 	public Map<Integer, Map<String, ScheduleCycleVo>> getCourseArrange(@RequestParam Map<String, String> conditions) {
@@ -181,6 +198,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		if(classSchedule == null) {
 			throw new NotFoundException("该排课不存在");
 		}
+		courseArrangeService.deleteScheduleTeacherByScheduleId(classSchedule.getId());
 		List<ScheduleTeacher> scheduleTeachers = new ArrayList<>();
 		for (String key : conditions.keySet()) {
 			Teacher teacher = teacherService.getTeacher(Long.parseLong(conditions.get(key).toString()));
@@ -213,5 +231,23 @@ public class CourseArrangeController extends BaseController<Course> {
 		}
 		scheduleCycle.setBuildingRoom(buildingRoom);
 		return scheduleCycle;
+	}
+	
+	private ProgramCourseVo buildProgramCourseVo(ProgramCourse programCourse, Map<String, Object> conditions) {
+		ProgramCourseVo programCourseVo = new ProgramCourseVo();
+		BeanUtils.copyPropertiesWithIgnoreProperties(programCourse, programCourseVo);
+		programCourseVo.setRemainderCourseNum(programCourse.getWeekPeriod());
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(programCourse.getTermCode(), programCourse.getCourse().getId(), Long.parseLong(conditions.get("classroomId").toString()));
+		if(classSchedule != null) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("scheduleId", classSchedule.getId());
+			Long arrangeCourseNum = courseArrangeService.countScheduleCyle(map);
+			Integer remainderCourseNum = programCourse.getWeekPeriod() - Integer.parseInt(arrangeCourseNum.toString());
+			if(remainderCourseNum < 0) {
+				throw new InvalidParameterException("课程"+programCourse.getCourse().getName()+"排课超出周课时");
+			}
+			programCourseVo.setRemainderCourseNum(remainderCourseNum);
+		}
+		return programCourseVo;
 	}
 }

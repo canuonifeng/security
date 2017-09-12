@@ -34,4 +34,6 @@ public interface CourseArrangeService {
 	public ScheduleTeacher createScheduleTeacher(ScheduleTeacher scheduleTeacher);
 
 	public List<ScheduleTeacher> findScheduleTeachers(HashMap<String, Object> conditions);
+
+	public Boolean deleteScheduleTeacherByScheduleId(Long ScheduleId);
 }

@@ -23,6 +23,7 @@ import com.edu.biz.teaching.specification.ProgramSpecification;
 import com.edu.biz.teachingres.dao.CourseDao;
 import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.specification.CourseSpecification;
+import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
@@ -39,6 +40,10 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	private CourseDao courseDao;
 	@Override
 	public Program createProgram(Program program) {
+		Program savedProgram = getProgram(program.getGrade(), program.getMajor().getId());
+		if(savedProgram != null) {
+			throw new InvalidParameterException("该教学计划已被创建");
+		}
 		return programDao.save(program);
 	}
 	
@@ -85,7 +90,15 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	public Program getProgram(Long id) {
 		return programDao.findOne(id);
 	}
-
+	
+	@Override
+	public Program getProgram(String grade, Long majorId) {
+		Map<String, Object> conditions = new HashMap<String, Object>();
+		conditions.put("majorId", majorId);
+		conditions.put("grade", grade);
+		return programDao.findOne(new ProgramSpecification(conditions));
+	}
+	
 	@Override
 	public Page<Program> searchPrograms(Map<String, Object> conditions, Pageable pageable) {
 		return programDao.findAll(new ProgramSpecification(conditions), pageable);
