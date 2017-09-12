@@ -25,7 +25,8 @@ public class CourseArrangeServiceTest extends BaseServiceTest {
 
 	@Test
 	public void testGetClassSchedule() {
-		courseArrangeService.getClassSchedule("17-18-1", 1L, 1L);
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule("17-18-1", 1L, 1L);
+		Assert.assertEquals("17-18-1", classSchedule.getTerm());
 	}
 	
 	@Test
