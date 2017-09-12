@@ -170,4 +170,13 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		scheduleTeacherDao.deleteByClassScheduleId(scheduleId);
 		return true;
 	}
+	
+	@Override
+	public ScheduleCycle getScheduleCycle(Long scheduleId, String period, Integer week) {
+		HashMap<String, Object> conditions = new HashMap<>();
+		conditions.put("scheduleId", scheduleId);
+		conditions.put("period", period);
+		conditions.put("week", week);
+		return scheduleCycleDao.findOne(new ScheduleCycleSpecification(conditions));
+	}
 }

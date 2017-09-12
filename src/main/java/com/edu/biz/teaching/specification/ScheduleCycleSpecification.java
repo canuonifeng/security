@@ -6,14 +6,11 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.edu.biz.schoolroll.entity.Classroom;
-import com.edu.biz.teaching.entity.ClassSchedule;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 
 public class ScheduleCycleSpecification implements Specification<ScheduleCycle> {
@@ -30,6 +27,12 @@ public class ScheduleCycleSpecification implements Specification<ScheduleCycle> 
 		if (null != conditions) {
 			if (conditions.containsKey("scheduleId")) {
 				list.add(cb.equal(root.get("classSchedule").get("id").as(Long.class), conditions.get("scheduleId")));
+			}
+			if (conditions.containsKey("period")) {
+				list.add(cb.equal(root.get("period"), conditions.get("period")));
+			}
+			if (conditions.containsKey("week")) {
+				list.add(cb.equal(root.get("week"), conditions.get("week")));
 			}
 		}
 		

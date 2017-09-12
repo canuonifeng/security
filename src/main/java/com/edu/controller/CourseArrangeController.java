@@ -182,9 +182,15 @@ public class CourseArrangeController extends BaseController<Course> {
 	}
 
 	private ScheduleCycleVo createScheduleCycle(Map<String, String> conditions, ClassSchedule classSchedule) {
+		String period = TermCodeUtil.getCoursePeriod(conditions.get("period"), conditions.get("type"));
+		Integer week = Integer.parseInt(conditions.get("week"));
+		ScheduleCycle savedScheduleCycle = courseArrangeService.getScheduleCycle(classSchedule.getId(), period, week);
+		if(savedScheduleCycle != null) {
+			throw new InvalidParameterException("该位置已有课程被排");
+		}
 		ScheduleCycle scheduleCycle = new ScheduleCycle();
-		scheduleCycle.setPeriod(TermCodeUtil.getCoursePeriod(conditions.get("period"), conditions.get("type")));
-		scheduleCycle.setWeek(Integer.parseInt(conditions.get("week")));
+		scheduleCycle.setPeriod(period);
+		scheduleCycle.setWeek(week);
 		scheduleCycle.setClassSchedule(classSchedule);
 		scheduleCycle = courseArrangeService.createScheduleCycle(scheduleCycle);
 		ScheduleCycleVo scheduleCycleVo = new ScheduleCycleVo();
