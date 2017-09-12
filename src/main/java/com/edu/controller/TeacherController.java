@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.entity.TeacherCourse;
 import com.edu.biz.teachingres.entity.TeacherStatus;
 import com.edu.biz.teachingres.service.TeacherService;
 
@@ -87,5 +88,11 @@ public class TeacherController extends BaseController<Teacher> {
 	@PreAuthorize("hasPermission('teacher', 'get')")
 	public List<Teacher> findTeachers(@RequestParam Map<String, Object> conditions) {
 		return teacherService.findTeachers(conditions);
+	}
+	
+	@RequestMapping(path = "/{id}/givecourses", method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('teacher', 'give')")
+	public void giveCourses(@PathVariable Long id, @RequestParam List<TeacherCourse> teacherCourses) {
+		
 	}
 }
