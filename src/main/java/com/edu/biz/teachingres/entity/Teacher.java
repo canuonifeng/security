@@ -39,10 +39,10 @@ public class Teacher extends BaseEntity {
 	@ApiModelProperty(value = " 状态")
 	private TeacherStatus status = TeacherStatus.enable;
 	
-	@ManyToMany(targetEntity = Course.class, fetch = FetchType.EAGER)
+	@ManyToMany(targetEntity = Course.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "teacher_course", joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
 	@ApiModelProperty(value = "所授课程")
-	@JsonView({ JsonViews.Cascade.class })
+	@JsonView({ TeachingresJsonViews.CascadeCourse.class })
 	private List<Course> courses;
 	
 	public List<Course> getCourses() {

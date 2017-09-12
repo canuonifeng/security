@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.teachingres.entity.Teacher;
 import com.edu.biz.teachingres.entity.TeacherCourse;
 import com.edu.biz.teachingres.entity.TeacherStatus;
+import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.teachingres.service.TeacherService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -79,6 +81,7 @@ public class TeacherController extends BaseController<Teacher> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('teacher', 'get')")
+	@JsonView(TeachingresJsonViews.CascadeCourse.class)
 	public Page<Teacher> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return teacherService.searchTeachers(conditions, pageable);
