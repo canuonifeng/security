@@ -9,16 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
-import com.edu.biz.schoolroll.dao.StudentChangeDao;
 import com.edu.biz.schoolroll.dao.StudentDao;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
-import com.edu.biz.schoolroll.entity.StudentChange;
 import com.edu.biz.schoolroll.service.StudentService;
-import com.edu.biz.schoolroll.specification.StudentChangeSpecification;
 import com.edu.biz.schoolroll.specification.StudentSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
@@ -28,9 +24,6 @@ import com.edu.core.util.BeanUtils;
 public class StudentServiceImpl extends BaseService implements StudentService {
 	@Autowired
 	private StudentDao studentDao;
-	
-	@Autowired
-	private StudentChangeDao studentChangeDao;
 
 	@Override
 	public Student createStudent(Student student) {
@@ -129,45 +122,5 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 			return true;
 		}
 		return false;
-	}
-	
-	//学籍异动
-	
-	@Override
-	@Transactional
-	public StudentChange createStudentChange(StudentChange studentChange) {
-		return studentChangeDao.save(studentChange);
-	}
-
-	@Override
-	public StudentChange updateStudentChange(StudentChange studentChange) {
-		StudentChange saveStudentChange = studentChangeDao.findOne(studentChange.getId());
-		if (null == saveStudentChange) {
-			throw new NotFoundException("该学生不存在");
-		}
-		BeanUtils.copyPropertiesWithCopyProperties(studentChange, saveStudentChange, "status", "refuseCause", "auditUser", "updatedTime");
-
-		return studentChangeDao.save(studentChange);
-	}
-
-	@Override
-	public Boolean deleteStudentChange(Long id) {
-		studentChangeDao.delete(id);
-		return null == studentChangeDao.findOne(id);
-	}
-
-	@Override
-	public StudentChange getStudentChange(Long id) {
-		return studentChangeDao.findOne(id);
-	}
-	
-	@Override
-	public List<StudentChange> findStudentChangeByStudentId(Long id) {
-		return studentChangeDao.findByStudentId(id);
-	}
-
-	@Override
-	public Page<StudentChange> searchStudentChanges(Map<String, Object> conditions, Pageable pageable) {
-		return studentChangeDao.findAll(new StudentChangeSpecification(conditions), pageable);
 	}
 }

@@ -42,4 +42,6 @@ public interface ProgramService {
 
 	public ProgramCourse getProgramCourse(long courseId, String term);
 
+	Program getProgram(String grade, Long majorId);
+
 }

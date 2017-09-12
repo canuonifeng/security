@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.common.dao.service.SettingService;
@@ -161,5 +162,12 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	@Override
 	public Long countScheduleCyle(Map<String, Object> map) {
 		return scheduleCycleDao.count(new ScheduleCycleSpecification(map));
+	}
+	
+	@Override
+	@Transactional
+	public Boolean deleteScheduleTeacherByScheduleId(Long scheduleId) {
+		scheduleTeacherDao.deleteByClassScheduleId(scheduleId);
+		return true;
 	}
 }
