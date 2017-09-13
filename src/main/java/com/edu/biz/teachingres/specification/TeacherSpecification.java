@@ -31,9 +31,6 @@ public class TeacherSpecification implements Specification<Teacher> {
 			if (conditions.containsKey("no")) {
 				list.add(cb.equal(root.get("no"), this.conditions.get("no")));
 			}
-			if (conditions.containsKey("id")) {
-				list.add(cb.equal(root.get("id"), this.conditions.get("id")));
-			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
