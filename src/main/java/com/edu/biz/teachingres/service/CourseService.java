@@ -23,4 +23,6 @@ public interface CourseService {
 	public Page<Course> searchCourses(Map<String, Object> conditions, Pageable pageable);
 
 	public Boolean checkCode(String code, Long courseId);
+	
+	public Course giveTeachers(Course course);
 }

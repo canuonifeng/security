@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.teachingres.entity.Course;
+import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.teachingres.service.CourseService;
 import com.edu.biz.validgroup.Update;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,6 +50,7 @@ public class CourseController extends BaseController<Course> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('course', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Course get(@PathVariable Long id) {
 		return courseService.getCourse(id);
 	}
@@ -58,8 +63,17 @@ public class CourseController extends BaseController<Course> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('course', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Page<Course> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return courseService.searchCourses(conditions, pageable);
+	}
+	
+	@RequestMapping(path = "/{id}/giveteachers", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('course', 'give')")
+	public Course giveTeachers(@PathVariable Long id, @RequestBody List<Teacher> teachers) {
+		Course course = courseService.getCourse(id);
+		course.setTeachers(teachers);
+		return courseService.giveTeachers(course);
 	}
 }

@@ -81,5 +81,15 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 	public List<Teacher> findTeachers(Map<String, Object> conditions) {
 		return teacherDao.findAll(new TeacherSpecification(conditions));
 	}
+	
+	@Override
+	public Teacher giveCourses(Teacher teacher) {
+		Teacher saveTeacher = teacherDao.findOne(teacher.getId());
+		if (null == saveTeacher) {
+			throw new NotFoundException("该教师不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(teacher, saveTeacher, "courses");
 
+		return teacherDao.save(saveTeacher);
+	}
 }
