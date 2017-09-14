@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.entity.Teacher;
 import com.edu.biz.teachingres.entity.TeacherStatus;
+import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.teachingres.service.TeacherService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -70,6 +73,7 @@ public class TeacherController extends BaseController<Teacher> {
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('teacher', 'get')")
+	@JsonView(TeachingresJsonViews.CascadeCourse.class)
 	public Teacher get(@PathVariable Long id) {
 		Teacher teacher = new Teacher();
 		teacher.setId(id);
@@ -78,6 +82,7 @@ public class TeacherController extends BaseController<Teacher> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('teacher', 'get')")
+	@JsonView(TeachingresJsonViews.CascadeCourse.class)
 	public Page<Teacher> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return teacherService.searchTeachers(conditions, pageable);
@@ -85,7 +90,16 @@ public class TeacherController extends BaseController<Teacher> {
 
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('teacher', 'get')")
+	@JsonView(TeachingresJsonViews.CascadeCourse.class)
 	public List<Teacher> findTeachers(@RequestParam Map<String, Object> conditions) {
 		return teacherService.findTeachers(conditions);
+	}
+	
+	@RequestMapping(path = "/{id}/givecourses", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('teacher', 'give')")
+	public Teacher giveCourses(@PathVariable Long id, @RequestBody List<Course> courses) {
+		Teacher teacher = teacherService.getTeacher(id);
+		teacher.setCourses(courses);
+		return teacherService.giveCourses(teacher);
 	}
 }

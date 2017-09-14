@@ -26,4 +26,6 @@ public interface TeacherService {
 	public Page<Teacher> searchTeachers(Map<String, Object> conditions, Pageable pageable);
 
 	public List<Teacher> findTeachers(Map<String, Object> conditions);
+	
+	public Teacher giveCourses(Teacher teacher);
 }
