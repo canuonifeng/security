@@ -28,6 +28,9 @@ public class ScheduleTeacherSpecification implements Specification<ScheduleTeach
 			if (conditions.containsKey("scheduleId")) {
 				list.add(cb.equal(root.get("classSchedule").get("id").as(Long.class), conditions.get("scheduleId")));
 			}
+			if (conditions.containsKey("master")) {
+				list.add(cb.equal(root.get("master"), conditions.get("master")));
+			}
 		}
 		
 		Predicate[] p = new Predicate[list.size()];

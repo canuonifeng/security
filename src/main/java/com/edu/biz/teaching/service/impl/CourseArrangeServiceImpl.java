@@ -128,6 +128,15 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	}
 
 	@Override
+	public ScheduleCycle getScheduleCycle(Long buildingRoomId, String period, int week) {
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("buildingRoomId", buildingRoomId);
+		conditions.put("period", period);
+		conditions.put("week", week);
+		return scheduleCycleDao.findOne(new ScheduleCycleSpecification(conditions));
+	}
+	
+	@Override
 	public ScheduleTeacher createScheduleTeacher(ScheduleTeacher scheduleTeacher) {
 		return scheduleTeacherDao.save(scheduleTeacher);
 	}
@@ -172,11 +181,10 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	}
 	
 	@Override
-	public ScheduleCycle getScheduleCycle(Long scheduleId, String period, Integer week) {
-		HashMap<String, Object> conditions = new HashMap<>();
+	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId, int master) {
+		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("scheduleId", scheduleId);
-		conditions.put("period", period);
-		conditions.put("week", week);
-		return scheduleCycleDao.findOne(new ScheduleCycleSpecification(conditions));
+		conditions.put("master", master);
+		return scheduleTeacherDao.findOne(new ScheduleTeacherSpecification(conditions));
 	}
 }

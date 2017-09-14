@@ -37,5 +37,7 @@ public interface CourseArrangeService {
 
 	public Boolean deleteScheduleTeacherByScheduleId(Long ScheduleId);
 
-	public ScheduleCycle getScheduleCycle(Long scheduleId, String period, Integer week);
+	public ScheduleCycle getScheduleCycle(Long buildingRoomId, String period, int week);
+
+	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId, int master);
 }
