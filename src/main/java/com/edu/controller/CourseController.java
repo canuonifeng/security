@@ -71,6 +71,7 @@ public class CourseController extends BaseController<Course> {
 	
 	@RequestMapping(path = "/{id}/giveteachers", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('course', 'give')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Course giveTeachers(@PathVariable Long id, @RequestBody List<Teacher> teachers) {
 		Course course = courseService.getCourse(id);
 		course.setTeachers(teachers);
