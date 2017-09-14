@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.ClassSchedule;
 import com.edu.biz.teaching.entity.ScheduleCycle;
+import com.edu.biz.teaching.entity.ScheduleTeacher;
 
 public class ScheduleCycleSpecification implements Specification<ScheduleCycle> {
 	private Map<String, Object> conditions;
@@ -30,6 +31,27 @@ public class ScheduleCycleSpecification implements Specification<ScheduleCycle> 
 		if (null != conditions) {
 			if (conditions.containsKey("scheduleId")) {
 				list.add(cb.equal(root.get("classSchedule").get("id").as(Long.class), conditions.get("scheduleId")));
+			}
+			if (conditions.containsKey("period")) {
+				list.add(cb.equal(root.get("period"), conditions.get("period")));
+			}
+			if (conditions.containsKey("week")) {
+				list.add(cb.equal(root.get("week"), conditions.get("week")));
+			}
+			if (conditions.containsKey("classroomId")) {
+				Join<ScheduleCycle, ClassSchedule> joinSchedule = root.join("classSchedule");
+				list.add(cb.equal(joinSchedule.get("id").as(Long.class), root.get("classSchedule").get("id")));
+				Join<ClassSchedule, Classroom> join = joinSchedule.join("classrooms");
+				list.add(cb.equal(join.get("id").as(Long.class), conditions.get("classroomId")));
+			}
+			if (conditions.containsKey("teacherId")) {
+				Join<ScheduleCycle, ClassSchedule> joinSchedule = root.join("classSchedule");
+				list.add(cb.equal(joinSchedule.get("id").as(Long.class), root.get("classSchedule").get("id")));
+				Join<ClassSchedule, ScheduleTeacher> join = joinSchedule.join("scheduleTeachers");
+				list.add(cb.equal(join.get("teacher").get("id").as(Long.class), conditions.get("teacherId")));
+				if(conditions.containsKey("master")) {
+					list.add(cb.equal(join.get("master"), conditions.get("master")));
+				}
 			}
 		}
 		
