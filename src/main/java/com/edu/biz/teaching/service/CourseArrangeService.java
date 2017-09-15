@@ -13,6 +13,8 @@ public interface CourseArrangeService {
 	
 	public ClassSchedule createClassSchedule(ClassSchedule classSchedule);
 	
+	public ClassSchedule updateClassSchedule(ClassSchedule classSchedule);
+	
 	public ScheduleCycle createScheduleCycle(ScheduleCycle scheduleCycle);
 	
 	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId);
