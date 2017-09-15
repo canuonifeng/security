@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.common.dao.service.SettingService;
 import com.edu.biz.common.entity.Setting;
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.dao.ClassScheduleDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.dao.ScheduleTeacherDao;
@@ -24,6 +25,7 @@ import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.specification.ClassScheduleSpecification;
 import com.edu.biz.teaching.specification.ScheduleCycleSpecification;
 import com.edu.biz.teaching.specification.ScheduleTeacherSpecification;
+import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -48,6 +50,16 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return classScheduleDao.save(classSchedule);
 	}
 
+	@Override
+	public ClassSchedule updateClassSchedule(ClassSchedule classSchedule) {
+		ClassSchedule savedClassSchedule = classScheduleDao.findOne(classSchedule.getId());
+		if (null == savedClassSchedule) {
+			throw new NotFoundException("该排课不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(classSchedule, savedClassSchedule, "classrooms");
+		return classScheduleDao.save(savedClassSchedule);
+	}
+	
 	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("term", term);
