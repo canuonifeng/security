@@ -96,6 +96,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Program get(@PathVariable Long id) {
 		Program program = programService.getProgram(id);
 		return program;
@@ -103,6 +104,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Page<ProgramVo> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<Program> page = programService.searchPrograms(conditions, pageable);
@@ -146,6 +148,7 @@ public class ProgramController extends BaseController<Program> {
 	
 	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<ProgramCourse> courses(@RequestParam Map<String, Object> conditions) {
 		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
 		return programCourses;
