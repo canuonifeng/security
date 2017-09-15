@@ -31,12 +31,14 @@ import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.teachingres.service.BuildingService;
 import com.edu.biz.teachingres.service.CourseService;
 import com.edu.biz.teachingres.service.TeacherService;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 
@@ -140,6 +142,7 @@ public class CourseArrangeController extends BaseController<Course> {
 
 	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<ProgramCourseVo> termCourses(@RequestParam Map<String, Object> conditions) {
 		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
 		List<ProgramCourseVo> programCourseVos = new ArrayList<>();
@@ -155,6 +158,7 @@ public class CourseArrangeController extends BaseController<Course> {
 
 	@RequestMapping(path = "/schedule", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classSchedule', 'get')")
+	@JsonView(TeachingresJsonViews.CascadeCourse.class)
 	public Map<Integer, Map<String, ScheduleCycleVo>> getCourseArrange(@RequestParam Map<String, String> conditions) {
 		Map<Integer, Map<String, ScheduleCycleVo>> list = courseArrangeService.getCourseArrange(conditions.get("code"),
 				Long.parseLong(conditions.get("classroomId")));
@@ -177,6 +181,7 @@ public class CourseArrangeController extends BaseController<Course> {
 	
 	@RequestMapping(path = "schedule/{scheduleId}/mergeclassroom", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<ClassroomVo> getMergeClassroom(@PathVariable Long scheduleId, @RequestParam Map<String, Object> conditions) {
 		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
 		if (classSchedule == null) {
