@@ -56,6 +56,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('program', 'edit')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Program edit(@PathVariable Long id, @RequestBody Program program) {
 		program.setId(id);
 		return programService.updateProgram(program);
@@ -63,6 +64,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{id}/course", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('program', 'edit')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public ProgramCourse editProgramCourse(@PathVariable Long id, @RequestBody ProgramCourse programCourse) {
 		programCourse.setId(id);
 		return programService.updateProgramCourse(programCourse);
@@ -76,6 +78,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{id}/term", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public ProgramVo getTermProgram(@PathVariable Long id, @RequestParam Map<String, String> conditions) {
 		Program program = programService.getProgram(id);
 		ProgramVo programVo = new ProgramVo();
@@ -126,6 +129,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "show/{id}/coursetable", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Map<String, Map<String, List<ProgramCourse>>> showCourseTable(@PathVariable Long id) {
 		Map<String, Map<String, List<ProgramCourse>>> result = programService.showCourseTable(id);
 		return result;
@@ -140,6 +144,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/pagecourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Page<ProgramCourse> coursePager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<ProgramCourse> programCourse = programService.searchProgramCourse(conditions, pageable);
