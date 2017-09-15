@@ -186,8 +186,8 @@ public class CourseArrangeController extends BaseController<Course> {
 		map.put("mergeCourseId", classSchedule.getCourse().getId());
 		map.put("termCode", conditions.get("termCode"));
 		List<Classroom> classrooms = classroomService.findClassrooms(map);
-		//判断该班级在该位置是否含有其他课程(应该判断所有位置的该课程是否有冲突)
 		
+		//判断班级集合在位置集合有没有冲突
 		map.clear();
 		map.put("scheduleId", classSchedule.getId());
 		List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(map);
