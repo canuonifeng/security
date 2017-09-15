@@ -154,4 +154,10 @@ public class UserController extends BaseController<User> {
 		userService.setNewPassword(user.getId(), oldPassword, newPassword);
 		return true;
 	}
+	
+	@RequestMapping(path = "/current", method = RequestMethod.GET)
+	@ApiOperation(value = "获取当前登录用户信息")
+	public User getCurrentUser() {
+		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
 }
