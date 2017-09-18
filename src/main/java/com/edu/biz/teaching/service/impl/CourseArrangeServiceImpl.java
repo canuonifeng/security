@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.common.dao.service.SettingService;
 import com.edu.biz.common.entity.Setting;
-import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.dao.ClassScheduleDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.dao.ScheduleTeacherDao;
