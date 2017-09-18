@@ -28,8 +28,10 @@ import com.edu.biz.teaching.entity.pojo.ProgramVo;
 import com.edu.biz.teaching.service.ProgramService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.Course;
+import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.teachingres.service.CourseService;
 import com.edu.core.util.BeanUtils;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 
@@ -54,6 +56,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('program', 'edit')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Program edit(@PathVariable Long id, @RequestBody Program program) {
 		program.setId(id);
 		return programService.updateProgram(program);
@@ -61,6 +64,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{id}/course", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('program', 'edit')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public ProgramCourse editProgramCourse(@PathVariable Long id, @RequestBody ProgramCourse programCourse) {
 		programCourse.setId(id);
 		return programService.updateProgramCourse(programCourse);
@@ -74,6 +78,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{id}/term", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public ProgramVo getTermProgram(@PathVariable Long id, @RequestParam Map<String, String> conditions) {
 		Program program = programService.getProgram(id);
 		ProgramVo programVo = new ProgramVo();
@@ -94,6 +99,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Program get(@PathVariable Long id) {
 		Program program = programService.getProgram(id);
 		return program;
@@ -101,6 +107,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Page<ProgramVo> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<Program> page = programService.searchPrograms(conditions, pageable);
@@ -122,6 +129,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "show/{id}/coursetable", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('program', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Map<String, Map<String, List<ProgramCourse>>> showCourseTable(@PathVariable Long id) {
 		Map<String, Map<String, List<ProgramCourse>>> result = programService.showCourseTable(id);
 		return result;
@@ -136,6 +144,7 @@ public class ProgramController extends BaseController<Program> {
 
 	@RequestMapping(path = "/pagecourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Page<ProgramCourse> coursePager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<ProgramCourse> programCourse = programService.searchProgramCourse(conditions, pageable);
@@ -144,6 +153,7 @@ public class ProgramController extends BaseController<Program> {
 	
 	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<ProgramCourse> courses(@RequestParam Map<String, Object> conditions) {
 		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
 		return programCourses;
@@ -151,6 +161,7 @@ public class ProgramController extends BaseController<Program> {
 	
 	@RequestMapping(path = "/{programId}/addcourse", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('course', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Page<Course> showCoursesNotInProgram(@PathVariable Long programId,
 			@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {

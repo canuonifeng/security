@@ -13,6 +13,8 @@ public interface CourseArrangeService {
 	
 	public ClassSchedule createClassSchedule(ClassSchedule classSchedule);
 	
+	public ClassSchedule updateClassSchedule(ClassSchedule classSchedule);
+	
 	public ScheduleCycle createScheduleCycle(ScheduleCycle scheduleCycle);
 	
 	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId);
@@ -36,4 +38,8 @@ public interface CourseArrangeService {
 	public List<ScheduleTeacher> findScheduleTeachers(HashMap<String, Object> conditions);
 
 	public Boolean deleteScheduleTeacherByScheduleId(Long ScheduleId);
+
+	public ScheduleCycle getScheduleCycle(Long buildingRoomId, String period, int week);
+
+	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId, int master);
 }

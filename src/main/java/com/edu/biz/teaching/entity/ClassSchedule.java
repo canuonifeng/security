@@ -2,6 +2,7 @@ package com.edu.biz.teaching.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -34,9 +35,14 @@ public class ClassSchedule extends BaseEntity {
 	private List<Classroom> classrooms;
 
 	@OneToMany(targetEntity = ScheduleCycle.class, fetch = FetchType.LAZY)
-	@JoinColumn(name="schedule_id")
+	@JoinColumn(name="schedule_id", insertable = false, updatable = false)
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<ScheduleCycle> scheduleCycles;
+	
+	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = ScheduleTeacher.class, fetch = FetchType.LAZY)
+	@JoinColumn(name="schedule_id", insertable = false, updatable = false)
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private List<ScheduleTeacher> scheduleTeachers;
 
 	public Course getCourse() {
 		return course;
@@ -68,6 +74,14 @@ public class ClassSchedule extends BaseEntity {
 
 	public void setScheduleCycles(List<ScheduleCycle> scheduleCycles) {
 		this.scheduleCycles = scheduleCycles;
+	}
+
+	public List<ScheduleTeacher> getScheduleTeachers() {
+		return scheduleTeachers;
+	}
+
+	public void setScheduleTeachers(List<ScheduleTeacher> scheduleTeachers) {
+		this.scheduleTeachers = scheduleTeachers;
 	}
 	
 }

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.common.dao.service.SettingService;
 import com.edu.biz.common.entity.Setting;
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.dao.ClassScheduleDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.dao.ScheduleTeacherDao;
@@ -24,6 +25,7 @@ import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.specification.ClassScheduleSpecification;
 import com.edu.biz.teaching.specification.ScheduleCycleSpecification;
 import com.edu.biz.teaching.specification.ScheduleTeacherSpecification;
+import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -48,6 +50,16 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return classScheduleDao.save(classSchedule);
 	}
 
+	@Override
+	public ClassSchedule updateClassSchedule(ClassSchedule classSchedule) {
+		ClassSchedule savedClassSchedule = classScheduleDao.findOne(classSchedule.getId());
+		if (null == savedClassSchedule) {
+			throw new NotFoundException("该排课不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(classSchedule, savedClassSchedule, "classrooms");
+		return classScheduleDao.save(savedClassSchedule);
+	}
+	
 	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("term", term);
@@ -128,6 +140,15 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	}
 
 	@Override
+	public ScheduleCycle getScheduleCycle(Long buildingRoomId, String period, int week) {
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("buildingRoomId", buildingRoomId);
+		conditions.put("period", period);
+		conditions.put("week", week);
+		return scheduleCycleDao.findOne(new ScheduleCycleSpecification(conditions));
+	}
+	
+	@Override
 	public ScheduleTeacher createScheduleTeacher(ScheduleTeacher scheduleTeacher) {
 		return scheduleTeacherDao.save(scheduleTeacher);
 	}
@@ -169,5 +190,13 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	public Boolean deleteScheduleTeacherByScheduleId(Long scheduleId) {
 		scheduleTeacherDao.deleteByClassScheduleId(scheduleId);
 		return true;
+	}
+	
+	@Override
+	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId, int master) {
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("scheduleId", scheduleId);
+		conditions.put("master", master);
+		return scheduleTeacherDao.findOne(new ScheduleTeacherSpecification(conditions));
 	}
 }

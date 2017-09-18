@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.schoolroll.entity.Major;
 import com.edu.biz.teachingres.entity.Course;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -30,6 +32,11 @@ public class Program extends BaseEntity {
 	@JoinTable(name = "teaching_program_course", joinColumns = @JoinColumn(name = "teaching_program_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
 	@ApiModelProperty(value = "课程列表")
 	private List<Course> courses;
+	
+	@OneToMany(targetEntity = ProgramCourse.class, fetch = FetchType.EAGER)
+	@JoinColumn(name="teaching_program_id", insertable = false, updatable = false)
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private List<ProgramCourse> programCourses;
 	
 	public String getGrade() {
 		return grade;
@@ -53,5 +60,13 @@ public class Program extends BaseEntity {
 
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
+	}
+
+	public List<ProgramCourse> getProgramCourses() {
+		return programCourses;
+	}
+
+	public void setProgramCourses(List<ProgramCourse> programCourses) {
+		this.programCourses = programCourses;
 	}
 }

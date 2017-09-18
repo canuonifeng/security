@@ -40,6 +40,17 @@ public class CourseServiceImpl extends BaseService implements CourseService {
 
 		return courseDao.save(course);
 	}
+	
+	@Override
+	public Course giveTeachers(Course course) {
+		Course saveCourse = courseDao.findOne(course.getId());
+		if (null == saveCourse) {
+			throw new NotFoundException("该课程不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(course, saveCourse, "teachers");
+
+		return courseDao.save(saveCourse);
+	}
 
 	@Override
 	public Course changeCourseStatus(Long id, CourseStatus status) {

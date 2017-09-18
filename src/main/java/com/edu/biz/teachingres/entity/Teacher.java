@@ -1,13 +1,20 @@
 package com.edu.biz.teachingres.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.dict.Gender;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -31,6 +38,20 @@ public class Teacher extends BaseEntity {
 	@ApiModelProperty(value = " 状态")
 	private TeacherStatus status = TeacherStatus.enable;
 	
+	@ManyToMany(targetEntity = Course.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "teacher_course", joinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
+	@ApiModelProperty(value = "所授课程")
+	@JsonView({ TeachingresJsonViews.CascadeCourse.class })
+	private List<Course> courses;
+	
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
+	}
+
 	public String getNo() {
 		return no;
 	}
