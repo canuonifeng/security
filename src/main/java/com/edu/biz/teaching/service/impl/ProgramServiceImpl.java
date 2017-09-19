@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.teaching.dao.ProgramCourseDao;
 import com.edu.biz.teaching.dao.ProgramDao;
+import com.edu.biz.teaching.entity.CountProgramCourseCategory;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.Term;
@@ -207,6 +208,11 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		map.put("courseId", courseId);
 		map.put("term", term);
 		return programCourseDao.findOne(new ProgramCourseSpecification(map));
+	}
+	
+	@Override
+	public List<CountProgramCourseCategory> countProgramCourseByProgramIdGroupByCategory(Long programId) {
+		return programCourseDao.countProgramCourseByProgramIdGroupByCategory(programId);
 	}
 	
 	private Boolean dealTerms(List<Term> terms, List<String> codes){

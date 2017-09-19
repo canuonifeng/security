@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.common.util.TermCodeUtil;
 import com.edu.biz.schoolroll.service.ClassroomService;
+import com.edu.biz.teaching.entity.CountProgramCourseCategory;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.Term;
@@ -130,19 +131,21 @@ public class ProgramController extends BaseController<Program> {
 		map.put("grade", programVo.getGrade());
 		Long classroomNum = classroomService.countClassroom(map);
 		programVo.setClassroomNum(classroomNum);
-		
+
 		String[] publicCourse = new String[]{"pubLiteracy", "pubLiteracyExpand"};
 		String[] professionalCourse = new String[]{"professionalSupport", "professionalCore", "professionalExpand"};
 		String[] practiceCourse = new String[]{"comprehensivePractice"};
-		for (ProgramCourse programCourse : programVo.getProgramCourses()) {
-			if(Arrays.asList(publicCourse).contains(programCourse.getCategory())) {
-				programVo.setPublicCourseNum(programVo.getPublicCourseNum()+1);
+		
+		List<CountProgramCourseCategory> countProgramCourseCategorys = programService.countProgramCourseByProgramIdGroupByCategory(programVo.getId());
+		for (CountProgramCourseCategory countProgramCourseCategory : countProgramCourseCategorys) {
+			if(Arrays.asList(publicCourse).contains(countProgramCourseCategory.getCategory())) {
+				programVo.setPublicCourseNum(programVo.getPublicCourseNum()+Integer.parseInt(countProgramCourseCategory.getCount().toString()));
 			}
-			if(Arrays.asList(professionalCourse).contains(programCourse.getCategory())) {
-				programVo.setProfessionalCourseNum(programVo.getProfessionalCourseNum()+1);
+			if(Arrays.asList(professionalCourse).contains(countProgramCourseCategory.getCategory())) {
+				programVo.setProfessionalCourseNum(programVo.getProfessionalCourseNum()+Integer.parseInt(countProgramCourseCategory.getCount().toString()));
 			}
-			if(Arrays.asList(practiceCourse).contains(programCourse.getCategory())) {
-				programVo.setPracticeCourseNum(programVo.getPracticeCourseNum()+1);
+			if(Arrays.asList(practiceCourse).contains(countProgramCourseCategory.getCategory())) {
+				programVo.setPracticeCourseNum(programVo.getPracticeCourseNum()+Integer.parseInt(countProgramCourseCategory.getCount().toString()));
 			}
 		}
 		
