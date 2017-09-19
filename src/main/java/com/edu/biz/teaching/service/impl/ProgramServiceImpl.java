@@ -123,7 +123,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	}
 	@Override
 	public Boolean joinProgram(Course course, Program program) {
-		Boolean result = this.canJoinProgram(course, program);
+		Boolean result = canJoinProgram(course, program);
 		if (!result) {
 			throw new ServiceException("403", "该课程不能加入该教学计划");
 		}
