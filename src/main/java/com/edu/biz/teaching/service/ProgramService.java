@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.edu.biz.teaching.entity.CountProgramCourseCategory;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.Term;
@@ -43,5 +44,7 @@ public interface ProgramService {
 	public ProgramCourse getProgramCourse(long courseId, String term);
 
 	Program getProgram(String grade, Long majorId);
+	
+	public List<CountProgramCourseCategory> countProgramCourseByProgramIdGroupByCategory(Long programId);
 
 }
