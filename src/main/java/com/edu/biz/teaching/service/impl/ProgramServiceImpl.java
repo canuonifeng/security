@@ -70,7 +70,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		if (null == saveProgramCourse) {
 			throw new NotFoundException("该教学计划课程不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay", "weekPeriod", "termNum", "termCode");
+		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay", "weekPeriod", "termNum", "termCode", "practicePeriod", "theoryPeriod");
 
 		return programCourseDao.save(saveProgramCourse);
 	}
@@ -113,6 +113,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	@Override
 	public Page<Course> searchCoursesNotInProgram(Long programId, Map<String, Object> conditions, Pageable pageable) {
 		List<ProgramCourse> existCourses = new ArrayList<ProgramCourse>();
+		conditions.put("programId", programId);
 		existCourses  = programCourseDao.findAll(new ProgramCourseSpecification(conditions));
 //		Long[] notCourseIds = new Long[existCourses.size()];
 		List<Long> notCourseIds = new ArrayList<>();
