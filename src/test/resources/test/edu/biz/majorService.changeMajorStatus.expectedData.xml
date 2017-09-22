@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<MAJOR id="1" code="jsjkx" name="计算机科学与技术" faculty_id="1" status="disable"/>
+	<MAJOR id="2" code="rjgc" name="软件工程" faculty_id="1" status="enable"/>
+	<MAJOR id="3" code="tmgc" name="土木工程" faculty_id="2" status="enable"/>
+</dataset>

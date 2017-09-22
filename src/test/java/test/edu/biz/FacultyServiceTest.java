@@ -20,7 +20,7 @@ public class FacultyServiceTest extends BaseServiceTest {
 	
 	@Test
 	@ExpectedDatabase(value = "facultyService.createFaculty.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
-	public void testCreateUser() {
+	public void testCreateFaculty() {
 		Faculty faculty = new Faculty();
 		faculty.setCode("rjgc");
 		faculty.setName("软件工程");
@@ -29,7 +29,7 @@ public class FacultyServiceTest extends BaseServiceTest {
 	
 	@Test
 	@ExpectedDatabase(value = "facultyService.updateFaculty.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
-	public void testUpdateUser() {
+	public void testUpdateFaculty() {
 		Faculty faculty = new Faculty();
 		faculty.setName("测试更新土木工程系");
 		faculty.setCode("cstmgc");
