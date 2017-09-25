@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<TEACHER id="1" no="001" name="教师1" gender="male" start_work_time="2013-05" status="learnOut"/>
+	<TEACHER id="2" no="002" name="教师2" gender="female" start_work_time="2013-05" status="vacation"/>
+	<TEACHER id="3" no="003" name="教师3" gender="male" start_work_time="2013-05" status="enable"/>
+</dataset>
