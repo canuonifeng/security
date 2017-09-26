@@ -115,6 +115,7 @@ public class StudentController extends BaseController<Student> {
 			num++;
 		}
 		classroom.setIsAssignNum(1);
+		classroom.setLastAssignNum(num);
 		classroomService.updateClassroom(classroom);
 		return true;
 	}
