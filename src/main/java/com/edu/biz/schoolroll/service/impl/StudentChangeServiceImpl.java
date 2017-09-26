@@ -1,5 +1,6 @@
 package com.edu.biz.schoolroll.service.impl;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
+import com.edu.biz.schoolroll.dao.ClassroomDao;
 import com.edu.biz.schoolroll.dao.StudentChangeDao;
 import com.edu.biz.schoolroll.dao.StudentChangeLogDao;
 import com.edu.biz.schoolroll.dao.StudentDao;
 import com.edu.biz.schoolroll.entity.ChangeStatus;
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.StudentChange;
 import com.edu.biz.schoolroll.entity.StudentChangeLog;
@@ -33,6 +36,8 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 	private StudentChangeLogDao studentChangeLogDao;
 	@Autowired
 	private StudentDao studentDao;
+	@Autowired
+	private ClassroomDao classroomDao;
 	
 	@Override
 	@Transactional
@@ -88,7 +93,19 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 		if (log.getNewStatus().equals(ChangeStatus.approved)) {
 			Student student = change.getStudent();
 			switch (log.getChange().getChangeType().toString()) {
-				case "changeClassroom":student.setNo(null);student.setClassroom(change.getNewClassroom());break;
+				case "changeClassroom":
+					Classroom classroom = classroomDao.findOne(change.getNewClassroom().getId());
+					if (classroom.getIsAssignNum() == 1) {
+						DecimalFormat dfInt = new DecimalFormat("00");
+						String studentNo = classroom.getCode()+dfInt.format(classroom.getLastAssignNum() + 1);
+						student.setNo(studentNo);
+						classroom.setLastAssignNum(classroom.getLastAssignNum() + 1);
+						classroomDao.save(classroom);
+					} else {
+						student.setNo(null);
+					}
+					student.setClassroom(change.getNewClassroom());
+					break;
 				case "changeMajor": student.setMajor(change.getNewMajor());student.setNo(null);break;
 				case "changeSchool": student.setStatus(StudentStatus.changeSchool);break;
 				case "dropOut": student.setStatus(StudentStatus.dropOut);break;
