@@ -1,11 +1,14 @@
 package com.edu.biz.schoolroll.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -44,6 +47,11 @@ public class Student extends BaseEntity {
 	@JoinColumn(name = "classroom_id")
 	@ApiModelProperty(value = "所属班级")
 	private Classroom classroom;
+	
+	@OneToMany(targetEntity = StudentChange.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "id")
+	@ApiModelProperty(value = "异动记录")
+	private List<StudentChange> changes;
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
@@ -224,5 +232,13 @@ public class Student extends BaseEntity {
 
 	public void setSeq(int seq) {
 		this.seq = seq;
+	}
+
+	public List<StudentChange> getChanges() {
+		return changes;
+	}
+
+	public void setChanges(List<StudentChange> changes) {
+		this.changes = changes;
 	}
 }

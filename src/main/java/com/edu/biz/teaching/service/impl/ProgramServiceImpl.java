@@ -70,7 +70,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		if (null == saveProgramCourse) {
 			throw new NotFoundException("该教学计划课程不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay", "weekPeriod", "termNum", "termCode", "practicePeriod", "theoryPeriod");
+		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay", "weekPeriod", "termNum", "termCode", "practicePeriod", "theoryPeriod", "credit");
 
 		return programCourseDao.save(saveProgramCourse);
 	}
