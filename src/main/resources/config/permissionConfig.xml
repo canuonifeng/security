@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<permissionConfig>
+	<permission name="用户管理" code="user">
+		<permission name="新增用户" code="user:post" />
+		<permission name="修改用户" code="user:put" />
+		<permission name="删除用户" code="user:delete" />
+		<permission name="查看用户" code="user:get" />
+	</permission>
+	<permission name="角色管理" code="role">
+		<permission name="新增角色" code="role:post" />
+		<permission name="修改角色" code="role:put" />
+		<permission name="删除角色" code="role:delete" />
+		<permission name="查看角色" code="role:get" />
+	</permission>
+</permissionConfig>

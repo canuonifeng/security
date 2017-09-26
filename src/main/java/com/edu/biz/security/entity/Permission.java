@@ -8,18 +8,45 @@ import javax.persistence.ManyToMany;
 import com.edu.biz.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @Entity
 public class Permission extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
-
+	@XStreamAsAttribute
+	@XStreamAlias("name")
 	private String name;
+	@XStreamAsAttribute
+	@XStreamAlias("code")
 	private String code;
 
 	@ManyToMany(mappedBy = "permissions")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<Role> roles;
+	
+	private Permission parentPermission;
+	
+	@XStreamImplicit(itemFieldName="permission")	
+	private List<Permission> subpermissions;
+
+	public List<Permission> getSubpermissions() {
+		return subpermissions;
+	}
+
+	public void setSubpermissions(List<Permission> subpermissions) {
+		this.subpermissions = subpermissions;
+	}
+
+	public Permission getParentPermission() {
+		return parentPermission;
+	}
+
+	public void setParentPermission(Permission parentPermission) {
+		this.parentPermission = parentPermission;
+	}
 
 	public String getCode() {
 		return code;
