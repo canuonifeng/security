@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.edu.biz.security.entity.Permission;
+import com.edu.biz.security.entity.Permission2;
 import com.edu.biz.security.entity.PermissionConfig;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -35,20 +36,20 @@ public class ReaderPermissionConfig {
 		}
 	}
 	
-	private static void setParentPermission(List<Permission> permissions,Permission parentPermission){
-		for(Permission permission:permissions){
+	private static void setParentPermission(List<Permission2> permissions,Permission2 parentPermission){
+		for(Permission2 permission:permissions){
 			permission.setParentPermission(parentPermission);
-			List<Permission> subPermissions = permission.getSubpermissions();
+			List<Permission2> subPermissions = permission.getSubpermissions();
 			if(null != subPermissions && subPermissions.size()>0){
 				setParentPermission(subPermissions, permission);
 			}
 		}
 	}
 	
-	private static List<Permission> getPermissions(List<Permission> list){
-		List<Permission> permissions = new ArrayList<Permission>();		
-		for(Permission permission:list){			
-			List<Permission> subPermissions = permission.getSubpermissions();
+	private static List<Permission2> getPermissions(List<Permission2> list){
+		List<Permission2> permissions = new ArrayList<Permission2>();		
+		for(Permission2 permission:list){			
+			List<Permission2> subPermissions = permission.getSubpermissions();
 			if(null != subPermissions && subPermissions.size()>0){
 				permissions.addAll(subPermissions);
 				permissions.addAll(getPermissions(subPermissions));
@@ -57,16 +58,16 @@ public class ReaderPermissionConfig {
 		return permissions;
 	}
 	
-	public static List<Permission> getPermissions(PermissionConfig config){
-		List<Permission> list = config.getPermissions();
-		List<Permission> permissions =new ArrayList<Permission>();
+	public static List<Permission2> getPermissions(PermissionConfig config){
+		List<Permission2> list = config.getPermissions();
+		List<Permission2> permissions =new ArrayList<Permission2>();
 		permissions.addAll(list);
 		permissions.addAll(getPermissions(list));
 		return permissions;
 	}
 	
 	public static String[] getPermissionCodes(PermissionConfig config){
-		List<Permission> permissions =  getPermissions(config);
+		List<Permission2> permissions =  getPermissions(config);
 		String[] codes = new String[permissions.size()];
 		for(int i = 0;i<permissions.size();i++){
 			codes[i] = permissions.get(i).getCode();

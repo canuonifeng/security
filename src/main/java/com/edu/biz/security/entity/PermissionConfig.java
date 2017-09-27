@@ -9,13 +9,13 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 public class PermissionConfig {
 
 	@XStreamImplicit(itemFieldName = "permission")
-	private List<Permission> permissions;
+	private List<Permission2> permissions;
 
-	public List<Permission> getPermissions() {
+	public List<Permission2> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<Permission> permissions) {
+	public void setPermissions(List<Permission2> permissions) {
 		this.permissions = permissions;
 	}
 }
