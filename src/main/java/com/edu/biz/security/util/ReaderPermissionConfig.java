@@ -4,13 +4,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.edu.biz.security.entity.Permission2;
+import com.edu.biz.security.entity.Permission;
 import com.edu.biz.security.entity.PermissionConfig;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 
 public class ReaderPermissionConfig {
@@ -23,11 +24,9 @@ public class ReaderPermissionConfig {
 					ReaderPermissionConfig.class
 							.getResourceAsStream("/config/permissionConfig.xml"),
 					"UTF-8");
-			XStream xStream = new XStream(new DomDriver());
-			xStream.processAnnotations(PermissionConfig.class);
-			PermissionConfig permissionConfig = (PermissionConfig) xStream
-					.fromXML(inputStreamReader);
-			setParentPermission(permissionConfig.getPermissions(), null);
+			JAXBContext jaxbContext = JAXBContext.newInstance(PermissionConfig.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			PermissionConfig permissionConfig = (PermissionConfig) jaxbUnmarshaller.unmarshal(inputStreamReader);
 			return permissionConfig;
 		} catch (Exception e) {
 			logger.error("读取权限配置出错：" + e);
@@ -36,20 +35,20 @@ public class ReaderPermissionConfig {
 		}
 	}
 	
-	private static void setParentPermission(List<Permission2> permissions,Permission2 parentPermission){
-		for(Permission2 permission:permissions){
+	private static void setParentPermission(List<Permission> permissions,Permission parentPermission){
+		for(Permission permission:permissions){
 			permission.setParentPermission(parentPermission);
-			List<Permission2> subPermissions = permission.getSubpermissions();
+			List<Permission> subPermissions = permission.getSubpermissions();
 			if(null != subPermissions && subPermissions.size()>0){
 				setParentPermission(subPermissions, permission);
 			}
 		}
 	}
 	
-	private static List<Permission2> getPermissions(List<Permission2> list){
-		List<Permission2> permissions = new ArrayList<Permission2>();		
-		for(Permission2 permission:list){			
-			List<Permission2> subPermissions = permission.getSubpermissions();
+	private static List<Permission> getPermissions(List<Permission> list){
+		List<Permission> permissions = new ArrayList<Permission>();		
+		for(Permission permission:list){			
+			List<Permission> subPermissions = permission.getSubpermissions();
 			if(null != subPermissions && subPermissions.size()>0){
 				permissions.addAll(subPermissions);
 				permissions.addAll(getPermissions(subPermissions));
@@ -58,16 +57,16 @@ public class ReaderPermissionConfig {
 		return permissions;
 	}
 	
-	public static List<Permission2> getPermissions(PermissionConfig config){
-		List<Permission2> list = config.getPermissions();
-		List<Permission2> permissions =new ArrayList<Permission2>();
+	public static List<Permission> getPermissions(PermissionConfig config){
+		List<Permission> list = config.getPermissions();
+		List<Permission> permissions =new ArrayList<Permission>();
 		permissions.addAll(list);
 		permissions.addAll(getPermissions(list));
 		return permissions;
 	}
 	
 	public static String[] getPermissionCodes(PermissionConfig config){
-		List<Permission2> permissions =  getPermissions(config);
+		List<Permission> permissions =  getPermissions(config);
 		String[] codes = new String[permissions.size()];
 		for(int i = 0;i<permissions.size();i++){
 			codes[i] = permissions.get(i).getCode();
@@ -77,8 +76,8 @@ public class ReaderPermissionConfig {
 	
 	public static void main(String args[]) {
 		try {
-			PermissionConfig config = readerConfig();
-			String[] enames = getPermissionCodes(config);
+			PermissionConfig config = ReaderPermissionConfig.readerConfig();
+			String[] enames = ReaderPermissionConfig.getPermissionCodes(config);
 			for (String e : enames) {
 				System.out.println(e);
 			}
