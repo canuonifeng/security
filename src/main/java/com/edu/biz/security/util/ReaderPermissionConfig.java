@@ -7,7 +7,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.edu.biz.security.entity.Permission;
 import com.edu.biz.security.entity.Permission2;
 import com.edu.biz.security.entity.PermissionConfig;
 import com.thoughtworks.xstream.XStream;
@@ -32,6 +31,7 @@ public class ReaderPermissionConfig {
 			return permissionConfig;
 		} catch (Exception e) {
 			logger.error("读取权限配置出错：" + e);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -75,7 +75,7 @@ public class ReaderPermissionConfig {
 		return codes;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String args[]) {
 		try {
 			PermissionConfig config = readerConfig();
 			String[] enames = getPermissionCodes(config);
