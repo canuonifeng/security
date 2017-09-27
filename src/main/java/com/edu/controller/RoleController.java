@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.security.entity.Permission;
+import com.edu.biz.security.entity.PermissionConfig;
 import com.edu.biz.security.entity.Role;
+import com.edu.biz.security.entity.RolePermission;
 import com.edu.biz.security.service.RoleService;
+import com.edu.biz.security.util.ReaderPermissionConfig;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -75,5 +80,25 @@ public class RoleController extends BaseController<Role> {
 		List<Role> list = roleService.findRoles(conditions);
 		
 		return list;
+	}
+	
+	@RequestMapping(path = "/permission/tree", method = RequestMethod.GET)
+	public PermissionConfig getPermissionTree(@RequestParam Map<String, Object> conditions) {
+		List<RolePermission> list = new ArrayList<>();
+		if (conditions.containsKey("roleId")) {
+			list = roleService.findRolePermissionByRoleId(Long.valueOf(conditions.get("roleId").toString()));
+		}
+		PermissionConfig config = ReaderPermissionConfig.readerConfig();
+		for(RolePermission rolePermission : list) {
+			for(Permission permission : config.getPermissions()) {
+				for(Permission subpermission : permission.getSubpermissions()) {
+					if (subpermission.getCode().equals(rolePermission.getPermissionCode())) {
+						subpermission.setIsRolePermission(true);
+						permission.setIsRolePermission(true);
+					}
+				}
+			}
+		}
+		return config;
 	}
 }

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import com.edu.biz.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,7 +27,7 @@ public class Role extends BaseEntity {
 	@ManyToMany
 	@JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
 	@JsonProperty(access = Access.WRITE_ONLY)
-	private List<Permission> permissions;
+	private List<Permission1> permissions;
 
 	public String getCode() {
 		return code;
@@ -52,11 +53,11 @@ public class Role extends BaseEntity {
 		this.users = users;
 	}
 
-	public List<Permission> getPermissions() {
+	public List<Permission1> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<Permission> permissions) {
+	public void setPermissions(List<Permission1> permissions) {
 		this.permissions = permissions;
 	}
 }

@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <permissionConfig>
-	<permission name="用户管理" code="user">
-		<permission name="新增用户" code="user:post" />
-		<permission name="修改用户" code="user:put" />
-		<permission name="删除用户" code="user:delete" />
-		<permission name="查看用户" code="user:get" />
+	<permission name="系统管理" code="system">
+		<permission name="院系管理" code="system:faculty" />
+		<permission name="组织机构" code="system:org" />
+		<permission name="角色权限" code="system:role" />
+		<permission name="用户管理" code="system:user" />
 	</permission>
-	<permission name="角色管理" code="role">
-		<permission name="新增角色" code="role:post" />
-		<permission name="修改角色" code="role:put" />
-		<permission name="删除角色" code="role:delete" />
-		<permission name="查看角色" code="role:get" />
+	<permission name="学生管理" code="student">
+		<permission name="学籍管理" code="student:student" />
+		<permission name="异动记录" code="student:change" />
+		<permission name="班级管理" code="student:classroom" />
+	</permission>
+	<permission name="教学资源" code="teachingres">
+		<permission name="教师管理" code="teachingres:teacher" />
+		<permission name="教室管理" code="teachingres:buildingroom" />
+	</permission>
+	<permission name="教学管理" code="teaching">
+		<permission name="学期管理" code="teaching:term" />
+		<permission name="课程库" code="teaching:course" />
+		<permission name="人才培养方案" code="teaching:program" />
+		<permission name="排课管理" code="teaching:coursearrange" />
 	</permission>
 </permissionConfig>
