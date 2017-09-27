@@ -16,6 +16,8 @@ import com.edu.biz.base.BaseEntity;
 import com.edu.biz.dict.Gender;
 import com.edu.biz.dict.IDType;
 import com.edu.biz.dict.Nation;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -49,7 +51,8 @@ public class Student extends BaseEntity {
 	private Classroom classroom;
 	
 	@OneToMany(targetEntity = StudentChange.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "student_id")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@ApiModelProperty(value = "异动记录")
 	private List<StudentChange> changes;
 	
