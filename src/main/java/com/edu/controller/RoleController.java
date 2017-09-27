@@ -83,9 +83,11 @@ public class RoleController extends BaseController<Role> {
 	}
 	
 	@RequestMapping(path = "/permission/tree", method = RequestMethod.GET)
-	public PermissionConfig getPermissionTree(@RequestParam Long roleId) {
+	public PermissionConfig getPermissionTree(@RequestParam Map<String, Object> conditions) {
 		List<RolePermission> list = new ArrayList<>();
-		list = roleService.findRolePermissionByRoleId(roleId);
+		if (conditions.containsKey("roleId")) {
+			list = roleService.findRolePermissionByRoleId(Long.valueOf(conditions.get("roleId").toString()));
+		}
 		PermissionConfig config = ReaderPermissionConfig.readerConfig();
 		for(RolePermission rolePermission : list) {
 			for(Permission permission : config.getPermissions()) {
