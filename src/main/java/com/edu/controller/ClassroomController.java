@@ -28,6 +28,7 @@ import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.MajorService;
 import com.edu.biz.schoolroll.service.StudentService;
+import com.edu.biz.teaching.entity.Program;
 import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
@@ -140,5 +141,11 @@ public class ClassroomController extends BaseController<Classroom> {
 	public List<Classroom> findClassrooms(@RequestParam Map<String, Object> conditions) {
 		List<Classroom> list = classroomService.findClassrooms(conditions);
 		return list;
+	}
+	
+	@RequestMapping(path = "/joinprogram/{programId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('classroom', 'put')")
+	public Boolean joinProgram(@PathVariable Long programId, @RequestBody Map<Integer, String> classroomIds) {
+		return classroomService.joinProgram(programId, classroomIds);
 	}
 }

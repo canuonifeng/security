@@ -3,13 +3,10 @@ package com.edu.biz.schoolroll.entity;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.teaching.entity.Program;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -33,12 +30,10 @@ public class Classroom extends BaseEntity {
 	@JoinColumn(name = "major_id")
 	@ApiModelProperty(value = "专业")
 	private Major major;
-
+	
 	@ManyToOne(targetEntity = Program.class, fetch = FetchType.LAZY)
-	@JoinColumns({
-			@JoinColumn(name = "major_id", referencedColumnName = "major_id", insertable = false, updatable = false),
-			@JoinColumn(name = "grade", referencedColumnName = "grade", insertable = false, updatable = false) })
-	@JsonProperty(access = Access.WRITE_ONLY)
+	@JoinColumn(name = "program_id")
+	@ApiModelProperty(value = "教学计划")
 	private Program program;
 
 	public String getCode() {
