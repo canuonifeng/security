@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.security.entity.Permission;
 import com.edu.biz.security.entity.PermissionConfig;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.entity.RolePermission;
@@ -89,16 +88,11 @@ public class RoleController extends BaseController<Role> {
 			list = roleService.findRolePermissionByRoleId(Long.valueOf(conditions.get("roleId").toString()));
 		}
 		PermissionConfig config = ReaderPermissionConfig.readerConfig();
+		List<String> defaultPermission = new ArrayList<>();
 		for(RolePermission rolePermission : list) {
-			for(Permission permission : config.getPermissions()) {
-				for(Permission subpermission : permission.getSubpermissions()) {
-					if (subpermission.getCode().equals(rolePermission.getPermissionCode())) {
-						subpermission.setIsRolePermission(true);
-						permission.setIsRolePermission(true);
-					}
-				}
-			}
+			defaultPermission.add(rolePermission.getPermissionCode());
 		}
+		config.setDefaultPermission(defaultPermission);
 		return config;
 	}
 }

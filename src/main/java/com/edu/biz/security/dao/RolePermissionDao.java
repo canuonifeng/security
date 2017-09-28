@@ -8,4 +8,6 @@ import com.edu.biz.security.entity.RolePermission;
 public interface RolePermissionDao extends BaseDao<RolePermission> {
 	
 	public List<RolePermission> findByRoleId(Long id);
+	
+	public void deleteByRoleId(Long id);
 }

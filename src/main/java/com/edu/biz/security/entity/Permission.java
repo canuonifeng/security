@@ -16,17 +16,6 @@ public class Permission {
 	private String name;
 	@XmlAttribute(name = "code")
 	private String code;
-	
-	private Boolean isRolePermission = false;
-
-	
-	public Boolean getIsRolePermission() {
-		return isRolePermission;
-	}
-
-	public void setIsRolePermission(Boolean isRolePermission) {
-		this.isRolePermission = isRolePermission;
-	}
 
 	private Permission parentPermission;
 	

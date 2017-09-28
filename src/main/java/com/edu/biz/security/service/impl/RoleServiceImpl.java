@@ -16,7 +16,6 @@ import com.edu.biz.base.BaseService;
 import com.edu.biz.security.dao.RoleDao;
 import com.edu.biz.security.dao.RolePermissionDao;
 import com.edu.biz.security.dao.specification.RoleSpecification;
-import com.edu.biz.security.entity.Permission1;
 import com.edu.biz.security.entity.Role;
 import com.edu.biz.security.entity.RolePermission;
 import com.edu.biz.security.service.RoleService;
@@ -68,9 +67,9 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		List<Role> roles = roleDao.findByCodeIn(roleCodes);
 		Set<String> permissionCodes = new HashSet<String>();
 		for (Role role : roles) {
-			List<Permission1> permissions = role.getPermissions();
-			for (Permission1 permission : permissions) {
-				permissionCodes.add(permission.getName());
+			List<RolePermission> permissions = role.getRolePermissions();
+			for (RolePermission permission : permissions) {
+				permissionCodes.add(permission.getPermissionCode());
 			}
 		}
 		return permissionCodes;
