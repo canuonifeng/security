@@ -2,20 +2,23 @@ package com.edu.biz.security.entity;
 
 import java.util.List;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@XStreamAlias("permissionConfig")
+@XmlRootElement(name = "permissionConfig")
+@XmlAccessorType (XmlAccessType.FIELD)
 public class PermissionConfig {
 
-	@XStreamImplicit(itemFieldName = "permission")
-	private List<Permission2> permissions;
+	@XmlElement(name = "permission",type = Permission.class)
+	private List<Permission> permissions;
 
-	public List<Permission2> getPermissions() {
+	public List<Permission> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<Permission2> permissions) {
+	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
 	}
 }
