@@ -1,5 +1,7 @@
 package com.edu.biz.schoolroll.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ import com.edu.biz.schoolroll.dao.ClassroomDao;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.specification.ClassroomSpecification;
+import com.edu.biz.teaching.entity.Program;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
@@ -57,7 +60,7 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 		if(!this.checkCode(classroom.getCode(), classroom.getId())) {
 			throw new ServiceException("406","班级编码已被占用");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(classroom, savedClassroom, "name", "code", "isAssignNum");
+		BeanUtils.copyPropertiesWithCopyProperties(classroom, savedClassroom, "name", "code", "isAssignNum", "program");
 		return classroomDao.save(savedClassroom);
 	}
 
@@ -78,5 +81,37 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	@Override
 	public Long countClassroom(Map<String, Object> conditions) {
 		return classroomDao.count(new ClassroomSpecification(conditions));
+	}
+	
+	@Override
+	public Boolean joinProgram(Long programId, Map<Integer, String> classroomIds) {
+		Map<String, Object> conditions = new HashMap<String, Object>();
+		conditions.put("programId", programId);
+		List<Classroom> savedclassrooms = findClassrooms(conditions);
+		setProgram(savedclassrooms, null);
+		
+		List<Long> roomIds = new ArrayList<>();
+		for (Integer key : classroomIds.keySet()) {
+			roomIds.add(Long.parseLong(classroomIds.get(key)));
+		}
+		
+		conditions.clear();
+		conditions.put("classroomIds", roomIds);
+		List<Classroom> classrooms = findClassrooms(conditions);
+		setProgram(classrooms, programId);
+		return true;
+	}
+
+	private void setProgram(List<Classroom> classrooms, Long programId) {
+		for (Classroom classroom : classrooms) {
+			if(programId == null) {
+				classroom.setProgram(null);
+			} else {
+				Program program = new Program();
+				program.setId(programId);
+				classroom.setProgram(program);
+			}
+			updateClassroom(classroom);
+		}
 	}
 }

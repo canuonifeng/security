@@ -27,4 +27,6 @@ public interface ClassroomService {
 	public Long countClassroom(Map<String, Object> conditions);
 
 	public List<Classroom> findClassrooms(Map<String, Object> conditions);
+
+	public Boolean joinProgram(Long programId, Map<Integer, String> classroomIds);
 }
