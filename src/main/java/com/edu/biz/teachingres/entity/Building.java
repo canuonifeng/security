@@ -21,6 +21,18 @@ public class Building extends BaseEntity {
 	@ApiModelProperty(value = " 名称")
 	private String name;
 	
+	@NotEmpty(message = "代码不能为空")
+	@ApiModelProperty(value = " 代码")
+	private String code;
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	@OneToMany(cascade = CascadeType.REMOVE,targetEntity = BuildingRoom.class,  fetch = FetchType.LAZY)
 	@ApiModelProperty(value = "教室")
 	@JoinColumn(name = "building_id",insertable = false, updatable = false)
