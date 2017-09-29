@@ -13,6 +13,16 @@ public class PermissionConfig {
 
 	@XmlElement(name = "permission",type = Permission.class)
 	private List<Permission> permissions;
+	
+	private List<String> defaultPermission;
+
+	public List<String> getDefaultPermission() {
+		return defaultPermission;
+	}
+
+	public void setDefaultPermission(List<String> defaultPermission) {
+		this.defaultPermission = defaultPermission;
+	}
 
 	public List<Permission> getPermissions() {
 		return permissions;
