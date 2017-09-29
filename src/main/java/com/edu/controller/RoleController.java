@@ -44,6 +44,7 @@ public class RoleController extends BaseController<Role> {
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('role', 'edit')")
 	public Role edit(@PathVariable Long id, @RequestBody Role role) {
+		role.setId(id);
 		return roleService.updateRole(role);
 	}
 
