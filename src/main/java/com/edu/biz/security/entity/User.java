@@ -71,7 +71,7 @@ public class User extends BaseEntity implements UserDetails {
 	@ApiModelProperty(value = "昵称")
 	private String nickname;
 
-	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.EAGER)
 	@JoinColumn(name = "faculty_id")
 	@ApiModelProperty(value = "院系")
 	@JsonView({ JsonViews.Cascade.class })
