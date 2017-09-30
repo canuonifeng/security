@@ -96,12 +96,6 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	}
 
 	@Override
-	@Transactional
-	public void deleteBuildingRoomByFloor(Long buildingId, Integer floor) {
-		buildingRoomDao.deleteByBuildingIdAndFloor(buildingId, floor);
-	}
-
-	@Override
 	public BuildingRoom getBuildingRoom(Long id) {
 		return buildingRoomDao.findOne(id);
 	}
@@ -119,11 +113,6 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	@Override
 	public List<Building> findBuildings(Map<String, Object> conditions) {
 		return buildingDao.findAll(new BuildingSpecification(conditions));
-	}
-
-	@Override
-	public Long getFloorNum(Long id) {
-		return buildingRoomDao.countDistinctFloor(id);
 	}
 
 	@Override
