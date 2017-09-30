@@ -98,9 +98,9 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 		conditions.clear();
 		List<Classroom> classrooms = new ArrayList<>();
 		if(!roomIds.isEmpty()) {
+			conditions.put("classroomIds", roomIds);
 			classrooms = findClassrooms(conditions);
 		}
-		conditions.put("classroomIds", roomIds);
 		
 		setProgram(classrooms, programId);
 		return true;
