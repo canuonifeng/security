@@ -157,6 +157,7 @@ public class UserController extends BaseController<User> {
 	
 	@RequestMapping(path = "/current", method = RequestMethod.GET)
 	@ApiOperation(value = "获取当前登录用户信息")
+	@JsonView({ JsonViews.Cascade.class })
 	public User getCurrentUser() {
 		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
