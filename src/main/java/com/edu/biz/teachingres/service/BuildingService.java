@@ -42,8 +42,6 @@ public interface BuildingService {
 	public Long countBuildingRoom(Map<String, Object> conditions);
 	
 	public Long getFloorNum(Long id);
-	
-	public List<BuildingRoom> findBuildingRooms(Map<String, Object> conditions);
 
 	public List<Building> findBuildings(Map<String, Object> conditions);
 

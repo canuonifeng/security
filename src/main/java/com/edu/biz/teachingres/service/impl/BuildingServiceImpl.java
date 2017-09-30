@@ -81,10 +81,10 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	public BuildingRoom updateBuildingRoom(BuildingRoom buildingRoom) {
 		BuildingRoom saveBuildingRoom = buildingRoomDao.findOne(buildingRoom.getId());
 		if (null == saveBuildingRoom) {
-			throw new NotFoundException("该课程不存在");
+			throw new NotFoundException("该教室不存在");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(buildingRoom, saveBuildingRoom, "floor", "name", "room_type",
-				"seat_num");
+				"seat_num", "exam_seat_num");
 
 		return buildingRoomDao.save(buildingRoom);
 	}
@@ -129,12 +129,6 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	@Override
 	public List<BuildingRoom> findAllrooms(Map<String, Object> conditions) {
 		return buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
-	}
-	
-	@Override
-	public List<BuildingRoom> findBuildingRooms(Map<String, Object> conditions) {
-		List<BuildingRoom> buildingRooms = buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
-		return buildingRooms;
 	}
 
 }
