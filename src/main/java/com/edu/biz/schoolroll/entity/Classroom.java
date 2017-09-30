@@ -19,7 +19,7 @@ public class Classroom extends BaseEntity {
 	private String name;
 	private String grade;
 	private int isAssignNum;
-	private Integer lastAssignNum;
+	private Integer lastAssignNum = 0;
 
 	@ManyToOne(targetEntity = Major.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "major_id")
