@@ -40,7 +40,7 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 		if (null == saveBuilding) {
 			throw new NotFoundException("该建筑不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(building, saveBuilding, "name");
+		BeanUtils.copyPropertiesWithCopyProperties(building, saveBuilding, "name", "code");
 
 		return buildingDao.save(saveBuilding);
 	}
@@ -126,6 +126,11 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 		return buildingRoomDao.countDistinctFloor(id);
 	}
 
+	@Override
+	public List<BuildingRoom> findAllrooms(Map<String, Object> conditions) {
+		return buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
+	}
+	
 	@Override
 	public List<BuildingRoom> findBuildingRooms(Map<String, Object> conditions) {
 		List<BuildingRoom> buildingRooms = buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));

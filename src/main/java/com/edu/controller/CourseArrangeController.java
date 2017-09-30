@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.common.util.TermCodeUtil;
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.ClassSchedule;
 import com.edu.biz.teaching.entity.ProgramCourse;
@@ -30,12 +31,14 @@ import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.teachingres.service.BuildingService;
 import com.edu.biz.teachingres.service.CourseService;
 import com.edu.biz.teachingres.service.TeacherService;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 
@@ -82,7 +85,27 @@ public class CourseArrangeController extends BaseController<Course> {
 
 		return scheduleCycleVo;
 	}
-
+	
+	@RequestMapping(path = "schedule/{scheduleId}/mergeclassroom", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('classSchedule', 'edit')")
+	public Boolean mergeClassroom(@PathVariable Long scheduleId, @RequestBody Map<String, String> classroomIds) {
+		List<Long> mergeClassroomIds = new ArrayList<>();
+		for (String key : classroomIds.keySet()) {
+			mergeClassroomIds.add(Long.parseLong(classroomIds.get(key)));
+		}
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("classroomIds", mergeClassroomIds);
+		List<Classroom> classrooms = classroomService.findClassrooms(conditions);
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
+		if(classSchedule == null) {
+			throw new NotFoundException("该排课不存在");
+		}
+		classSchedule.setClassrooms(classrooms);
+		courseArrangeService.updateClassSchedule(classSchedule);
+		return true;
+	}
+	
+	
 	@RequestMapping(path = "schedule/{scheduleId}/cycle/{cycleId}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classSchedule', 'edit')")
 	public ScheduleCycle updateCourseArrange(@PathVariable Long scheduleId, @PathVariable Long cycleId,
@@ -119,6 +142,7 @@ public class CourseArrangeController extends BaseController<Course> {
 
 	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<ProgramCourseVo> termCourses(@RequestParam Map<String, Object> conditions) {
 		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
 		List<ProgramCourseVo> programCourseVos = new ArrayList<>();
@@ -134,6 +158,7 @@ public class CourseArrangeController extends BaseController<Course> {
 
 	@RequestMapping(path = "/schedule", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classSchedule', 'get')")
+	@JsonView(TeachingresJsonViews.CascadeCourse.class)
 	public Map<Integer, Map<String, ScheduleCycleVo>> getCourseArrange(@RequestParam Map<String, String> conditions) {
 		Map<Integer, Map<String, ScheduleCycleVo>> list = courseArrangeService.getCourseArrange(conditions.get("code"),
 				Long.parseLong(conditions.get("classroomId")));
@@ -153,7 +178,27 @@ public class CourseArrangeController extends BaseController<Course> {
 
 		return scheduleCycleVo;
 	}
-
+	
+	@RequestMapping(path = "schedule/{scheduleId}/mergeclassroom", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public List<ClassroomVo> getMergeClassroom(@PathVariable Long scheduleId, @RequestParam Map<String, Object> conditions) {
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
+		if (classSchedule == null) {
+			throw new NotFoundException("该排课不存在");
+		}
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("mergeCourseId", classSchedule.getCourse().getId());
+		map.put("termCode", conditions.get("termCode"));
+		List<Classroom> classrooms = classroomService.findClassrooms(map);
+		
+		//判断班级集合在位置集合有没有冲突
+		map.clear();
+		map.put("scheduleId", classSchedule.getId());
+		List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(map);
+		return classroomCategory(classrooms, scheduleCycles);
+	}
+	
 	@RequestMapping(path = "/schedule/{scheduleId}/cycle/{cycleId}/setroom", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classSchedule', 'put')")
 	public ScheduleCycle setCourseRoom(@PathVariable Long scheduleId, @PathVariable Long cycleId,
@@ -186,19 +231,14 @@ public class CourseArrangeController extends BaseController<Course> {
 	private ScheduleCycleVo createScheduleCycle(Map<String, String> conditions, ClassSchedule classSchedule) {
 		String period = TermCodeUtil.getCoursePeriod(conditions.get("period"), conditions.get("type"));
 		Integer week = Integer.parseInt(conditions.get("week"));
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("period", period);
-		map.put("week", week);
-		map.put("classroomId", conditions.get("classroomId"));
-		// 判断某个星期的某节课，是否有课程
-		List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(map);
+		List<ScheduleCycle> scheduleCycles = classroomHasOtherCourseArrange(Long.parseLong(conditions.get("classroomId")), period, week);
 		if (scheduleCycles.size() != 0) {
 			throw new InvalidParameterException("该位置已有课程被排");
 		}
 		ScheduleTeacher scheduleTeacher = courseArrangeService.getMasterScheduleTeacher(classSchedule.getId(), 1);
 		// 判断老师在某个星期某节课。是否有其他课程需要上
 		if(scheduleTeacher != null) {
-			hasOtherCourseArrange(scheduleTeacher.getTeacher().getId(), period, week);
+			teacherHasOtherCourseArrange(scheduleTeacher.getTeacher().getId(), period, week);
 		}
 
 		ScheduleCycle scheduleCycle = new ScheduleCycle();
@@ -225,7 +265,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(map);
 		//判断所有该课程位置上主带老师是否有课要上
 		for (ScheduleCycle scheduleCycle : scheduleCycles) {
-			hasOtherCourseArrange((Long.parseLong(conditions.get("0").toString())), scheduleCycle.getPeriod(), scheduleCycle.getWeek());
+			teacherHasOtherCourseArrange((Long.parseLong(conditions.get("0").toString())), scheduleCycle.getPeriod(), scheduleCycle.getWeek());
 		}
 		courseArrangeService.deleteScheduleTeacherByScheduleId(classSchedule.getId());
 		List<ScheduleTeacher> scheduleTeachers = new ArrayList<>();	
@@ -287,7 +327,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		return programCourseVo;
 	}
 
-	private Boolean hasOtherCourseArrange(Long teacherId, String period, Integer week) {
+	private Boolean teacherHasOtherCourseArrange(Long teacherId, String period, Integer week) {
 		Teacher teacher = teacherService.getTeacher(teacherId);
 		if (teacher == null) {
 			throw new NotFoundException("老师不存在");
@@ -302,5 +342,31 @@ public class CourseArrangeController extends BaseController<Course> {
 			throw new InvalidParameterException("老师在该时间段还有其他课程需要上");
 		}
 		return true;
+	}
+
+	private List<ScheduleCycle> classroomHasOtherCourseArrange(Long classroomId, String period, Integer week) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("period", period);
+		map.put("week", week);
+		map.put("classroomId", classroomId);
+		// 判断某个星期的某节课，是否有课程
+		return courseArrangeService.findScheduleCycles(map);
+	}
+	
+	private List<ClassroomVo> classroomCategory(List<Classroom> classrooms, List<ScheduleCycle> scheduleCycles){
+		List<ClassroomVo> classroomVos = new ArrayList<>();
+		for (int i = 0; i < classrooms.size(); i++) {
+			ClassroomVo classroomVo = new ClassroomVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(classrooms.get(i), classroomVo);
+			for (int j = 0; j < scheduleCycles.size(); j++) {
+				List<ScheduleCycle> cycles = classroomHasOtherCourseArrange(classroomVo.getId(), scheduleCycles.get(j).getPeriod(), scheduleCycles.get(j).getWeek());
+				if(cycles.size() != 0) {
+					classroomVo.setHasOtherCourse(1);
+					break;
+				}
+			}
+			classroomVos.add(classroomVo);
+		}
+		return classroomVos;
 	}
 }

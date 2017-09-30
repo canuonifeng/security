@@ -16,6 +16,7 @@ import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.TermSpecification;
 import com.edu.core.exception.NotFoundException;
+import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
 
 @Service
@@ -25,6 +26,9 @@ public class TermServiceImpl extends BaseService implements TermService {
 	
 	@Override
 	public Term createTerm(Term term) {
+		if(!this.checkCode(term.getCode(), null)){
+			throw new ServiceException("406","学期代码已被占用");
+		}
 		return termDao.save(term);
 	}
 
@@ -33,6 +37,9 @@ public class TermServiceImpl extends BaseService implements TermService {
 		Term saveTerm = termDao.findOne(term.getId());
 		if (null == saveTerm) {
 			throw new NotFoundException("该学期不存在");
+		}
+		if(!this.checkCode(term.getCode(), term.getId())){
+			throw new ServiceException("406","学期代码已被占用");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(term, saveTerm, "title", "code", "long_code", "start_date", "end_date");
 

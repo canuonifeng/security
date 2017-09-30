@@ -6,12 +6,14 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.entity.StudentChange;
 
 public class StudentSpecification implements Specification<Student> {
 	
@@ -61,6 +63,11 @@ public class StudentSpecification implements Specification<Student> {
 			}
 			if (conditions.containsKey("gender")) {
 				list.add(cb.equal(root.get("gender").as(String.class), this.conditions.get("gender")));
+			}
+			if (conditions.containsKey("notAudit")) {
+				Join<Student, StudentChange> join = root.join("changes");
+				String[] status = new String[]{"facultyApproving","schoolApproving"};
+				list.add(cb.not(root.get("status").as(String.class).in(status)));
 			}
 		}
 

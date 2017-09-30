@@ -2,24 +2,41 @@ package com.edu.biz.security.entity;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import com.edu.biz.base.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+@XmlRootElement(name = "permission")
+@XmlAccessorType (XmlAccessType.FIELD)
+public class Permission {
 
-@Entity
-public class Permission extends BaseEntity {
-
-	private static final long serialVersionUID = 1L;
-
+	@XmlAttribute(name = "name")
 	private String name;
+	@XmlAttribute(name = "code")
 	private String code;
 
-	@ManyToMany(mappedBy = "permissions")
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private List<Role> roles;
+	private Permission parentPermission;
+	
+	@XmlElement(name = "permission")
+	private List<Permission> subpermissions;
+
+	public List<Permission> getSubpermissions() {
+		return subpermissions;
+	}
+
+	public void setSubpermissions(List<Permission> subpermissions) {
+		this.subpermissions = subpermissions;
+	}
+
+	public Permission getParentPermission() {
+		return parentPermission;
+	}
+
+	public void setParentPermission(Permission parentPermission) {
+		this.parentPermission = parentPermission;
+	}
 
 	public String getCode() {
 		return code;

@@ -2,10 +2,10 @@ package com.edu.biz.security.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.edu.biz.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,10 +23,9 @@ public class Role extends BaseEntity {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<User> users;
 
-	@ManyToMany
-	@JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "role")
 	@JsonProperty(access = Access.WRITE_ONLY)
-	private List<Permission> permissions;
+	private List<RolePermission> rolePermissions;
 
 	public String getCode() {
 		return code;
@@ -52,11 +51,14 @@ public class Role extends BaseEntity {
 		this.users = users;
 	}
 
-	public List<Permission> getPermissions() {
-		return permissions;
+	public List<RolePermission> getRolePermissions() {
+		return rolePermissions;
 	}
 
-	public void setPermissions(List<Permission> permissions) {
-		this.permissions = permissions;
+	public void setRolePermissions(List<RolePermission> rolePermissions) {
+		for(RolePermission rolePermission : rolePermissions) {
+			rolePermission.setRole(this);
+		}
+		this.rolePermissions = rolePermissions;
 	}
 }

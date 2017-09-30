@@ -6,12 +6,15 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.teaching.entity.Program;
+import com.edu.biz.teaching.entity.ProgramCourse;
 
 public class ClassroomSpecification implements Specification<Classroom> {
 	private Map<String, Object> conditions;
@@ -36,8 +39,29 @@ public class ClassroomSpecification implements Specification<Classroom> {
 			if (conditions.containsKey("facultyId")) {
 				list.add(cb.equal(root.get("major").get("faculty").get("id"), this.conditions.get("facultyId")));
 			}
+			if (conditions.containsKey("programId")) {
+				list.add(cb.equal(root.get("program").get("id"), this.conditions.get("programId")));
+			}
 			if (conditions.containsKey("isAssignNum")) {
 				list.add(cb.equal(root.get("isAssignNum"), this.conditions.get("isAssignNum")));
+			}
+			if (conditions.containsKey("notProgramId")) {
+				list.add(cb.isNull(root.get("program").get("id"))); 
+			}
+			if (conditions.containsKey("programIdIsNullOrCurrentProgramId")) {
+				list.add(cb.or(cb.isNull(root.get("program").get("id")), cb.equal(root.get("program").get("id"), this.conditions.get("currentProgramId"))));
+			}
+			if (conditions.containsKey("mergeCourseId")) {
+				Join<Classroom, Program> joinProgram = root.join("program");
+				Join<Program, ProgramCourse> join = joinProgram.join("programCourses");
+				list.add(cb.equal(join.get("course").get("id").as(Long.class), conditions.get("mergeCourseId")));
+				list.add(cb.equal(join.get("termCode"), conditions.get("termCode")));
+			}
+			if (conditions.containsKey("classroomIds")) {
+				List<Long> ids = (List<Long>) this.conditions.get("classroomIds");
+				if(ids.size()>0) {
+					list.add(root.get("id").in(ids.toArray()));
+				}
 			}
 		}
 		Predicate[] p = new Predicate[list.size()];

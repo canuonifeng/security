@@ -1,11 +1,14 @@
 package com.edu.biz.schoolroll.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -13,6 +16,8 @@ import com.edu.biz.base.BaseEntity;
 import com.edu.biz.dict.Gender;
 import com.edu.biz.dict.IDType;
 import com.edu.biz.dict.Nation;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -44,6 +49,12 @@ public class Student extends BaseEntity {
 	@JoinColumn(name = "classroom_id")
 	@ApiModelProperty(value = "所属班级")
 	private Classroom classroom;
+	
+	@OneToMany(targetEntity = StudentChange.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "student_id")
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@ApiModelProperty(value = "异动记录")
+	private List<StudentChange> changes;
 	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
@@ -224,5 +235,13 @@ public class Student extends BaseEntity {
 
 	public void setSeq(int seq) {
 		this.seq = seq;
+	}
+
+	public List<StudentChange> getChanges() {
+		return changes;
+	}
+
+	public void setChanges(List<StudentChange> changes) {
+		this.changes = changes;
 	}
 }

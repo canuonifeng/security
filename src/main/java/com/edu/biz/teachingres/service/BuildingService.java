@@ -46,4 +46,6 @@ public interface BuildingService {
 	public List<BuildingRoom> findBuildingRooms(Map<String, Object> conditions);
 
 	public List<Building> findBuildings(Map<String, Object> conditions);
+
+	public List<BuildingRoom> findAllrooms(Map<String, Object> conditions);
 }

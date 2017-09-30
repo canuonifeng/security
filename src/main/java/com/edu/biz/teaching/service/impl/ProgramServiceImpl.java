@@ -11,8 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
+import com.edu.biz.common.util.TermCodeUtil;
 import com.edu.biz.teaching.dao.ProgramCourseDao;
 import com.edu.biz.teaching.dao.ProgramDao;
+import com.edu.biz.teaching.entity.CountProgramCourseCategory;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.Term;
@@ -69,7 +71,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		if (null == saveProgramCourse) {
 			throw new NotFoundException("该教学计划课程不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay", "weekPeriod", "termNum", "termCode");
+		BeanUtils.copyPropertiesWithCopyProperties(programCourse, saveProgramCourse, "category", "nature", "testWay", "weekPeriod", "termNum", "termCode", "practicePeriod", "theoryPeriod", "credit");
 
 		return programCourseDao.save(saveProgramCourse);
 	}
@@ -112,6 +114,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	@Override
 	public Page<Course> searchCoursesNotInProgram(Long programId, Map<String, Object> conditions, Pageable pageable) {
 		List<ProgramCourse> existCourses = new ArrayList<ProgramCourse>();
+		conditions.put("programId", programId);
 		existCourses  = programCourseDao.findAll(new ProgramCourseSpecification(conditions));
 //		Long[] notCourseIds = new Long[existCourses.size()];
 		List<Long> notCourseIds = new ArrayList<>();
@@ -123,7 +126,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	}
 	@Override
 	public Boolean joinProgram(Course course, Program program) {
-		Boolean result = this.canJoinProgram(course, program);
+		Boolean result = canJoinProgram(course, program);
 		if (!result) {
 			throw new ServiceException("403", "该课程不能加入该教学计划");
 		}
@@ -133,6 +136,9 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		programCourse.setCredit(course.getCredit());
 		programCourse.setPracticePeriod(course.getPracticePeriod());
 		programCourse.setTheoryPeriod(course.getTheoryPeriod());
+		programCourse.setTermNum(1);
+		programCourse.setWeekPeriod(course.getWeekPeriod());
+		programCourse.setTermCode(TermCodeUtil.getTermCode(program.getGrade(), 1));
 		createProgramCourse(programCourse);
 		return true;
 	}
@@ -207,6 +213,11 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		map.put("courseId", courseId);
 		map.put("term", term);
 		return programCourseDao.findOne(new ProgramCourseSpecification(map));
+	}
+	
+	@Override
+	public List<CountProgramCourseCategory> countProgramCourseByProgramIdGroupByCategory(Long programId) {
+		return programCourseDao.countProgramCourseByProgramIdGroupByCategory(programId);
 	}
 	
 	private Boolean dealTerms(List<Term> terms, List<String> codes){
