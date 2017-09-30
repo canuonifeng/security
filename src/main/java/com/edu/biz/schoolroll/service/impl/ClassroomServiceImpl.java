@@ -60,7 +60,7 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 		if(!this.checkCode(classroom.getCode(), classroom.getId())) {
 			throw new ServiceException("406","班级编码已被占用");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(classroom, savedClassroom, "name", "code", "isAssignNum", "program");
+		BeanUtils.copyPropertiesWithCopyProperties(classroom, savedClassroom, "name", "code", "isAssignNum", "program", "lastAssignNum", "teacher", "buildingRoom");
 		return classroomDao.save(savedClassroom);
 	}
 

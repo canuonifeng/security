@@ -129,6 +129,11 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	}
 
 	@Override
+	public List<BuildingRoom> findAllrooms(Map<String, Object> conditions) {
+		return buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
+	}
+	
+	@Override
 	public Map<String, List<BuildingRoom>> findBuildingRooms(Map<String, Object> conditions) {
 		List<BuildingRoom> buildingRooms = buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
 		Map<String, List<BuildingRoom>> map = new TreeMap<>();
