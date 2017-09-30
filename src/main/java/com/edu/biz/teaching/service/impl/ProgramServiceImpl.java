@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
+import com.edu.biz.common.util.TermCodeUtil;
 import com.edu.biz.teaching.dao.ProgramCourseDao;
 import com.edu.biz.teaching.dao.ProgramDao;
 import com.edu.biz.teaching.entity.CountProgramCourseCategory;
@@ -135,6 +136,9 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		programCourse.setCredit(course.getCredit());
 		programCourse.setPracticePeriod(course.getPracticePeriod());
 		programCourse.setTheoryPeriod(course.getTheoryPeriod());
+		programCourse.setTermNum(1);
+		programCourse.setWeekPeriod(course.getWeekPeriod());
+		programCourse.setTermCode(TermCodeUtil.getTermCode(program.getGrade(), 1));
 		createProgramCourse(programCourse);
 		return true;
 	}
