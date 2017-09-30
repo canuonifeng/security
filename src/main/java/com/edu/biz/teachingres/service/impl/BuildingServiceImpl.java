@@ -1,9 +1,7 @@
 package com.edu.biz.teachingres.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -129,20 +127,9 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	}
 
 	@Override
-	public Map<String, List<BuildingRoom>> findBuildingRooms(Map<String, Object> conditions) {
+	public List<BuildingRoom> findBuildingRooms(Map<String, Object> conditions) {
 		List<BuildingRoom> buildingRooms = buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
-		Map<String, List<BuildingRoom>> map = new TreeMap<>();
-		for (BuildingRoom room : buildingRooms) {
-			if (map.containsKey(room.getFloor().toString())) {
-				map.get(room.getFloor().toString()).add(room);
-			} else {
-				List<BuildingRoom> list = new ArrayList<>();
-				list.add(room);
-				map.put(room.getFloor().toString(), list);
-			}
-		}
-
-		return map;
+		return buildingRooms;
 	}
 
 }
