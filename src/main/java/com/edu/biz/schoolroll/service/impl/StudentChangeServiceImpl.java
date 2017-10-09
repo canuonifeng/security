@@ -1,6 +1,5 @@
 package com.edu.biz.schoolroll.service.impl;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -12,18 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
-import com.edu.biz.schoolroll.dao.ClassroomDao;
 import com.edu.biz.schoolroll.dao.StudentChangeDao;
 import com.edu.biz.schoolroll.dao.StudentChangeLogDao;
 import com.edu.biz.schoolroll.dao.StudentDao;
 import com.edu.biz.schoolroll.entity.ChangeStatus;
-import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.StudentChange;
 import com.edu.biz.schoolroll.entity.StudentChangeLog;
-import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.schoolroll.service.StudentChangeService;
 import com.edu.biz.schoolroll.specification.StudentChangeSpecification;
+import com.edu.biz.schoolroll.strategy.ContextStudentChangeFactory;
+import com.edu.biz.schoolroll.strategy.StudentChangeStrategy;
 import com.edu.biz.security.entity.User;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
@@ -37,7 +35,7 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 	@Autowired
 	private StudentDao studentDao;
 	@Autowired
-	private ClassroomDao classroomDao;
+    private Map<String, StudentChangeStrategy> strategyMap;
 	
 	@Override
 	@Transactional
@@ -92,28 +90,10 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 		//更新学籍表学员信息
 		if (log.getNewStatus().equals(ChangeStatus.approved)) {
 			Student student = change.getStudent();
-			switch (log.getChange().getChangeType().toString()) {
-				case "changeClassroom":
-					Classroom classroom = classroomDao.findOne(change.getNewClassroom().getId());
-					if (classroom.getIsAssignNum() == 1) {
-						DecimalFormat dfInt = new DecimalFormat("00");
-						String studentNo = classroom.getCode()+dfInt.format(classroom.getLastAssignNum() + 1);
-						student.setNo(studentNo);
-						classroom.setLastAssignNum(classroom.getLastAssignNum() + 1);
-						classroomDao.save(classroom);
-					} else {
-						student.setNo(null);
-					}
-					student.setClassroom(change.getNewClassroom());
-					break;
-				case "changeMajor": student.setMajor(change.getNewMajor());student.setNo(null);break;
-				case "changeSchool": student.setStatus(StudentStatus.changeSchool);break;
-				case "dropOut": student.setStatus(StudentStatus.dropOut);break;
-				case "fired": student.setStatus(StudentStatus.fired);break;
-				case "pause": student.setStatus(StudentStatus.pause);break;
-				case "retainAdmission": student.setStatus(StudentStatus.retainAdmission);break;
-			}
-			studentDao.save(student);
+			ContextStudentChangeFactory contextFactory = new ContextStudentChangeFactory(change, student);
+			contextFactory.setStrategyMap(strategyMap);
+			Student updateStudent = contextFactory.audit(log.getChange().getChangeType().toString());
+			studentDao.save(updateStudent);
 		}
 	}
 }
