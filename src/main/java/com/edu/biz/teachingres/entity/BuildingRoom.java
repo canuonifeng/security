@@ -16,10 +16,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class BuildingRoom extends BaseEntity {
-	@NotNull(message = "层数不能为空")
-	@ApiModelProperty(value = " 层数")
-	private Integer floor;
-	
 	@NotEmpty(message = "名称不能为空")
 	@ApiModelProperty(value = "教室名称")
 	private String name;
@@ -44,13 +40,17 @@ public class BuildingRoom extends BaseEntity {
 	@NotNull(message = "座位数不能为空")
 	@ApiModelProperty(value = "座位数")
 	private Integer seatNum;
+	
+	@NotNull(message = "考试座位数不能为空")
+	@ApiModelProperty(value = "座位数")
+	private Integer examSeatNum;
 
-	public Integer getFloor() {
-		return floor;
+	public Integer getExamSeatNum() {
+		return examSeatNum;
 	}
 
-	public void setFloor(Integer floor) {
-		this.floor = floor;
+	public void setExamSeatNum(Integer examSeatNum) {
+		this.examSeatNum = examSeatNum;
 	}
 
 	public String getName() {
