@@ -1,17 +1,17 @@
 package com.edu.biz.security.entity.pojo;
 
-import java.util.Map;
+import java.util.Set;
 
 import com.edu.biz.security.entity.User;
 
 public class UserVo extends User {
-	private Map<String, Object> Permissions;
+	private Set<String> Permissions;
 
-	public Map<String, Object> getPermissions() {
+	public Set<String> getPermissions() {
 		return Permissions;
 	}
 
-	public void setPermissions(Map<String, Object> permissions) {
+	public void setPermissions(Set<String> permissions) {
 		Permissions = permissions;
 	}
 }

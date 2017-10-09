@@ -1,8 +1,8 @@
 package com.edu.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,12 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.org.entity.OrgJsonViews;
-import com.edu.biz.security.entity.Role;
-import com.edu.biz.security.entity.RolePermission;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
 import com.edu.biz.security.entity.pojo.UserVo;
-import com.edu.biz.security.service.RoleService;
 import com.edu.biz.security.service.UserService;
 import com.edu.biz.validgroup.Create;
 import com.edu.biz.validgroup.Update;
@@ -49,8 +46,6 @@ public class UserController extends BaseController<User> {
 
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private RoleService roleService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('user', 'get')")
@@ -168,19 +163,11 @@ public class UserController extends BaseController<User> {
 	@JsonView({ OrgJsonViews.CascadeParent.class })
 	public UserVo getCurrentUser() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Map<String, Object> permissions = new HashMap<>();
-		for(Role role : user.getRoles()) {
-			List<RolePermission> list = roleService.findRolePermissionByRoleId(role.getId());
-			for(RolePermission rolePermission : list) {
-				if (!permissions.containsKey(rolePermission.getPermissionCode())) {
-					permissions.put(rolePermission.getPermissionCode(), true);
-				}
-			}
-		}
 		UserVo userVo = new UserVo();
-		userVo.setPermissions(permissions);
 		User getUser = userService.getUserById(user.getId());
 		BeanUtils.copyPropertiesWithIgnoreProperties(getUser, userVo);
+		Set<String> permissions = userService.findCurrentUserPermissionCodes();
+		userVo.setPermissions(permissions);
 		return userVo;
 	}
 }
