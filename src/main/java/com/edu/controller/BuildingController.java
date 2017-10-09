@@ -76,12 +76,6 @@ public class BuildingController extends BaseController<Object> {
 	public boolean deleteBuildingRoom(@PathVariable Long roomId) {
 		return buildingService.deleteBuildingRoom(roomId);
 	}
-	
-	@RequestMapping(path = "/{buildingId}/room/floor/{floor}", method = RequestMethod.DELETE)
-	@PreAuthorize("hasPermission('building', 'delete')")
-	public void deleteFloor(@PathVariable Long buildingId, @PathVariable Integer floor) {
-		buildingService.deleteBuildingRoomByFloor(buildingId, floor);
-	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('building', 'get')")
@@ -93,13 +87,6 @@ public class BuildingController extends BaseController<Object> {
 	@PreAuthorize("hasPermission('building', 'get')")
 	public BuildingRoom getBuildingRoom(@PathVariable Long id) {
 		return buildingService.getBuildingRoom(id);
-	}
-	
-	@RequestMapping(path = "/{id}/room/all",method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('building', 'get')")
-	public Map<String, List<BuildingRoom>> findAllBuildingRoom(@PathVariable Long id, @RequestParam Map<String, Object> conditions) {
-		conditions.put("buildingId", id);
-		return buildingService.findBuildingRooms(conditions);
 	}
 	
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
@@ -126,10 +113,8 @@ public class BuildingController extends BaseController<Object> {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("buildingId", building.getId());
 			Long buildingRoomNum = buildingService.countBuildingRoom(map);
-			Long floorNum = buildingService.getFloorNum(building.getId());
 			List<CountRoomType> roomType = buildingService.getRoomNumByBuildingId(building.getId());
 			buildingVo.setRoomDetail(roomType);
-			buildingVo.setFloorNum(floorNum.intValue());
 			buildingVo.setClassroomNum(buildingRoomNum.intValue());
 			buildingVos.add(buildingVo);
 		}
