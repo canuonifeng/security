@@ -31,6 +31,14 @@ public class Teacher extends BaseEntity {
 	@ApiModelProperty(value = " 性别")
 	private Gender gender = Gender.secret;
 	
+	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(value = "职称")
+	private TeacherTitle title;
+	
+	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(value = "学历")
+	private TeacherDegree degree;
+
 	@ApiModelProperty(value="从教时间")
 	private String startWorkTime;
 	
@@ -78,6 +86,22 @@ public class Teacher extends BaseEntity {
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+	
+	public TeacherTitle getTitle() {
+		return title;
+	}
+
+	public void setTitle(TeacherTitle title) {
+		this.title = title;
+	}
+
+	public TeacherDegree getDegree() {
+		return degree;
+	}
+
+	public void setDegree(TeacherDegree degree) {
+		this.degree = degree;
 	}
 
 	public String getStartWorkTime() {
