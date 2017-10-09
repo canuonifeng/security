@@ -88,12 +88,26 @@ public class Teacher extends BaseEntity {
 		this.gender = gender;
 	}
 	
+	public String getTitleName() {
+		if (title == null) {
+			return null;
+		}
+		return title.getName();
+	}
+	
 	public TeacherTitle getTitle() {
 		return title;
 	}
 
 	public void setTitle(TeacherTitle title) {
 		this.title = title;
+	}
+	
+	public String getDegreeName() {
+		if (degree == null) {
+			return null;
+		}
+		return degree.getName();
 	}
 
 	public TeacherDegree getDegree() {

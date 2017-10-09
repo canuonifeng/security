@@ -19,7 +19,9 @@ import com.edu.biz.teachingres.entity.CourseCategory;
 import com.edu.biz.teachingres.entity.CourseNature;
 import com.edu.biz.teachingres.entity.CourseTestWay;
 import com.edu.biz.teachingres.entity.RoomType;
+import com.edu.biz.teachingres.entity.TeacherDegree;
 import com.edu.biz.teachingres.entity.TeacherStatus;
+import com.edu.biz.teachingres.entity.TeacherTitle;
 
 import io.swagger.annotations.Api;
 
@@ -154,6 +156,30 @@ public class EnumDictController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("id", changeType.name());
 			map.put("name" , changeType.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	@RequestMapping(path = "/teachertitle", method = RequestMethod.GET)
+	public List<Object> getTeacherTitle() {
+		ArrayList<Object> list=new ArrayList<Object>();
+		for(TeacherTitle teacherTitle : TeacherTitle.values()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", teacherTitle.name());
+			map.put("name" , teacherTitle.getName());
+			list.add(map);
+		}
+		return list;
+	}
+	
+	@RequestMapping(path = "/teacherdegree", method = RequestMethod.GET)
+	public List<Object> getTeacherDegree() {
+		ArrayList<Object> list=new ArrayList<Object>();
+		for(TeacherDegree teacherDegree : TeacherDegree.values()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("id", teacherDegree.name());
+			map.put("name" , teacherDegree.getName());
 			list.add(map);
 		}
 		return list;
