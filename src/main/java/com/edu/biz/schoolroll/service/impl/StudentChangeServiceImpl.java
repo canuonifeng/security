@@ -20,7 +20,6 @@ import com.edu.biz.schoolroll.entity.StudentChange;
 import com.edu.biz.schoolroll.entity.StudentChangeLog;
 import com.edu.biz.schoolroll.service.StudentChangeService;
 import com.edu.biz.schoolroll.specification.StudentChangeSpecification;
-import com.edu.biz.schoolroll.strategy.ContextStudentChangeFactory;
 import com.edu.biz.schoolroll.strategy.StudentChangeStrategy;
 import com.edu.biz.security.entity.User;
 import com.edu.core.exception.NotFoundException;
@@ -90,9 +89,7 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 		//更新学籍表学员信息
 		if (log.getNewStatus().equals(ChangeStatus.approved)) {
 			Student student = change.getStudent();
-			ContextStudentChangeFactory contextFactory = new ContextStudentChangeFactory(change, student);
-			contextFactory.setStrategyMap(strategyMap);
-			Student updateStudent = contextFactory.audit(log.getChange().getChangeType().toString());
+			Student updateStudent = strategyMap.get(log.getChange().getChangeType().toString()).changeStudentField(change, student);
 			studentDao.save(updateStudent);
 		}
 	}
