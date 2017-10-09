@@ -28,7 +28,6 @@ import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.MajorService;
 import com.edu.biz.schoolroll.service.StudentService;
-import com.edu.biz.teaching.entity.Program;
 import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
