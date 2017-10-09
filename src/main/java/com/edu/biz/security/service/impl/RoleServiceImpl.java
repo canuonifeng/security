@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.security.dao.RoleDao;
@@ -31,8 +32,10 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	public Role createRole(Role role) {
 		return this.roleDao.save(role);
 	}
-
+	
+	@Transactional
 	public Role updateRole(Role role) {
+		this.rolePermissionDao.deleteByRoleId(role.getId());
 		return this.roleDao.save(role);
 	}
 	
