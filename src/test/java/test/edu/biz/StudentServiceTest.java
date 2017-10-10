@@ -96,4 +96,14 @@ public class StudentServiceTest extends BaseServiceTest {
 		Classroom classroom = classroomService.getClassroom(1L);
 		Assert.assertTrue(studentService.joinClassroom(student, classroom));
 	}
+	
+	@Test
+	@ExpectedDatabase(value = "studentService.assignStudentNum.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+	public void testAssignStudentNum() {
+		Student student = studentService.getStudent(1L);
+		Classroom classroom = classroomService.getClassroom(1L);
+		student.setClassroom(classroom);
+		student.setNo(classroom.getCode()+classroom.getLastAssignNum());
+		studentService.AssignStudentNum(student);
+	}
 }
