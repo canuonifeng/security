@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.StudentChange;
 import com.edu.biz.schoolroll.entity.StudentChangeLog;
+import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.schoolroll.service.StudentChangeService;
 import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.security.entity.User;
+import com.edu.core.exception.NotFoundException;
 
 import io.swagger.annotations.Api;
 
@@ -38,10 +40,18 @@ public class StudentChangeController extends BaseController<StudentChange> {
 	@PreAuthorize("hasPermission('change', 'add')")
 	public StudentChange addChange(@RequestBody StudentChange studentChange) {
 		Student student = studentService.getStudent(studentChange.getStudent().getId());
+		if(student == null) {
+			throw new NotFoundException("该学生不存在");
+		}
 		studentChange.setStudent(student);
 		User currenUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		studentChange.setAuditUser(currenUser);
-		return studentChangeService.createStudentChange(studentChange);
+		StudentChange change = studentChangeService.createStudentChange(studentChange);
+		
+		student.setStatus(StudentStatus.approving);
+		studentService.updateStudent(student);
+		
+		return change;
 	}
 	
 	@RequestMapping(path = "/{id}/audit", method = RequestMethod.PUT)

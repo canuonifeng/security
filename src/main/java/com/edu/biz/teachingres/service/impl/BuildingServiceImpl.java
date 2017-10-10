@@ -1,9 +1,7 @@
 package com.edu.biz.teachingres.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +40,7 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 		if (null == saveBuilding) {
 			throw new NotFoundException("该建筑不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(building, saveBuilding, "name");
+		BeanUtils.copyPropertiesWithCopyProperties(building, saveBuilding, "name", "code");
 
 		return buildingDao.save(saveBuilding);
 	}
@@ -83,10 +81,10 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	public BuildingRoom updateBuildingRoom(BuildingRoom buildingRoom) {
 		BuildingRoom saveBuildingRoom = buildingRoomDao.findOne(buildingRoom.getId());
 		if (null == saveBuildingRoom) {
-			throw new NotFoundException("该课程不存在");
+			throw new NotFoundException("该教室不存在");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(buildingRoom, saveBuildingRoom, "floor", "name", "room_type",
-				"seat_num");
+				"seat_num", "exam_seat_num");
 
 		return buildingRoomDao.save(buildingRoom);
 	}
@@ -95,12 +93,6 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	public Boolean deleteBuildingRoom(Long id) {
 		buildingRoomDao.delete(id);
 		return true;
-	}
-
-	@Override
-	@Transactional
-	public void deleteBuildingRoomByFloor(Long buildingId, Integer floor) {
-		buildingRoomDao.deleteByBuildingIdAndFloor(buildingId, floor);
 	}
 
 	@Override
@@ -124,25 +116,8 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	}
 
 	@Override
-	public Long getFloorNum(Long id) {
-		return buildingRoomDao.countDistinctFloor(id);
-	}
-
-	@Override
-	public Map<String, List<BuildingRoom>> findBuildingRooms(Map<String, Object> conditions) {
-		List<BuildingRoom> buildingRooms = buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
-		Map<String, List<BuildingRoom>> map = new TreeMap<>();
-		for (BuildingRoom room : buildingRooms) {
-			if (map.containsKey(room.getFloor().toString())) {
-				map.get(room.getFloor().toString()).add(room);
-			} else {
-				List<BuildingRoom> list = new ArrayList<>();
-				list.add(room);
-				map.put(room.getFloor().toString(), list);
-			}
-		}
-
-		return map;
+	public List<BuildingRoom> findAllrooms(Map<String, Object> conditions) {
+		return buildingRoomDao.findAll(new BuildingRoomSpecification(conditions));
 	}
 
 }

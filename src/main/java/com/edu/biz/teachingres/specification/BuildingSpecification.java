@@ -30,7 +30,13 @@ public class BuildingSpecification implements Specification<Building> {
 			if (conditions.containsKey("roomType")) {
 				Join<Building, BuildingRoom> join = root.join("buildingRoom");
 				list.add(cb.equal(join.get("roomType").as(String.class), conditions.get("roomType")));
-			}			
+			}
+			if (conditions.containsKey("name")) {
+				list.add(cb.like(root.get("name"), "%" + this.conditions.get("name") + "%"));
+			}
+			if (conditions.containsKey("code")) {
+				list.add(cb.equal(root.get("code"), this.conditions.get("code")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];

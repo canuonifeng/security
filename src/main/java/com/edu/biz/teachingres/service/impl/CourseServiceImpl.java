@@ -1,5 +1,6 @@
 package com.edu.biz.teachingres.service.impl;
 
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class CourseServiceImpl extends BaseService implements CourseService {
 		if (!this.checkCode(course.getCode(), course.getId())) {
 			throw new ServiceException("406", "code已被占用");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(course, saveCourse, "code", "name", "credit", "period");
+		BeanUtils.copyPropertiesWithCopyProperties(course, saveCourse, "code", "name", "credit", "period", "weekPeriod", "faculty");
 
 		return courseDao.save(course);
 	}

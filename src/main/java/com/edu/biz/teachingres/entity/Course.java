@@ -9,10 +9,12 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.edu.biz.base.BaseEntity;
+import com.edu.biz.org.entity.Faculty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -38,6 +40,9 @@ public class Course extends BaseEntity {
 	@ApiModelProperty(value="实践学时")
 	private int practicePeriod;
 	
+	@ApiModelProperty(value="周学时")
+	private int weekPeriod;
+	
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(value = " 状态")
 	private CourseStatus status = CourseStatus.enable;
@@ -48,6 +53,11 @@ public class Course extends BaseEntity {
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	private List<Teacher> teachers;
 
+	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "faculty_id")
+	@ApiModelProperty(value = "所属院系")
+	private Faculty faculty;
+	
 	public List<Teacher> getTeachers() {
 		return teachers;
 	}
@@ -102,6 +112,22 @@ public class Course extends BaseEntity {
 
 	public void setPracticePeriod(int practicePeriod) {
 		this.practicePeriod = practicePeriod;
+	}
+
+	public Faculty getFaculty() {
+		return faculty;
+	}
+
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
+	}
+
+	public int getWeekPeriod() {
+		return weekPeriod;
+	}
+
+	public void setWeekPeriod(int weekPeriod) {
+		this.weekPeriod = weekPeriod;
 	}
 	
 

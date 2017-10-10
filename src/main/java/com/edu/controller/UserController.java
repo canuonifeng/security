@@ -2,6 +2,7 @@ package com.edu.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.org.entity.OrgJsonViews;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
+import com.edu.biz.security.entity.pojo.UserVo;
 import com.edu.biz.security.service.UserService;
 import com.edu.biz.validgroup.Create;
 import com.edu.biz.validgroup.Update;
 import com.edu.biz.viewgroup.JsonViews;
+import com.edu.core.util.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
@@ -157,7 +160,14 @@ public class UserController extends BaseController<User> {
 	
 	@RequestMapping(path = "/current", method = RequestMethod.GET)
 	@ApiOperation(value = "获取当前登录用户信息")
-	public User getCurrentUser() {
-		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	@JsonView({ JsonViews.NoCascade.class })
+	public UserVo getCurrentUser() {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserVo userVo = new UserVo();
+		User getUser = userService.getUserById(user.getId());
+		BeanUtils.copyPropertiesWithIgnoreProperties(getUser, userVo);
+		Set<String> permissions = userService.findCurrentUserPermissionCodes();
+		userVo.setPermissions(permissions);
+		return userVo;
 	}
 }

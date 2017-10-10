@@ -18,9 +18,9 @@ import com.edu.biz.schoolroll.entity.ChangeStatus;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.StudentChange;
 import com.edu.biz.schoolroll.entity.StudentChangeLog;
-import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.schoolroll.service.StudentChangeService;
 import com.edu.biz.schoolroll.specification.StudentChangeSpecification;
+import com.edu.biz.schoolroll.strategy.StudentChangeStrategy;
 import com.edu.biz.security.entity.User;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
@@ -33,6 +33,8 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 	private StudentChangeLogDao studentChangeLogDao;
 	@Autowired
 	private StudentDao studentDao;
+	@Autowired
+    private Map<String, StudentChangeStrategy> strategyMap;
 	
 	@Override
 	@Transactional
@@ -87,16 +89,8 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 		//更新学籍表学员信息
 		if (log.getNewStatus().equals(ChangeStatus.approved)) {
 			Student student = change.getStudent();
-			switch (log.getChange().getChangeType().toString()) {
-				case "changeClassroom":student.setNo(null);student.setClassroom(change.getNewClassroom());break;
-				case "changeMajor": student.setMajor(change.getNewMajor());student.setNo(null);break;
-				case "changeSchool": student.setStatus(StudentStatus.changeSchool);break;
-				case "dropOut": student.setStatus(StudentStatus.dropOut);break;
-				case "fired": student.setStatus(StudentStatus.fired);break;
-				case "pause": student.setStatus(StudentStatus.pause);break;
-				case "retainAdmission": student.setStatus(StudentStatus.retainAdmission);break;
-			}
-			studentDao.save(student);
+			Student updateStudent = strategyMap.get(log.getChange().getChangeType().toString()).changeStudentField(change, student);
+			studentDao.save(updateStudent);
 		}
 	}
 }

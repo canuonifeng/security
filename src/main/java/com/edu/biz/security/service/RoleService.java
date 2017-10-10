@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.edu.biz.security.entity.Role;
+import com.edu.biz.security.entity.RolePermission;
 
 public interface RoleService {
 	public Role createRole(Role role);
@@ -25,4 +26,6 @@ public interface RoleService {
 	public Set<String> findByPermissionCodes(Set<String> roleCodes);
 
 	public List<Role> findRoles(Map<String, Object> conditions);
+	
+	public List<RolePermission> findRolePermissionByRoleId(Long roleId);
 }

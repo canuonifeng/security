@@ -53,7 +53,7 @@ public class AuthenticationHandler
 		response.setCharacterEncoding("UTF-8");
 		Map<String, String> map = new HashMap<String, String>();
 		ResponseWrapper responseWrapper = new ResponseWrapper(map);
-		responseWrapper.setStatus(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
+		responseWrapper.setStatus(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED)+".1");
 		responseWrapper.setMessage("用户名或密码错误");
 
 		ObjectMapper mapper = new ObjectMapper();

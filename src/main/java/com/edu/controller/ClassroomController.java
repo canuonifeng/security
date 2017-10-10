@@ -141,4 +141,10 @@ public class ClassroomController extends BaseController<Classroom> {
 		List<Classroom> list = classroomService.findClassrooms(conditions);
 		return list;
 	}
+	
+	@RequestMapping(path = "/joinprogram/{programId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('classroom', 'put')")
+	public Boolean joinProgram(@PathVariable Long programId, @RequestBody Map<Integer, String> classroomIds) {
+		return classroomService.joinProgram(programId, classroomIds);
+	}
 }

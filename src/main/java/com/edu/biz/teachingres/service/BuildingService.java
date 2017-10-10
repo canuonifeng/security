@@ -29,8 +29,6 @@ public interface BuildingService {
 	
 	public Boolean deleteBuildingRoom(Long id);
 	
-	public void deleteBuildingRoomByFloor(Long buildingId, Integer floor);
-	
 	public BuildingRoom getBuildingRoom(Long id);
 	
 	public List<CountRoomType> getRoomNum();
@@ -40,10 +38,8 @@ public interface BuildingService {
 	public Page<BuildingRoom> searchBuildingRooms(Map<String, Object> conditions, Pageable pageable);
 	
 	public Long countBuildingRoom(Map<String, Object> conditions);
-	
-	public Long getFloorNum(Long id);
-	
-	public Map<String, List<BuildingRoom>> findBuildingRooms(Map<String, Object> conditions);
 
 	public List<Building> findBuildings(Map<String, Object> conditions);
+
+	public List<BuildingRoom> findAllrooms(Map<String, Object> conditions);
 }

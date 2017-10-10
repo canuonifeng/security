@@ -39,8 +39,17 @@ public class ClassroomSpecification implements Specification<Classroom> {
 			if (conditions.containsKey("facultyId")) {
 				list.add(cb.equal(root.get("major").get("faculty").get("id"), this.conditions.get("facultyId")));
 			}
+			if (conditions.containsKey("programId")) {
+				list.add(cb.equal(root.get("program").get("id"), this.conditions.get("programId")));
+			}
 			if (conditions.containsKey("isAssignNum")) {
 				list.add(cb.equal(root.get("isAssignNum"), this.conditions.get("isAssignNum")));
+			}
+			if (conditions.containsKey("notProgramId")) {
+				list.add(cb.isNull(root.get("program").get("id"))); 
+			}
+			if (conditions.containsKey("programIdIsNullOrCurrentProgramId")) {
+				list.add(cb.or(cb.isNull(root.get("program").get("id")), cb.equal(root.get("program").get("id"), this.conditions.get("currentProgramId"))));
 			}
 			if (conditions.containsKey("mergeCourseId")) {
 				Join<Classroom, Program> joinProgram = root.join("program");

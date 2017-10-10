@@ -11,12 +11,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.security.dao.RoleDao;
+import com.edu.biz.security.dao.RolePermissionDao;
 import com.edu.biz.security.dao.specification.RoleSpecification;
-import com.edu.biz.security.entity.Permission;
 import com.edu.biz.security.entity.Role;
+import com.edu.biz.security.entity.RolePermission;
 import com.edu.biz.security.service.RoleService;
 
 @Service
@@ -24,12 +26,16 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 
 	@Autowired
 	private RoleDao roleDao;
+	@Autowired
+	private RolePermissionDao rolePermissionDao;
 
 	public Role createRole(Role role) {
 		return this.roleDao.save(role);
 	}
-
+	
+	@Transactional
 	public Role updateRole(Role role) {
+		this.rolePermissionDao.deleteByRoleId(role.getId());
 		return this.roleDao.save(role);
 	}
 	
@@ -64,9 +70,9 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		List<Role> roles = roleDao.findByCodeIn(roleCodes);
 		Set<String> permissionCodes = new HashSet<String>();
 		for (Role role : roles) {
-			List<Permission> permissions = role.getPermissions();
-			for (Permission permission : permissions) {
-				permissionCodes.add(permission.getName());
+			List<RolePermission> permissions = role.getRolePermissions();
+			for (RolePermission permission : permissions) {
+				permissionCodes.add(permission.getPermissionCode());
 			}
 		}
 		return permissionCodes;
@@ -75,5 +81,10 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Override
 	public List<Role> findRoles(Map<String, Object> conditions) {
 		return roleDao.findAll(new RoleSpecification(conditions), new Sort(Direction.DESC, "createdTime"));
+	}
+	
+	@Override
+	public List<RolePermission> findRolePermissionByRoleId(Long roleId) {
+		return rolePermissionDao.findByRoleId(roleId);
 	}
 }

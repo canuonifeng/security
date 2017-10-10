@@ -1,6 +1,7 @@
 package com.edu.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.common.util.TermCodeUtil;
 import com.edu.biz.schoolroll.service.ClassroomService;
+import com.edu.biz.teaching.entity.CountProgramCourseCategory;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.Term;
@@ -115,16 +117,39 @@ public class ProgramController extends BaseController<Program> {
 		for (Program program : page.getContent()) {
 			ProgramVo programVo = new ProgramVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(program, programVo);
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("majorId", program.getMajor().getId());
-			map.put("grade", program.getGrade());
-			Long classroomNum = classroomService.countClassroom(map);
-			programVo.setClassroomNum(classroomNum);
+			programVo = buildProgramVo(programVo);
 			programVos.add(programVo);
 		}
 
 		Page<ProgramVo> programVoPage = new PageImpl<>(programVos, pageable, page.getTotalElements());
 		return programVoPage;
+	}
+
+	private ProgramVo buildProgramVo(ProgramVo programVo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("majorId", programVo.getMajor().getId());
+		map.put("grade", programVo.getGrade());
+		Long classroomNum = classroomService.countClassroom(map);
+		programVo.setClassroomNum(classroomNum);
+
+		String[] publicCourse = new String[]{"pubLiteracy", "pubLiteracyExpand"};
+		String[] professionalCourse = new String[]{"professionalSupport", "professionalCore", "professionalExpand"};
+		String[] practiceCourse = new String[]{"comprehensivePractice"};
+		
+		List<CountProgramCourseCategory> countProgramCourseCategorys = programService.countProgramCourseByProgramIdGroupByCategory(programVo.getId());
+		for (CountProgramCourseCategory countProgramCourseCategory : countProgramCourseCategorys) {
+			if(Arrays.asList(publicCourse).contains(countProgramCourseCategory.getCategory())) {
+				programVo.setPublicCourseNum(programVo.getPublicCourseNum()+Integer.parseInt(countProgramCourseCategory.getCount().toString()));
+			}
+			if(Arrays.asList(professionalCourse).contains(countProgramCourseCategory.getCategory())) {
+				programVo.setProfessionalCourseNum(programVo.getProfessionalCourseNum()+Integer.parseInt(countProgramCourseCategory.getCount().toString()));
+			}
+			if(Arrays.asList(practiceCourse).contains(countProgramCourseCategory.getCategory())) {
+				programVo.setPracticeCourseNum(programVo.getPracticeCourseNum()+Integer.parseInt(countProgramCourseCategory.getCount().toString()));
+			}
+		}
+		
+		return programVo;
 	}
 
 	@RequestMapping(path = "show/{id}/coursetable", method = RequestMethod.GET)
