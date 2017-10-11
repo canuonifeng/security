@@ -83,10 +83,9 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 		if (null == saveBuildingRoom) {
 			throw new NotFoundException("该教室不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(buildingRoom, saveBuildingRoom, "floor", "name", "room_type",
-				"seat_num", "exam_seat_num");
+		BeanUtils.copyPropertiesWithIgnoreProperties(buildingRoom, saveBuildingRoom, "building_id");
 
-		return buildingRoomDao.save(buildingRoom);
+		return buildingRoomDao.save(saveBuildingRoom);
 	}
 
 	@Override
