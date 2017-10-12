@@ -45,7 +45,7 @@ public class StudentServiceTest extends BaseServiceTest {
 	
 	@Test
 	@ExpectedDatabase(value = "studentService.updateStudent.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
-	public void testUpdateFaculty() {
+	public void testUpdateStudent() {
 		Student student = new Student();
 		Classroom classroom = classroomService.getClassroom(1L);
 		student.setClassroom(classroom);
