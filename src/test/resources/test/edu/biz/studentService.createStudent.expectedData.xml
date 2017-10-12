@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<STUDENT id="1" no="null" name="测试1" gender="male" admission_time="2013-9" grade="2013" major_id="1" status="enable" origin="alone" native_place="杭州" idcard="111" birthday="1993-01-01" nation="HAN" idtype="idcard" />
+	<STUDENT id="2" no="jike101" name="测试1" gender="male" admission_time="2013-9" grade="2013" major_id="1" classroom_id="1" status="enable" origin="alone" native_place="杭州" idcard="111" birthday="1993-01-01" nation="HAN" idtype="idcard" />
+	<STUDENT id="3" name="test1" gender="male" admission_time="2013-09" grade="2013" status="enable" origin="unified" native_place="杭州" idcard="111111" birthday="1995-01-01" nation="HAN" idtype="idcard"/>
+</dataset>

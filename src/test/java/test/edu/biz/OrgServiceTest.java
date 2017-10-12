@@ -7,12 +7,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.edu.biz.dict.Gender;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.org.service.OrgService;
-import com.edu.biz.security.entity.User;
-import com.edu.biz.security.entity.UserStatus;
 
 public class OrgServiceTest extends BaseServiceTest{
 	

@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,6 @@ import com.edu.biz.schoolroll.entity.StudentChangeLog;
 import com.edu.biz.schoolroll.service.StudentChangeService;
 import com.edu.biz.schoolroll.specification.StudentChangeSpecification;
 import com.edu.biz.schoolroll.strategy.StudentChangeStrategy;
-import com.edu.biz.security.entity.User;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
 
@@ -46,11 +44,10 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 	public StudentChange updateStudentChange(StudentChange studentChange) {
 		StudentChange saveStudentChange = studentChangeDao.findOne(studentChange.getId());
 		if (null == saveStudentChange) {
-			throw new NotFoundException("该学生不存在");
+			throw new NotFoundException("该异动不存在");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(studentChange, saveStudentChange, "status", "refuseCause", "auditUser", "updatedTime");
-
-		return studentChangeDao.save(studentChange);
+		return studentChangeDao.save(saveStudentChange);
 	}
 
 	@Override
@@ -77,15 +74,14 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 	@Override
 	@Transactional
 	public void audit(StudentChangeLog log) {
-		User currenUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		//保存审核记录表
 		studentChangeLogDao.save(log);
 		//更新异动表
 		StudentChange change = log.getChange();
 		change.setStatus(log.getNewStatus());
 		change.setRefuseCause(log.getCause());
-		change.setAuditUser(currenUser);
-		studentChangeDao.save(change);
+		change.setAuditUser(log.getOpUser());
+		updateStudentChange(change);
 		//更新学籍表学员信息
 		if (log.getNewStatus().equals(ChangeStatus.approved)) {
 			Student student = change.getStudent();

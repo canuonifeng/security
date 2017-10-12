@@ -64,11 +64,9 @@ public class Student extends BaseEntity {
 	@ApiModelProperty(value = " 学生来源")
 	private StudentOrigin origin = StudentOrigin.unified;
 	
-	@NotEmpty(message = "籍贯不能为空")
 	@ApiModelProperty(value = "籍贯")
 	private String nativePlace;
 	
-	@NotEmpty(message = "证件号码不能为空")
 	@ApiModelProperty(value = "身份证号")
 	private String idcard;
 
