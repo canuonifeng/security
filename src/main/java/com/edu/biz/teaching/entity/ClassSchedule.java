@@ -34,7 +34,7 @@ public class ClassSchedule extends BaseEntity {
 	@JoinTable(name = "schedule_calssroom", joinColumns = @JoinColumn(name = "schedule_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "classroom_id", referencedColumnName = "id"))
 	private List<Classroom> classrooms;
 
-	@OneToMany(targetEntity = ScheduleCycle.class, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.REMOVE, targetEntity = ScheduleCycle.class, fetch = FetchType.LAZY)
 	@JoinColumn(name="schedule_id", insertable = false, updatable = false)
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<ScheduleCycle> scheduleCycles;

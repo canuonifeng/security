@@ -1,10 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dataset>	
-	<COURSE id="1" code="666" name="前端大神养成之路" credit="1"  theory_period="1"  practice_period="1"  status="enable" />
+<dataset>
+	<FACULTY id="1" code="FACULTY" name="咸鱼" status="enable"/>	
+	<COURSE id="1" code="666" name="前端大神养成之路" credit="1" faculty_id="1"  week_period="1"  theory_period="1"  practice_period="1"  status="enable" />
+	<COURSE id="2" code="333" name="前端大神养成之路1" credit="1" faculty_id="1"  week_period="1"  theory_period="1"  practice_period="1"  status="enable" />
 	
-	<BUILDING id="1" name="高教一楼" />
+	<BUILDING id="1" name="高教一楼" code="building" />
 	
-	<BUILDING_ROOM id="1" building_id="1" floor="1" name="计算机一楼"  room_type="multimedia"  seat_num="40" />
+	<BUILDING_ROOM id="1" building_id="1"  name="计算机一楼"  room_type="multimedia"  seat_num="40"  exam_seat_num="20"/>
+	<BUILDING_ROOM id="2" building_id="1"  name="计算机二楼"  room_type="multimedia"  seat_num="40"  exam_seat_num="20"/>
 
 	<CLASS_SCHEDULE id="1" term="17-18-1" course_id="1" />
 	<CLASS_SCHEDULE id="2" term="17-18-2" course_id="1" />
@@ -12,10 +15,12 @@
 	<SCHEDULE_CYCLE id="1" schedule_id="1"  building_room_id="1"  week="1" period="1-1" />
 	<SCHEDULE_CYCLE id="2" schedule_id="2"  building_room_id="1"  week="2" period="1-1" />
 	
-	<CLASSROOM id="1" code="CLASS_CODE"  name="咸鱼1号班级"  major_id="1"  />
-	<SCHEDULE_CALSSROOM id="1" schedule_id="1"  classroom_id="1" />
+	<MAJOR id="1"  code="major" name="专业哟" status="enable"  faculty_id="1" />
 	
-
+	<CLASSROOM id="1"  code="CLASS_CODE"  name="咸鱼1号班级"  major_id="1"  is_assign_num="0"/>
+	<SCHEDULE_CALSSROOM  schedule_id="1"  classroom_id="1" />
+	
+	<TEACHER id="1"  name="赵耀"  gender="female"  status="enable"/>
 		
 	<SCHEDULE_TEACHER id="1"  schedule_id="1"  teacher_id="1"  master="1" />
 	
