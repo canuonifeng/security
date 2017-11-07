@@ -33,8 +33,7 @@ public class TeacherServiceImpl extends BaseService implements TeacherService {
 		if (null == saveTeacher) {
 			throw new NotFoundException("该教师不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(teacher, saveTeacher, "no", "name", "gender", "status",
-				"startWorkTime", "title", "degree");
+		BeanUtils.copyPropertiesWithCopyProperties(teacher, saveTeacher, "no", "name", "gender", "status", "startWorkTime", "title", "degree", "faculty");
 
 		return teacherDao.save(saveTeacher);
 	}
