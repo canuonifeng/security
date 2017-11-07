@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.common.dao.service.SettingService;
 import com.edu.biz.common.entity.Setting;
-import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.dao.ClassScheduleDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.dao.ScheduleTeacherDao;
@@ -135,7 +134,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	}
 
 	@Override
-	public List<ScheduleTeacher> findScheduleTeachers(HashMap<String, Object> conditions) {
+	public List<ScheduleTeacher> findScheduleTeachers(Map<String, Object> conditions) {
 		return scheduleTeacherDao.findAll(new ScheduleTeacherSpecification(conditions));
 	}
 
@@ -193,10 +192,10 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	}
 	
 	@Override
-	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId, int master) {
+	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("scheduleId", scheduleId);
-		conditions.put("master", master);
+		conditions.put("master", 1);
 		return scheduleTeacherDao.findOne(new ScheduleTeacherSpecification(conditions));
 	}
 }

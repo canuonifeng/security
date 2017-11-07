@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>	
+	<CLASS_SCHEDULE id="1" term="17-18-1" course_id="1" />
+	<CLASS_SCHEDULE id="2" term="17-18-2" course_id="1" />
+	<CLASS_SCHEDULE id="3" term="17-18-1" course_id="2" />
+</dataset>

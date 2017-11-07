@@ -1,6 +1,5 @@
 package com.edu.biz.teaching.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,11 +34,11 @@ public interface CourseArrangeService {
 
 	public ScheduleTeacher createScheduleTeacher(ScheduleTeacher scheduleTeacher);
 
-	public List<ScheduleTeacher> findScheduleTeachers(HashMap<String, Object> conditions);
+	public List<ScheduleTeacher> findScheduleTeachers(Map<String, Object> conditions);
 
 	public Boolean deleteScheduleTeacherByScheduleId(Long ScheduleId);
 
 	public ScheduleCycle getScheduleCycle(Long buildingRoomId, String period, int week);
 
-	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId, int master);
+	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId);
 }
