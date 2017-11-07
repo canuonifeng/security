@@ -1,1 +1,1 @@
-ALTER TABLE `teacher` ADD `faculty_id` int(10) UNSIGNED NOT NULL COMMENT '所属院系' AFTER `status`;
+ALTER TABLE `teacher` ADD `faculty_id` int(10) UNSIGNED COMMENT '所属院系' AFTER `status`;
