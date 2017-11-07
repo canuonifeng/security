@@ -1,0 +1,1 @@
+ALTER TABLE `teaching_program` ADD `content`  text NOT NULL COMMENT '内容'  AFTER `major_id`;
