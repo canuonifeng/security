@@ -134,7 +134,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	}
 
 	@Override
-	public List<ScheduleTeacher> findScheduleTeachers(HashMap<String, Object> conditions) {
+	public List<ScheduleTeacher> findScheduleTeachers(Map<String, Object> conditions) {
 		return scheduleTeacherDao.findAll(new ScheduleTeacherSpecification(conditions));
 	}
 
@@ -192,10 +192,10 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	}
 	
 	@Override
-	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId, int master) {
+	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("scheduleId", scheduleId);
-		conditions.put("master", master);
+		conditions.put("master", 1);
 		return scheduleTeacherDao.findOne(new ScheduleTeacherSpecification(conditions));
 	}
 }

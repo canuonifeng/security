@@ -235,7 +235,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		if (scheduleCycles.size() != 0) {
 			throw new InvalidParameterException("该位置已有课程被排");
 		}
-		ScheduleTeacher scheduleTeacher = courseArrangeService.getMasterScheduleTeacher(classSchedule.getId(), 1);
+		ScheduleTeacher scheduleTeacher = courseArrangeService.getMasterScheduleTeacher(classSchedule.getId());
 		// 判断老师在某个星期某节课。是否有其他课程需要上
 		if(scheduleTeacher != null) {
 			teacherHasOtherCourseArrange(scheduleTeacher.getTeacher().getId(), period, week);
@@ -248,7 +248,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		scheduleCycle = courseArrangeService.createScheduleCycle(scheduleCycle);
 		ScheduleCycleVo scheduleCycleVo = new ScheduleCycleVo();
 		BeanUtils.copyPropertiesWithIgnoreProperties(scheduleCycle, scheduleCycleVo);
-		HashMap<String, Object> condition = new HashMap<String, Object>();
+		Map<String, Object> condition = new HashMap<String, Object>();
 		condition.put("scheduleId", scheduleCycle.getClassSchedule().getId());
 		List<ScheduleTeacher> scheduleTeachers = courseArrangeService.findScheduleTeachers(condition);
 		scheduleCycleVo.setScheduleTeacher(scheduleTeachers);
