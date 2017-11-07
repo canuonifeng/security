@@ -9,11 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.dict.Gender;
+import com.edu.biz.org.entity.Faculty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -52,6 +54,19 @@ public class Teacher extends BaseEntity {
 	@JsonView({ TeachingresJsonViews.CascadeCourse.class })
 	private List<Course> courses;
 	
+	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "faculty_id")
+	@ApiModelProperty(value = "所属院系")
+	private Faculty faculty;
+	
+	public Faculty getFaculty() {
+		return faculty;
+	}
+
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
+	}
+
 	public List<Course> getCourses() {
 		return courses;
 	}
