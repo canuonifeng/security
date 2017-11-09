@@ -73,6 +73,12 @@ public class TermController extends BaseController<Term> {
 		return termService.getTerm(term.getId());
 	}
 	
+	@RequestMapping(path = "/current", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('term', 'get')")
+	public Term getCurrent() {
+		return termService.getTermByCurrent(1);
+	}
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('term', 'get')")
 	public Page<Term> pager(@RequestParam Map<String, Object> conditions,
