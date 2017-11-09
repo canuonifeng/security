@@ -28,7 +28,9 @@ import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.MajorService;
 import com.edu.biz.schoolroll.service.StudentService;
+import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.core.util.BeanUtils;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 
@@ -117,6 +119,7 @@ public class ClassroomController extends BaseController<Classroom> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Page<ClassroomVo> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<Classroom> page = classroomService.searchClassroom(conditions, pageable);
@@ -137,6 +140,7 @@ public class ClassroomController extends BaseController<Classroom> {
 
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<Classroom> findClassrooms(@RequestParam Map<String, Object> conditions) {
 		List<Classroom> list = classroomService.findClassrooms(conditions);
 		return list;

@@ -86,6 +86,12 @@ public class TermServiceImpl extends BaseService implements TermService {
 	}
 	
 	@Override
+	public Term getTermByCurrent(int current)
+	{
+		return termDao.getByCurrent(current);
+	}
+	
+	@Override
 	public Term getTermByCode(String code) {
 		return termDao.getByCode(code);
 	}

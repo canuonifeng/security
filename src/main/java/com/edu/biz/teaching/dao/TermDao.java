@@ -10,4 +10,6 @@ public interface TermDao extends BaseDao<Term> {
 	public List<Term> findByCurrent(int current);
 	
 	public Term getByCode(String code);
+	
+	public Term getByCurrent(int current);
 }

@@ -1,6 +1,7 @@
 package com.edu.biz.teachingres.service.impl;
 
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,12 @@ public class CourseServiceImpl extends BaseService implements CourseService {
 	@Override
 	public Page<Course> searchCourses(Map<String, Object> conditions, Pageable pageable) {
 		return courseDao.findAll(new CourseSpecification(conditions), pageable);
+	}
+	
+	@Override
+	public List<Course> findCourses(Map<String, Object> conditions)
+	{
+		return courseDao.findAll(new CourseSpecification(conditions));
 	}
 
 	@Override

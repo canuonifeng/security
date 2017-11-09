@@ -61,6 +61,14 @@ public class CourseController extends BaseController<Course> {
 		 return courseService.checkCode(code, courseId);
 	}
 	
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public List<Course> findCourses(@RequestParam Map<String, Object> conditions) {
+		List<Course> list = courseService.findCourses(conditions);
+		
+		return list;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('course', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
