@@ -67,6 +67,13 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return classScheduleDao.findOne(new ClassScheduleSpecification(conditions));
 	}
 
+	public ClassSchedule getClassSchedule(String term, Long couresId) {
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("term", term);
+		conditions.put("courseId", couresId);
+		return classScheduleDao.findOne(new ClassScheduleSpecification(conditions));
+	}
+	
 	public List<ClassSchedule> findClassSchedules(String term, Long classroomId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("term", term);

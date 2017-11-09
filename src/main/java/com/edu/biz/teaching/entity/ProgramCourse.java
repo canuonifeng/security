@@ -21,6 +21,9 @@ public class ProgramCourse extends BaseEntity {
 	private String termCode;
 	private Integer termNum;
 	private Integer weekPeriod;
+	private Long masterTeacherId;
+	private String mergeClassroomIds;
+	private String classWeekStage;
 	
 	@ManyToOne
 	@JoinColumn(name = "course_id")
@@ -116,5 +119,29 @@ public class ProgramCourse extends BaseEntity {
 
 	public void setWeekPeriod(Integer weekPeriod) {
 		this.weekPeriod = weekPeriod;
+	}
+
+	public String getMergeClassroomIds() {
+		return mergeClassroomIds;
+	}
+
+	public void setMergeClassroomIds(String mergeClassroomIds) {
+		this.mergeClassroomIds = mergeClassroomIds;
+	}
+
+	public Long getMasterTeacherId() {
+		return masterTeacherId;
+	}
+
+	public void setMasterTeacherId(Long masterTeacherId) {
+		this.masterTeacherId = masterTeacherId;
+	}
+
+	public String getClassWeekStage() {
+		return classWeekStage;
+	}
+
+	public void setClassWeekStage(String classWeekStage) {
+		this.classWeekStage = classWeekStage;
 	}
 }

@@ -27,4 +27,6 @@ public interface TermService {
 	public List<Term> findTerms(Map<String, Object> conditions);
 	
 	public Term getTermByCode(String code);
+	
+	public Term getCurrentTerm();
 }
