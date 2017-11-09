@@ -49,7 +49,7 @@ public class ClassroomProgramServiceImpl extends BaseService implements Classroo
 	}
 
 	private Boolean setCourseSchedule(Long courseId, Map<String, Object> map) {
-		Term term = termService.getCurrentTerm();
+		Term term = termService.getTermByCurrent(1);
 		ClassSchedule classSchedule = new ClassSchedule();
 		classSchedule = courseArrangeService.getClassSchedule(term.getCode(), courseId);
 		if (classSchedule == null) {

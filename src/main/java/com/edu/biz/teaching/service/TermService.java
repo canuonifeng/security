@@ -28,5 +28,5 @@ public interface TermService {
 	
 	public Term getTermByCode(String code);
 	
-	public Term getCurrentTerm();
+	public Term getTermByCurrent(int current);
 }

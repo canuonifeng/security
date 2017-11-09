@@ -75,8 +75,8 @@ public class TermController extends BaseController<Term> {
 	
 	@RequestMapping(path = "/current", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('term', 'get')")
-	public Term getCurrentTerm() {
-		return termService.getCurrentTerm();
+	public Term getCurrent() {
+		return termService.getTermByCurrent(1);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
