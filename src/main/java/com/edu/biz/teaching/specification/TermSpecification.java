@@ -27,6 +27,9 @@ public class TermSpecification implements Specification<Term> {
 			if (conditions.containsKey("title")) {
 				list.add(cb.like(root.get("title"), "%"+this.conditions.get("title")+"%"));
 			}
+			if (conditions.containsKey("current")) {
+				list.add(cb.equal(root.get("current"), this.conditions.get("current")));
+			}
 			if (conditions.containsKey("inCodes")) {
 				List<String> codes = (List<String>) this.conditions.get("inCodes");
 //				root.get("id").in(ids.toArray());

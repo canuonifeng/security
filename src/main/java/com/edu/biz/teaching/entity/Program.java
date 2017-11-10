@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Table(name="teaching_program")
 public class Program extends BaseEntity {
 	private String grade;
+	private String content;
 	
 	@ManyToOne
 	@JoinColumn(name = "major_id")
@@ -68,5 +69,13 @@ public class Program extends BaseEntity {
 
 	public void setProgramCourses(List<ProgramCourse> programCourses) {
 		this.programCourses = programCourses;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 }
