@@ -1,12 +1,16 @@
 package com.edu.biz.teaching.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.PrimaryKeyJoinColumns;
 import javax.persistence.Table;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.teachingres.entity.Course;
+import com.edu.biz.teachingres.entity.Teacher;
 
 
 @Entity
@@ -21,7 +25,6 @@ public class ProgramCourse extends BaseEntity {
 	private String termCode;
 	private Integer termNum;
 	private Integer weekPeriod;
-	private Long masterTeacherId;
 	private String mergeClassroomIds;
 	private String classWeekStage;
 	
@@ -32,6 +35,10 @@ public class ProgramCourse extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "teaching_program_id")
 	private Program program;
+	
+	@ManyToOne(targetEntity = Teacher.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "master_teacher_id", referencedColumnName = "id")
+	private Teacher teacher;
 	
 	public String getCategory() {
 		return category;
@@ -129,19 +136,19 @@ public class ProgramCourse extends BaseEntity {
 		this.mergeClassroomIds = mergeClassroomIds;
 	}
 
-	public Long getMasterTeacherId() {
-		return masterTeacherId;
-	}
-
-	public void setMasterTeacherId(Long masterTeacherId) {
-		this.masterTeacherId = masterTeacherId;
-	}
-
 	public String getClassWeekStage() {
 		return classWeekStage;
 	}
 
 	public void setClassWeekStage(String classWeekStage) {
 		this.classWeekStage = classWeekStage;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
 	}
 }
