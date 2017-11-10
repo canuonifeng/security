@@ -45,6 +45,9 @@ public class ClassroomSpecification implements Specification<Classroom> {
 			if (conditions.containsKey("isAssignNum")) {
 				list.add(cb.equal(root.get("isAssignNum"), this.conditions.get("isAssignNum")));
 			}
+			if (conditions.containsKey("notClassroomId")) {
+				list.add(cb.notEqual(root.get("id"), this.conditions.get("notClassroomId")));
+			}
 			if (conditions.containsKey("notProgramId")) {
 				list.add(cb.isNull(root.get("program").get("id"))); 
 			}

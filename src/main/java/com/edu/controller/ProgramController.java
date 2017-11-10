@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.common.util.TermCodeUtil;
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.CountProgramCourseCategory;
 import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.Term;
+import com.edu.biz.teaching.entity.pojo.ProgramCourseVo;
 import com.edu.biz.teaching.entity.pojo.ProgramVo;
 import com.edu.biz.teaching.service.ProgramService;
 import com.edu.biz.teaching.service.TermService;
@@ -179,11 +181,18 @@ public class ProgramController extends BaseController<Program> {
 	@RequestMapping(path = "/allcourses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public List<ProgramCourse> courses(@RequestParam Map<String, Object> conditions) {
+	public List<ProgramCourseVo> courses(@RequestParam Map<String, Object> conditions) {
 		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
-		return programCourses;
+		List<ProgramCourseVo> programCourseVos = new ArrayList<ProgramCourseVo>();
+		for (ProgramCourse programCourse : programCourses) {
+			ProgramCourseVo programCourseVo = new ProgramCourseVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(programCourse, programCourseVo);
+			programCourseVo = buildProgramCourseVo(programCourseVo);
+			programCourseVos.add(programCourseVo);
+		}
+		return programCourseVos;
 	}
-	
+
 	@RequestMapping(path = "/{programId}/addcourse", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('course', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
@@ -204,5 +213,20 @@ public class ProgramController extends BaseController<Program> {
 		}
 
 		return true;
+	}
+	
+	private ProgramCourseVo buildProgramCourseVo(ProgramCourseVo programCourseVo) {
+		if(programCourseVo.getMergeClassroomIds() != null) {
+			String[] classroomIds = programCourseVo.getMergeClassroomIds().split(",");
+			List<Long> ids = new ArrayList<>();
+			for (int i = 0; i < classroomIds.length; i++) {
+				ids.add(Long.parseLong(classroomIds[i]));
+			}
+			Map<String, Object> conditions = new HashMap<>();
+			conditions.put("classroomIds", ids);
+			List<Classroom> classrooms = classroomService.findClassrooms(conditions);
+			programCourseVo.setMergeClassroom(classrooms);
+		}
+		return programCourseVo;
 	}
 }
