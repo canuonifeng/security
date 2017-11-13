@@ -5,11 +5,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
@@ -31,5 +33,23 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 		List<GradedTeaching> list = gradedTeachingService.findGradedTeachings(conditions);
 		
 		return list;
+	}
+
+	@RequestMapping(path = "/course/{courseId}/classrooms", method = RequestMethod.GET)
+	public List<Classroom>  findGradedTeachingClassrooms(@PathVariable Long courseId) {
+		
+		return gradedTeachingService.findGradedTeachingClassrooms(courseId);
+	}
+	
+	@RequestMapping(path = "/check/teachingtime", method = RequestMethod.GET)
+	public Boolean  checkTeachingTime(@RequestParam Map<String, Object> conditions) {
+		
+		return gradedTeachingService.checkTeachingTime(conditions);
+	}
+	
+	@RequestMapping(path = "/check/teachingclassroom", method = RequestMethod.GET)
+	public Boolean  checkTeachingClassroom(@RequestParam Map<String, Object> conditions) {
+		
+		return gradedTeachingService.checkTeachingClassroom(conditions);
 	}
 }
