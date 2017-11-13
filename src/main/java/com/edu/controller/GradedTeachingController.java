@@ -27,7 +27,7 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('GradedTeaching', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public List<GradedTeaching> findFacultys(@RequestParam Map<String, Object> conditions) {
+	public List<GradedTeaching> findGradedTeaching(@RequestParam Map<String, Object> conditions) {
 		List<GradedTeaching> list = gradedTeachingService.findGradedTeachings(conditions);
 		
 		return list;
