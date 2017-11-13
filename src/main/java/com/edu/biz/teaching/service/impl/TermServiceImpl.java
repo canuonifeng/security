@@ -1,6 +1,5 @@
 package com.edu.biz.teaching.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -105,12 +104,5 @@ public class TermServiceImpl extends BaseService implements TermService {
 	@Override
 	public List<Term> findTerms(Map<String, Object> conditions) {
 		return termDao.findAll(new TermSpecification(conditions), new Sort(Direction.ASC,"code"));
-	}
-	
-	@Override
-	public Term getCurrentTerm() {
-		Map<String, Object> conditions = new HashMap<String, Object>();
-		conditions.put("current", 1);
-		return termDao.findOne(new TermSpecification(conditions));
 	}
 }

@@ -98,7 +98,11 @@ public class ClassroomProgramServiceImpl extends BaseService implements Classroo
 
 	private ProgramCourse dealProgramCourse(ProgramCourse programCourse, Map<String, Object> map) {
 		if (map.containsKey("teacherId") && map.get("teacherId") != null) {
-			programCourse.setMasterTeacherId(Long.parseLong(map.get("teacherId").toString()));
+			Teacher teacher = teacherService.getTeacher(Long.parseLong(map.get("teacherId").toString()));
+			if	(teacher == null) {
+				throw new NotFoundException("该老师不存在");
+			}
+			programCourse.setTeacher(teacher);
 		}
 		if (map.containsKey("mergeClassroomIds") && map.get("mergeClassroomIds") != null
 				&& !map.get("mergeClassroomIds").equals("")) {
