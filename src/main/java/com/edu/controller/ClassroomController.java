@@ -141,9 +141,19 @@ public class ClassroomController extends BaseController<Classroom> {
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public List<Classroom> findClassrooms(@RequestParam Map<String, Object> conditions) {
+	public List<ClassroomVo> findClassrooms(@RequestParam Map<String, Object> conditions) {
 		List<Classroom> list = classroomService.findClassrooms(conditions);
-		return list;
+		List<ClassroomVo> classroomVos = new ArrayList<ClassroomVo>();
+		for (Classroom classroom : list) {
+			ClassroomVo classroomVo = new ClassroomVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(classroom, classroomVo);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("classroomId", classroom.getId());
+			Long memberNum = studentService.countStudent(map);
+			classroomVo.setStudentNum(memberNum);
+			classroomVos.add(classroomVo);
+		}
+		return classroomVos;
 	}
 	
 	@RequestMapping(path = "/joinprogram/{programId}", method = RequestMethod.PUT)

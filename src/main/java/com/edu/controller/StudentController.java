@@ -1,6 +1,8 @@
 package com.edu.controller;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.entity.pojo.StudentVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.StudentService;
+import com.edu.biz.teaching.entity.GradedSubject;
+import com.edu.biz.teaching.entity.GradedSubjectResult;
+import com.edu.biz.teaching.service.GradedSubjectService;
 import com.edu.biz.validgroup.Update;
+import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -35,6 +42,8 @@ public class StudentController extends BaseController<Student> {
 	private StudentService studentService;
 	@Autowired
 	private ClassroomService classroomService;
+	@Autowired
+	private GradedSubjectService gradedSubjectService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('student', 'add')")
@@ -67,15 +76,15 @@ public class StudentController extends BaseController<Student> {
 	@PreAuthorize("hasPermission('student', 'put')")
 	public Boolean joinClassroom(@PathVariable Long classroomId, @RequestBody Map<String, String> studentIds) {
 		Classroom classroom = classroomService.getClassroom(classroomId);
-		if(classroom.getIsAssignNum() == 1) {
+		if (classroom.getIsAssignNum() == 1) {
 			Student lastStudent = studentService.findByClassroomIdOrderByNoDesc(classroom.getId());
-			String lastNo = lastStudent.getNo().substring(lastStudent.getNo().length()-2);
+			String lastNo = lastStudent.getNo().substring(lastStudent.getNo().length() - 2);
 			int no = Integer.parseInt(lastNo);
 			DecimalFormat dfInt = new DecimalFormat("00");
 			for (String key : studentIds.keySet()) {
 				Long id = Long.parseLong(studentIds.get(key));
 				Student student = studentService.getStudent(id);
-				String studentNo = classroom.getCode()+dfInt.format(no + 1);
+				String studentNo = classroom.getCode() + dfInt.format(no + 1);
 				student.setNo(studentNo);
 				student.setClassroom(classroom);
 				studentService.AssignStudentNum(student);
@@ -99,7 +108,7 @@ public class StudentController extends BaseController<Student> {
 		int num = 0;
 		DecimalFormat dfInt = new DecimalFormat("00");
 		for (Integer i = 0; i < studentIds.size(); i++) {
-			String studentNo = classroom.getCode()+dfInt.format(num + 1);
+			String studentNo = classroom.getCode() + dfInt.format(num + 1);
 			Student student = studentService.getStudent(Long.parseLong(studentIds.get(i)));
 			student.setNo(studentNo);
 			studentService.updateStudent(student);
@@ -122,20 +131,36 @@ public class StudentController extends BaseController<Student> {
 		}
 		return true;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
 	public Page<Student> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<Student> page = studentService.searchStudents(conditions, pageable);
-		
+
 		return page;
 	}
 
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
-	public List<Student> findStudents(@RequestParam Map<String, Object> conditions) {
+	public List<StudentVo> findStudents(@RequestParam Map<String, Object> conditions) {
 		List<Student> list = studentService.findStudents(conditions);
-		return list;
+		List<StudentVo> studentVos = new ArrayList<StudentVo>();
+		for (Student student : list) {
+			StudentVo studentVo = new StudentVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(student, studentVo);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("facultyId", student.getMajor().getFaculty().getId());
+			map.put("grade", student.getGrade());
+			List<GradedSubject> gradedSubjects = gradedSubjectService.findGradedSubjects(map);
+			map.clear();
+			map.put("grade", student.getGrade());
+			map.put("studentId", student.getId());
+			List<GradedSubjectResult> gradedSubjectResults = gradedSubjectService.findGradedSubjectResults(map);
+			studentVo.setGradedSubjects(gradedSubjects);
+			studentVo.setGradedSubjectResults(gradedSubjectResults);
+			studentVos.add(studentVo);
+		}
+		return studentVos;
 	}
 }
