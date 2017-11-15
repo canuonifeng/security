@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
@@ -33,6 +34,12 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@PreAuthorize("hasPermission('gradedTeaching', 'add')")
 	public GradedTeaching add(@RequestBody GradedTeaching graded) {
 		return gradedTeachingService.createGraded(graded);
+	}
+	
+	@RequestMapping(path= "/schooltime",method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('gradedSchooltime', 'add')")
+	public void addTime(@RequestBody List<GradedSchooltime> list) {
+		gradedTeachingService.createSchooltimes(list);
 	}
 	
 	@RequestMapping(path = "/all",method = RequestMethod.GET)

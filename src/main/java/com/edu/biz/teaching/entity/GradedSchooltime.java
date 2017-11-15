@@ -26,4 +26,36 @@ public class GradedSchooltime extends BaseEntity {
 	
 	@ApiModelProperty(value = "节")
 	private int period;
+
+	public GradedTeaching getGradedTeaching() {
+		return gradedTeaching;
+	}
+
+	public void setGradedTeaching(GradedTeaching gradedTeaching) {
+		this.gradedTeaching = gradedTeaching;
+	}
+
+	public int getWeek() {
+		return week;
+	}
+
+	public void setWeek(int week) {
+		this.week = week;
+	}
+
+	public int getTimeSlot() {
+		return timeSlot;
+	}
+
+	public void setTimeSlot(int timeSlot) {
+		this.timeSlot = timeSlot;
+	}
+
+	public int getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(int period) {
+		this.period = period;
+	}
 }

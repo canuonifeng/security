@@ -5,16 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
+import com.edu.biz.teaching.dao.GradedSchooltimeDao;
 import com.edu.biz.teaching.dao.GradedTeachingDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
+import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.Term;
@@ -31,6 +32,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	@Autowired
 	private GradedTeachingDao gradedTeachingDao;
 	@Autowired
+	private GradedSchooltimeDao gradedSchooletimeDao;
+	@Autowired
 	private TermService termService;
 	@Autowired
 	private ClassroomService classroomService;
@@ -40,6 +43,14 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	@Override
 	public GradedTeaching createGraded(GradedTeaching graded) {
 		return gradedTeachingDao.save(graded);
+	}
+	
+	@Override
+	@Transactional
+	public void createSchooltimes(List<GradedSchooltime> list) {
+		for (GradedSchooltime time:list) {
+			gradedSchooletimeDao.save(time);
+		}
 	}
 	
 	@Override
