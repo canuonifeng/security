@@ -6,7 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.edu.biz.base.BaseEntity;
-import com.edu.biz.schoolroll.entity.Major;
+import com.edu.biz.org.entity.Faculty;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,10 +18,10 @@ public class GradedSubject extends BaseEntity {
 	@ApiModelProperty(value = "所属年级")
 	private String grade;
 	
-	@ManyToOne(targetEntity = Major.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "major_id")
-	@ApiModelProperty(value = "专业")
-	private Major major;
+	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "faculty_id")
+	@ApiModelProperty(value = "院系")
+	private Faculty faculty;
 
 	public String getName() {
 		return name;
@@ -39,11 +39,11 @@ public class GradedSubject extends BaseEntity {
 		this.grade = grade;
 	}
 
-	public Major getMajor() {
-		return major;
+	public Faculty getFaculty() {
+		return faculty;
 	}
 
-	public void setMajor(Major major) {
-		this.major = major;
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
 	}
 }
