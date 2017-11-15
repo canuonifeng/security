@@ -67,15 +67,15 @@ public class StudentController extends BaseController<Student> {
 	@PreAuthorize("hasPermission('student', 'put')")
 	public Boolean joinClassroom(@PathVariable Long classroomId, @RequestBody Map<String, String> studentIds) {
 		Classroom classroom = classroomService.getClassroom(classroomId);
-		if(classroom.getIsAssignNum() == 1) {
+		if (classroom.getIsAssignNum() == 1) {
 			Student lastStudent = studentService.findByClassroomIdOrderByNoDesc(classroom.getId());
-			String lastNo = lastStudent.getNo().substring(lastStudent.getNo().length()-2);
+			String lastNo = lastStudent.getNo().substring(lastStudent.getNo().length() - 2);
 			int no = Integer.parseInt(lastNo);
 			DecimalFormat dfInt = new DecimalFormat("00");
 			for (String key : studentIds.keySet()) {
 				Long id = Long.parseLong(studentIds.get(key));
 				Student student = studentService.getStudent(id);
-				String studentNo = classroom.getCode()+dfInt.format(no + 1);
+				String studentNo = classroom.getCode() + dfInt.format(no + 1);
 				student.setNo(studentNo);
 				student.setClassroom(classroom);
 				studentService.AssignStudentNum(student);
@@ -99,7 +99,7 @@ public class StudentController extends BaseController<Student> {
 		int num = 0;
 		DecimalFormat dfInt = new DecimalFormat("00");
 		for (Integer i = 0; i < studentIds.size(); i++) {
-			String studentNo = classroom.getCode()+dfInt.format(num + 1);
+			String studentNo = classroom.getCode() + dfInt.format(num + 1);
 			Student student = studentService.getStudent(Long.parseLong(studentIds.get(i)));
 			student.setNo(studentNo);
 			studentService.updateStudent(student);
@@ -122,13 +122,13 @@ public class StudentController extends BaseController<Student> {
 		}
 		return true;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
 	public Page<Student> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<Student> page = studentService.searchStudents(conditions, pageable);
-		
+
 		return page;
 	}
 
