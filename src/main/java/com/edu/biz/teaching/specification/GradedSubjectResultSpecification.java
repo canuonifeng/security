@@ -6,29 +6,32 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.teaching.entity.GradedSubject;
+import com.edu.biz.teaching.entity.GradedSubjectResult;
 
-public class GradedSubjectSpecification implements Specification<GradedSubject> {
+public class GradedSubjectResultSpecification implements Specification<GradedSubjectResult> {
 	private Map<String, Object> conditions;
 	
-	public GradedSubjectSpecification(Map<String, Object> conditions) {
+	public GradedSubjectResultSpecification(Map<String, Object> conditions) {
 		this.conditions = conditions;
 	}
 	
 	@Override
-	public Predicate toPredicate(Root<GradedSubject> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<GradedSubjectResult> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
 		if (null != conditions) {
 			if (conditions.containsKey("grade")) {
-				list.add(cb.equal(root.get("grade"), this.conditions.get("grade")));
+				Join<GradedSubjectResult, GradedSubject> join = root.join("gradedSubject");
+				list.add(cb.equal(join.get("grade"), conditions.get("grade")));
 			}
-			if (conditions.containsKey("facultyId")) {
-				list.add(cb.equal(root.get("faculty").get("id"), this.conditions.get("facultyId")));
+			if (conditions.containsKey("studentId")) {
+				list.add(cb.equal(root.get("student").get("id"), this.conditions.get("student")));
 			}
 		}
 

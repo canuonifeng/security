@@ -1,0 +1,1 @@
+ALTER TABLE `graded_subject` CHANGE `major_id` `faculty_id` int(10) UNSIGNED COMMENT '所属院系id';

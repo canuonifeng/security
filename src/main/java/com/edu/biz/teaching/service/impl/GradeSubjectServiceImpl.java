@@ -12,6 +12,7 @@ import com.edu.biz.teaching.dao.GradedSubjectResultDao;
 import com.edu.biz.teaching.entity.GradedSubject;
 import com.edu.biz.teaching.entity.GradedSubjectResult;
 import com.edu.biz.teaching.service.GradedSubjectService;
+import com.edu.biz.teaching.specification.GradedSubjectResultSpecification;
 import com.edu.biz.teaching.specification.GradedSubjectSpecification;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
@@ -44,6 +45,11 @@ public class GradeSubjectServiceImpl extends BaseService implements GradedSubjec
 		return gradedSubjectResultDao.save(gradedSubjectResult);
 	}
 
+	@Override
+	public List<GradedSubjectResult> findGradedSubjectResults(Map<String, Object> map) {
+		return gradedSubjectResultDao.findAll(new GradedSubjectResultSpecification(map));
+	}
+	
 	@Override
 	public GradedSubjectResult updateResult(GradedSubjectResult gradedSubjectResult) {
 		GradedSubjectResult savedResult = gradedSubjectResultDao.findOne(gradedSubjectResult.getId());
