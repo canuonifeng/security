@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +17,7 @@ import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
+import com.edu.biz.validgroup.Update;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
@@ -26,13 +29,34 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@Autowired
 	private GradedTeachingService gradedTeachingService;
 	
+	@RequestMapping(method = RequestMethod.POST)
+	@PreAuthorize("hasPermission('gradedTeaching', 'add')")
+	public GradedTeaching add(@RequestBody GradedTeaching graded) {
+		return gradedTeachingService.createGraded(graded);
+	}
+	
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('GradedTeaching', 'get')")
+	@PreAuthorize("hasPermission('gradedTeaching', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<GradedTeaching> findGradedTeaching(@RequestParam Map<String, Object> conditions) {
 		List<GradedTeaching> list = gradedTeachingService.findGradedTeachings(conditions);
 		
 		return list;
+	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('gradedTeaching', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public GradedTeaching get(@PathVariable Long id) {
+		return gradedTeachingService.getGradedTeaching(id);
+	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedTeaching', 'edit')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public GradedTeaching edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody GradedTeaching graded) {
+		graded.setId(id);
+		return gradedTeachingService.updateGradedTeaching(graded);
 	}
 
 	@RequestMapping(path = "/course/{courseId}/classrooms", method = RequestMethod.GET)

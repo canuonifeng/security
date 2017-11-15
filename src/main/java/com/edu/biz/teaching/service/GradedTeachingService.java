@@ -8,7 +8,13 @@ import com.edu.biz.teaching.entity.GradedTeaching;
 
 public interface GradedTeachingService {
 	
+	public GradedTeaching createGraded(GradedTeaching graded);
+	
 	public List<GradedTeaching> findGradedTeachings(Map<String, Object> conditions);
+	
+	public GradedTeaching getGradedTeaching(Long id);
+	
+	public GradedTeaching updateGradedTeaching(GradedTeaching graded);
 
 	public List<Classroom> findGradedTeachingClassrooms(Long courseId);
 

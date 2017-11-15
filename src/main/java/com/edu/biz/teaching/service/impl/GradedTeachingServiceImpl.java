@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.GradedSpecification;
 import com.edu.core.exception.InvalidParameterException;
+import com.edu.core.exception.NotFoundException;
+import com.edu.core.util.BeanUtils;
 
 @Service
 public class GradedTeachingServiceImpl extends BaseService implements GradedTeachingService {
@@ -34,8 +38,30 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	private CourseArrangeService courseArrangeService;
 	
 	@Override
+	@Transactional
+	public GradedTeaching createGraded(GradedTeaching graded) {
+		return gradedTeachingDao.save(graded);
+	}
+	
+	@Override
 	public List<GradedTeaching> findGradedTeachings(Map<String, Object> conditions) {
 		return gradedTeachingDao.findAll(new GradedSpecification(conditions));
+	}
+	
+	@Override
+	public GradedTeaching getGradedTeaching(Long id)
+	{
+		return gradedTeachingDao.findOne(id);
+	}
+	
+	@Override
+	public GradedTeaching updateGradedTeaching(GradedTeaching graded) {
+		GradedTeaching saveGraded = gradedTeachingDao.findOne(graded.getId());
+		if (null == saveGraded) {
+			throw new NotFoundException("该教师不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(graded, saveGraded, "course", "schooltime", "classrooms");
+		return gradedTeachingDao.save(saveGraded);
 	}
 	
 	@Override
