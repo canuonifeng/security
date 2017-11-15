@@ -38,7 +38,6 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	private CourseArrangeService courseArrangeService;
 	
 	@Override
-	@Transactional
 	public GradedTeaching createGraded(GradedTeaching graded) {
 		return gradedTeachingDao.save(graded);
 	}
