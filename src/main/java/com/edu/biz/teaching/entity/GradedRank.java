@@ -26,4 +26,36 @@ public class GradedRank extends BaseEntity {
 	
 	@ApiModelProperty(value = "最高分数")
 	private String maxScore;
+
+	public GradedTeaching getGradedTeaching() {
+		return gradedTeaching;
+	}
+
+	public void setGradedTeaching(GradedTeaching gradedTeaching) {
+		this.gradedTeaching = gradedTeaching;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getMinScore() {
+		return minScore;
+	}
+
+	public void setMinScore(String minScore) {
+		this.minScore = minScore;
+	}
+
+	public String getMaxScore() {
+		return maxScore;
+	}
+
+	public void setMaxScore(String maxScore) {
+		this.maxScore = maxScore;
+	}
 }

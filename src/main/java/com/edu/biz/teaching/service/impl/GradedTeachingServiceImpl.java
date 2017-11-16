@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
+import com.edu.biz.teaching.dao.GradedRankDao;
 import com.edu.biz.teaching.dao.GradedSchooltimeDao;
 import com.edu.biz.teaching.dao.GradedTeachingDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
+import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.ScheduleCycle;
@@ -34,6 +36,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	@Autowired
 	private GradedSchooltimeDao gradedSchooletimeDao;
 	@Autowired
+	private GradedRankDao gradedRankDao;
+	@Autowired
 	private TermService termService;
 	@Autowired
 	private ClassroomService classroomService;
@@ -50,6 +54,14 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	public void createSchooltimes(List<GradedSchooltime> list) {
 		for (GradedSchooltime time:list) {
 			gradedSchooletimeDao.save(time);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public void createRank(List<GradedRank> list) {
+		for (GradedRank rank:list) {
+			gradedRankDao.save(rank);
 		}
 	}
 	
