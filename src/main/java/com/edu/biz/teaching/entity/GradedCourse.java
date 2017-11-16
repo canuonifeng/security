@@ -28,4 +28,39 @@ public class GradedCourse extends BaseEntity {
 	@JoinColumn(name = "teacher_id")
 	@ApiModelProperty(value = "教师")
 	private Teacher teacher;
+	
+	@ApiModelProperty(value = "教师")
+	private int studentNumber;
+
+	public GradedTeaching getGradedTeaching() {
+		return gradedTeaching;
+	}
+
+	public void setGradedTeaching(GradedTeaching gradedTeaching) {
+		this.gradedTeaching = gradedTeaching;
+	}
+
+	public GradedRank getGradedRank() {
+		return gradedRank;
+	}
+
+	public void setGradedRank(GradedRank gradedRank) {
+		this.gradedRank = gradedRank;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
+	}
+
+	public int getStudentNumber() {
+		return studentNumber;
+	}
+
+	public void setStudentNumber(int studentNumber) {
+		this.studentNumber = studentNumber;
+	}
 }

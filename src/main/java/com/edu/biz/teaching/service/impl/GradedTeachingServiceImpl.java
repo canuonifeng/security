@@ -12,10 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
+import com.edu.biz.teaching.dao.GradedCourseDao;
+import com.edu.biz.teaching.dao.GradedCourseSchooltimeDao;
 import com.edu.biz.teaching.dao.GradedRankDao;
 import com.edu.biz.teaching.dao.GradedSchooltimeDao;
 import com.edu.biz.teaching.dao.GradedTeachingDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
+import com.edu.biz.teaching.entity.GradedCourse;
+import com.edu.biz.teaching.entity.GradedCourseAndCourseTime;
+import com.edu.biz.teaching.entity.GradedCourseSchooltime;
 import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
@@ -24,6 +29,8 @@ import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teaching.service.TermService;
+import com.edu.biz.teaching.specification.GradedRankSpecification;
+import com.edu.biz.teaching.specification.GradedSchooltimeSpecification;
 import com.edu.biz.teaching.specification.GradedSpecification;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
@@ -37,6 +44,10 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	private GradedSchooltimeDao gradedSchooletimeDao;
 	@Autowired
 	private GradedRankDao gradedRankDao;
+	@Autowired
+	private GradedCourseDao gradedCourseDao;
+	@Autowired
+	private GradedCourseSchooltimeDao gradedCourseSchooltimeDao;
 	@Autowired
 	private TermService termService;
 	@Autowired
@@ -66,6 +77,18 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 	
 	@Override
+	@Transactional
+	public void createCourse(List<GradedCourseAndCourseTime> list) {
+		for(GradedCourseAndCourseTime gradedCourseAndCourseTime: list) {
+			GradedCourse gradedCourse = gradedCourseDao.save(gradedCourseAndCourseTime.getGradedCourse());
+			for (GradedCourseSchooltime courseSchooltime: gradedCourseAndCourseTime.getGradedCourseTime()) {
+				courseSchooltime.setGradedCourse(gradedCourse);
+				gradedCourseSchooltimeDao.save(courseSchooltime);
+			}
+		}
+	}
+	
+	@Override
 	public List<GradedTeaching> findGradedTeachings(Map<String, Object> conditions) {
 		return gradedTeachingDao.findAll(new GradedSpecification(conditions));
 	}
@@ -74,6 +97,16 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	public GradedTeaching getGradedTeaching(Long id)
 	{
 		return gradedTeachingDao.findOne(id);
+	}
+	
+	@Override
+	public List<GradedRank> findRanks(Map<String, Object> conditions){
+		return gradedRankDao.findAll(new GradedRankSpecification(conditions));
+	}
+	
+	@Override
+	public List<GradedSchooltime> findTimes(Map<String, Object> conditions) {
+		return gradedSchooletimeDao.findAll(new GradedSchooltimeSpecification(conditions));
 	}
 	
 	@Override

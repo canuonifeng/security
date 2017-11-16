@@ -29,4 +29,28 @@ public class GradedCourseSchooltime extends BaseEntity {
 	@JoinColumn(name = "building_room_id")
 	@ApiModelProperty(value = "教师")
 	private BuildingRoom buildingRoom;
+
+	public GradedSchooltime getGradedSchooltime() {
+		return gradedSchooltime;
+	}
+
+	public void setGradedSchooltime(GradedSchooltime gradedSchooltime) {
+		this.gradedSchooltime = gradedSchooltime;
+	}
+
+	public GradedCourse getGradedCourse() {
+		return gradedCourse;
+	}
+
+	public void setGradedCourse(GradedCourse gradedCourse) {
+		this.gradedCourse = gradedCourse;
+	}
+
+	public BuildingRoom getBuildingRoom() {
+		return buildingRoom;
+	}
+
+	public void setBuildingRoom(BuildingRoom buildingRoom) {
+		this.buildingRoom = buildingRoom;
+	}
 }
