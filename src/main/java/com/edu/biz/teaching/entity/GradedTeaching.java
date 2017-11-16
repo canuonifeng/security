@@ -27,6 +27,9 @@ public class GradedTeaching extends BaseEntity {
 	@ApiModelProperty(value = "上课时间")
 	private String schooltime;
 	
+	@ApiModelProperty(value = "所属学期")
+	private String termCode;
+	
 	@OneToMany(targetEntity = Classroom.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "graded_classroom", joinColumns = @JoinColumn(name = "graded_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "classroom_id", referencedColumnName = "id"))
 	@ApiModelProperty(value = "适用班级")
@@ -54,5 +57,13 @@ public class GradedTeaching extends BaseEntity {
 
 	public void setSchooltime(String schooltime) {
 		this.schooltime = schooltime;
+	}
+
+	public String getTermCode() {
+		return termCode;
+	}
+
+	public void setTermCode(String termCode) {
+		this.termCode = termCode;
 	}
 }

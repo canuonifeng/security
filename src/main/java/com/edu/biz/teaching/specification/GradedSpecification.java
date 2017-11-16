@@ -36,6 +36,12 @@ public class GradedSpecification implements Specification<GradedTeaching> {
 				Join<GradedTeaching, Classroom> join = root.join("classrooms");
 			    list.add(cb.like(join.get("name"), "%" + conditions.get("suitClassroom") + "%"));
 			}
+			if (conditions.containsKey("courseId")) {
+				list.add(cb.equal(root.get("course").get("id"), this.conditions.get("courseId")));
+			}
+			if (conditions.containsKey("termCode")) {
+				list.add(cb.equal(root.get("termCode"), this.conditions.get("termCode")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
