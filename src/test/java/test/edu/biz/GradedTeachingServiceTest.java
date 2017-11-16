@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.service.GradedTeachingService;
@@ -52,6 +52,21 @@ public class GradedTeachingServiceTest extends BaseServiceTest {
 		List<GradedSchooltime> list = new ArrayList<>();
 		list.add(time);
 		gradedTeachingService.createSchooltimes(list);
+	}
+	
+	@Test
+	@ExpectedDatabase(value = "gradedTeachingService.createRank.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+	public void testCreateRank() {
+		GradedRank rank = new GradedRank();
+		GradedTeaching teaching = new GradedTeaching();
+		teaching.setId(1L);
+		rank.setName("A");
+		rank.setGradedTeaching(teaching);
+		rank.setMinScore("0");
+		rank.setMaxScore("100");
+		List<GradedRank> list = new ArrayList<>();
+		list.add(rank);
+		gradedTeachingService.createRank(list);
 	}
 	
 //	@Test
