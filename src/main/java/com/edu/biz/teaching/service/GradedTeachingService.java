@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 
 public interface GradedTeachingService {
 	
 	public GradedTeaching createGraded(GradedTeaching graded);
+	
+	public void createSchooltimes(List<GradedSchooltime> list);
 	
 	public List<GradedTeaching> findGradedTeachings(Map<String, Object> conditions);
 	
