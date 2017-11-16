@@ -28,18 +28,23 @@ public class GradeSubjectServiceImpl extends BaseService implements GradedSubjec
 	public GradedSubject createGradedSubject(GradedSubject gradedSubject) {
 		return gradedSubjectDao.save(gradedSubject);
 	}
-	
+
 	@Override
 	public Boolean deleteGradedSubject(Long id) {
 		gradedSubjectDao.delete(id);
 		return null == gradedSubjectDao.findOne(id);
 	}
-	
+
+	@Override
+	public GradedSubjectResult getGradedSubjectResult(Map<String, Object> map) {
+		return gradedSubjectResultDao.findOne(new GradedSubjectResultSpecification(map));
+	}
+
 	@Override
 	public List<GradedSubject> findGradedSubjects(Map<String, Object> conditions) {
-		return  gradedSubjectDao.findAll(new GradedSubjectSpecification(conditions));
+		return gradedSubjectDao.findAll(new GradedSubjectSpecification(conditions));
 	}
-	
+
 	@Override
 	public GradedSubjectResult createResult(GradedSubjectResult gradedSubjectResult) {
 		return gradedSubjectResultDao.save(gradedSubjectResult);
@@ -49,7 +54,7 @@ public class GradeSubjectServiceImpl extends BaseService implements GradedSubjec
 	public List<GradedSubjectResult> findGradedSubjectResults(Map<String, Object> map) {
 		return gradedSubjectResultDao.findAll(new GradedSubjectResultSpecification(map));
 	}
-	
+
 	@Override
 	public GradedSubjectResult updateResult(GradedSubjectResult gradedSubjectResult) {
 		GradedSubjectResult savedResult = gradedSubjectResultDao.findOne(gradedSubjectResult.getId());

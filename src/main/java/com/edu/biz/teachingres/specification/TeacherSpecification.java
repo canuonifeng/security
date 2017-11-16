@@ -41,7 +41,7 @@ public class TeacherSpecification implements Specification<Teacher> {
 				list.add(cb.equal(root.get("degree").as(String.class), this.conditions.get("degree")));
 			}
 			if (conditions.containsKey("facultyId")) {
-				list.add(cb.equal(root.get("faculty").get("id"), this.conditions.get("facultyId")));
+				list.add(cb.equal(root.get("faculty").get("id").as(Long.class), this.conditions.get("facultyId")));
 			}
 		}
 
