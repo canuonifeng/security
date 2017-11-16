@@ -46,6 +46,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	
 	@Override
 	public GradedTeaching createGraded(GradedTeaching graded) {
+		Term term = termService.getTermByCurrent(1);
+		graded.setTermCode(term.getCode());
 		return gradedTeachingDao.save(graded);
 	}
 	
