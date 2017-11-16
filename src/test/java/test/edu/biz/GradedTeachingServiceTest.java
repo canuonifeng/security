@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -24,11 +23,6 @@ public class GradedTeachingServiceTest extends BaseServiceTest {
 		Map<String, Object> conditions = new HashMap<>();
 		List<GradedTeaching> gradedTeachings = gradedTeachingService.findGradedTeachings(conditions);
 		Assert.assertEquals(1, gradedTeachings.size());
-	}
-	@Test
-	public void testFindGradedTeachingCourses() {
-		List<Classroom> classrooms = gradedTeachingService.findGradedTeachingClassrooms(1L);
-		Assert.assertEquals(1, classrooms.size());
 	}
 	@Test
 	public void testCheckTeachingTime() {

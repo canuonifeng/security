@@ -30,64 +30,64 @@ import io.swagger.annotations.Api;
 public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@Autowired
 	private GradedTeachingService gradedTeachingService;
-	
+
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedTeaching', 'add')")
 	public GradedTeaching add(@RequestBody GradedTeaching graded) {
 		return gradedTeachingService.createGraded(graded);
 	}
-	
-	@RequestMapping(path= "/schooltime",method = RequestMethod.POST)
+
+	@RequestMapping(path = "/schooltime", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedSchooltime', 'add')")
 	public void addTime(@RequestBody List<GradedSchooltime> list) {
 		gradedTeachingService.createSchooltimes(list);
 	}
-	
-	@RequestMapping(path= "/rank",method = RequestMethod.POST)
+
+	@RequestMapping(path = "/rank", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedRank', 'add')")
 	public void addRank(@RequestBody List<GradedRank> list) {
 		gradedTeachingService.createRank(list);
 	}
-	
-	@RequestMapping(path = "/all",method = RequestMethod.GET)
+
+	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('gradedTeaching', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<GradedTeaching> findGradedTeaching(@RequestParam Map<String, Object> conditions) {
 		List<GradedTeaching> list = gradedTeachingService.findGradedTeachings(conditions);
-		
+
 		return list;
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('gradedTeaching', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public GradedTeaching get(@PathVariable Long id) {
 		return gradedTeachingService.getGradedTeaching(id);
 	}
-	
+
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('gradedTeaching', 'edit')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public GradedTeaching edit(@PathVariable Long id, @Validated( { Update.class }) @RequestBody GradedTeaching graded) {
+	public GradedTeaching edit(@PathVariable Long id, @Validated({ Update.class }) @RequestBody GradedTeaching graded) {
 		graded.setId(id);
 		return gradedTeachingService.updateGradedTeaching(graded);
 	}
 
 	@RequestMapping(path = "/course/{courseId}/classrooms", method = RequestMethod.GET)
-	public List<Classroom>  findGradedTeachingClassrooms(@PathVariable Long courseId) {
-		
-		return gradedTeachingService.findGradedTeachingClassrooms(courseId);
+	public List<Classroom> findGradedTeachingClassrooms(@PathVariable Long courseId, @RequestParam Map<String, Object> conditions) {
+		conditions.put("courseId", courseId);
+		return gradedTeachingService.findGradedTeachingClassrooms(conditions);
 	}
-	
+
 	@RequestMapping(path = "/check/teachingtime", method = RequestMethod.GET)
-	public Boolean  checkTeachingTime(@RequestParam Map<String, Object> conditions) {
-		
+	public Boolean checkTeachingTime(@RequestParam Map<String, Object> conditions) {
+
 		return gradedTeachingService.checkTeachingTime(conditions);
 	}
-	
+
 	@RequestMapping(path = "/check/teachingclassroom", method = RequestMethod.GET)
-	public Boolean  checkTeachingClassroom(@RequestParam Map<String, Object> conditions) {
-		
+	public Boolean checkTeachingClassroom(@RequestParam Map<String, Object> conditions) {
+
 		return gradedTeachingService.checkTeachingClassroom(conditions);
 	}
 }

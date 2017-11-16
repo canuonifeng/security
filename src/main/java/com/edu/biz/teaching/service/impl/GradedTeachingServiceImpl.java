@@ -46,6 +46,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	
 	@Override
 	public GradedTeaching createGraded(GradedTeaching graded) {
+		Term term = termService.getTermByCurrent(1);
+		graded.setTermCode(term.getCode());
 		return gradedTeachingDao.save(graded);
 	}
 	
@@ -87,15 +89,28 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 	
 	@Override
-	public List<Classroom> findGradedTeachingClassrooms(Long courseId) {
+	public List<Classroom> findGradedTeachingClassrooms(Map<String, Object> conditions) {
 		Term term = termService.getTermByCurrent(1);
-		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(term.getCode(), courseId);
+		//判断该课程是否已经排课
+		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(term.getCode(), Long.parseLong(conditions.get("courseId").toString()));
 		if(classSchedule != null) {
 			return null;
 		}
+		//判断该课程是否已经分层
 		Map<String, Object> map = new HashMap<>();
-		map.put("mergeCourseId", courseId);
-		map.put("termCode",term.getCode());
+		map.put("courseId", conditions.get("courseId"));
+		map.put("termCode", term.getCode());
+		GradedTeaching gradedTeaching = gradedTeachingDao.findOne(new GradedSpecification(map));
+		if(gradedTeaching != null){
+			return null;
+		}
+		//判断该课程是否属于选课
+		//TO DO
+		map.clear();
+		map.put("gradedCourseId", conditions.get("courseId"));
+		map.put("currentTermCode",term.getCode());
+		map.put("facultyId",conditions.get("facultyId"));
+		map.put("grade",conditions.get("grade"));
 		return classroomService.findClassrooms(map);
 	}
 	

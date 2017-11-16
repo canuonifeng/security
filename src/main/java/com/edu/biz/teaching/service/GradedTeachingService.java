@@ -22,7 +22,7 @@ public interface GradedTeachingService {
 	
 	public GradedTeaching updateGradedTeaching(GradedTeaching graded);
 
-	public List<Classroom> findGradedTeachingClassrooms(Long courseId);
+	public List<Classroom> findGradedTeachingClassrooms(Map<String, Object> conditions);
 
 	public Boolean checkTeachingTime(Map<String, Object> conditions);
 
