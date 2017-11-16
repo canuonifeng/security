@@ -31,7 +31,10 @@ public class GradedSubjectResultSpecification implements Specification<GradedSub
 				list.add(cb.equal(join.get("grade"), conditions.get("grade")));
 			}
 			if (conditions.containsKey("studentId")) {
-				list.add(cb.equal(root.get("student").get("id"), this.conditions.get("student")));
+				list.add(cb.equal(root.get("student").get("id"), this.conditions.get("studentId")));
+			}
+			if (conditions.containsKey("gradedSubjectId")) {
+				list.add(cb.equal(root.get("gradedSubject").get("id"), this.conditions.get("gradedSubjectId")));
 			}
 		}
 

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<faculty id="1" code="JSUANJ" name="计算机系" status="enable"/>	
+	<faculty id="2" code="YASHUA" name="牙刷系" status="enable"/>
+	
+	<graded_subject id="1" faculty_id="1" name="语文" grade="2017"/>	
+	<graded_subject id="2" faculty_id="1" name="数学" grade="2017"/>
+	<graded_subject id="3" faculty_id="1" name="英语" grade="2017"/>
+	
+	<student_graded_subject_result id="1" graded_subject_id="1" student_id="1"  source="12.0" />
+	<student_graded_subject_result id="2" graded_subject_id="2" student_id="1"  source="13.0" />
+	<student_graded_subject_result id="3" graded_subject_id="3" student_id="1"  source="14.0" />
+	
+	<student id="1" name="牙刷丢了" gender="secret" admission_time="2017-08-01" grade="2017" status="enable" origin="unified" native_place="四川巴中" idcard="1" birthday="222" nation="HAN" idtype="idcard" seq="1" />
+	
+	
+	
+</dataset>

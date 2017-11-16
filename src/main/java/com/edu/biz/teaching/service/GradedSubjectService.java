@@ -19,4 +19,6 @@ public interface GradedSubjectService {
 	public List<GradedSubject> findGradedSubjects(Map<String, Object> conditions);
 
 	public List<GradedSubjectResult> findGradedSubjectResults(Map<String, Object> map);
+
+	public GradedSubjectResult getGradedSubjectResult(Map<String, Object> map);
 }

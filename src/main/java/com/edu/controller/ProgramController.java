@@ -228,9 +228,11 @@ public class ProgramController extends BaseController<Program> {
 				ids.add(Long.parseLong(classroomIds[i]));
 			}
 			Map<String, Object> conditions = new HashMap<>();
-			conditions.put("classroomIds", ids);
-			List<Classroom> classrooms = classroomService.findClassrooms(conditions);
-			programCourseVo.setMergeClassroom(classrooms);
+			if(ids.size() > 0){
+				conditions.put("classroomIds", ids);
+				List<Classroom> classrooms = classroomService.findClassrooms(conditions);
+				programCourseVo.setMergeClassroom(classrooms);
+			}
 		}
 		return programCourseVo;
 	}
