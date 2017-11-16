@@ -76,4 +76,26 @@ public class TermCodeUtil {
 
 		return periodPrefix;
 	}
+	
+	public static String getLessonByPeriod(String period) {
+		String[] source = period.split("-");
+		return (getLessonPrefix(source[0])+"第"+source[1]+"节");
+	}
+	
+	private static String getLessonPrefix(String type) {
+		String lessonPrefix = null;
+		switch (type) {
+		case "1":
+			lessonPrefix = "上午";
+			break;
+		case "2":
+			lessonPrefix = "下午";
+			break;
+		case "3":
+			lessonPrefix = "晚上";
+			break;
+		}
+
+		return lessonPrefix;
+	}
 }

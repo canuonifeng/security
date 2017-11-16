@@ -25,12 +25,6 @@ public class GradedTeachingServiceTest extends BaseServiceTest {
 		Assert.assertEquals(1, gradedTeachings.size());
 	}
 	@Test
-	public void testCheckTeachingTime() {
-		Map<String, Object> conditions = new HashMap<>();
-		Boolean result = gradedTeachingService.checkTeachingTime(conditions);
-		Assert.assertEquals(true, result);
-	}
-	@Test
 	public void testCheckTeachingClassroom() {
 		Map<String, Object> conditions = new HashMap<>();
 		Boolean result = gradedTeachingService.checkTeachingClassroom(conditions);
