@@ -6,6 +6,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.edu.biz.base.BaseEntity;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -16,6 +19,7 @@ public class GradedRank extends BaseEntity {
 	@ManyToOne(targetEntity = GradedTeaching.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "graded_id")
 	@ApiModelProperty(value = "分层教学")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private GradedTeaching gradedTeaching;
 	
 	@ApiModelProperty(value = "等级名称")

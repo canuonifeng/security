@@ -11,30 +11,21 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.edu.biz.teaching.entity.GradedSchooltime;
+import com.edu.biz.teaching.entity.GradedRank;
 
-public class GradedSchooltimeSpecification implements Specification<GradedSchooltime> {
+public class GradedRankSpecification implements Specification<GradedRank> {
 	private Map<String, Object> conditions;
 	
-	public GradedSchooltimeSpecification(Map<String, Object> conditions) {
+	public GradedRankSpecification(Map<String, Object> conditions) {
 		this.conditions = conditions;
 	}
 	
 	@Override
-	public Predicate toPredicate(Root<GradedSchooltime> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<GradedRank> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
 		if (null != conditions) {
 			if (conditions.containsKey("gradedId")) {
 				list.add(cb.equal(root.get("gradedTeaching").get("id"), this.conditions.get("gradedId")));
-			}
-			if (conditions.containsKey("period")) {
-				list.add(cb.equal(root.get("period"), conditions.get("period")));
-			}
-			if (conditions.containsKey("timeSlot")) {
-				list.add(cb.equal(root.get("timeSlot"), this.conditions.get("timeSlot")));
-			}
-			if (conditions.containsKey("week")) {
-				list.add(cb.equal(root.get("week"), this.conditions.get("week")));
 			}
 		}
 
