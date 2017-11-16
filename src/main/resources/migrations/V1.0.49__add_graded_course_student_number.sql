@@ -1,0 +1,1 @@
+ALTER TABLE `graded_course` ADD `student_number` int(10) UNSIGNED COMMENT '授课人数' AFTER `teacher_id`;

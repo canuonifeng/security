@@ -44,6 +44,7 @@ public class ScheduleCycleSpecification implements Specification<ScheduleCycle> 
 			if (conditions.containsKey("classroomId")) {
 				Join<ScheduleCycle, ClassSchedule> joinSchedule = root.join("classSchedule");
 				list.add(cb.equal(joinSchedule.get("id").as(Long.class), root.get("classSchedule").get("id")));
+				list.add(cb.equal(joinSchedule.get("termCode"), root.get("classSchedule").get("term")));
 				Join<ClassSchedule, Classroom> join = joinSchedule.join("classrooms");
 				list.add(cb.equal(join.get("id").as(Long.class), conditions.get("classroomId")));
 			}

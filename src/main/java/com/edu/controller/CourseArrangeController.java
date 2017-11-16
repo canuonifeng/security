@@ -346,9 +346,14 @@ public class CourseArrangeController extends BaseController<Course> {
 
 	private List<ScheduleCycle> classroomHasOtherCourseArrange(Long classroomId, String period, Integer week) {
 		HashMap<String, Object> map = new HashMap<>();
+		Term term = termService.getTermByCurrent(1);
+		if(term == null) {
+			throw new NotFoundException("未设置当前学期");
+		}
 		map.put("period", period);
 		map.put("week", week);
 		map.put("classroomId", classroomId);
+		map.put("termCode", term.getCode());
 		// 判断某个星期的某节课，是否有课程
 		return courseArrangeService.findScheduleCycles(map);
 	}
