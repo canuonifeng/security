@@ -8,6 +8,7 @@ import com.edu.biz.teaching.entity.GradedCourseAndCourseTime;
 import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
+import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 
 public interface GradedTeachingService {
 	
@@ -29,9 +30,9 @@ public interface GradedTeachingService {
 	
 	public GradedTeaching updateGradedTeaching(GradedTeaching graded);
 
-	public List<Classroom> findGradedTeachingClassrooms(Long courseId);
+	public List<Classroom> findGradedTeachingClassrooms(Map<String, Object> conditions);
 
-	public Boolean checkTeachingTime(Map<String, Object> conditions);
+	public Boolean checkTeachingTime(GradedTimeCheckForm gradedTimeCheckForm);
 
 	public Boolean checkTeachingClassroom(Map<String, Object> conditions);
 }

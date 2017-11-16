@@ -27,6 +27,15 @@ public class GradedSchooltimeSpecification implements Specification<GradedSchool
 			if (conditions.containsKey("gradedId")) {
 				list.add(cb.equal(root.get("gradedTeaching").get("id"), this.conditions.get("gradedId")));
 			}
+			if (conditions.containsKey("period")) {
+				list.add(cb.equal(root.get("period"), conditions.get("period")));
+			}
+			if (conditions.containsKey("timeSlot")) {
+				list.add(cb.equal(root.get("timeSlot"), this.conditions.get("timeSlot")));
+			}
+			if (conditions.containsKey("week")) {
+				list.add(cb.equal(root.get("week"), this.conditions.get("week")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
