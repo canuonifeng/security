@@ -149,7 +149,6 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		List<ScheduleCycle> scheduleCycles = hasCourseArrange(classroom.getId(), period,
 				week);
 		if (scheduleCycles.size() != 0) {
-			System.out.println(12345);
 			createCheckTeachingTimeError(classroom.getName(), week, period);
 		}
 	}
