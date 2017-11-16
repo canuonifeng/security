@@ -37,7 +37,7 @@ public class GradedSubjectServiceTest extends BaseServiceTest{
 	@Test
 	@ExpectedDatabase(value = "gradedSubjectService.delete.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
 	public void testdeleteGradedSubject() {
-		gradedSubjectService.deleteGradedSubject(2L);
+		gradedSubjectService.deleteGradedSubject(4L);
 	}
 	@Test
 	@ExpectedDatabase(value = "gradedSubjectService.createGradedSubjectResult.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
@@ -72,7 +72,7 @@ public class GradedSubjectServiceTest extends BaseServiceTest{
 		conditions.put("grade", 2017);
 		conditions.put("facultyId", 1L);
 		List<GradedSubject> gradedSubjects = gradedSubjectService.findGradedSubjects(conditions);
-		Assert.assertEquals(3, gradedSubjects.size());
+		Assert.assertEquals(4, gradedSubjects.size());
 	}
 	@Test
 	public void testfindGradedSubjectResults() {

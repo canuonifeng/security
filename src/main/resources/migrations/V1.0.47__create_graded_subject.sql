@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `student_graded_subject_result` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
   `graded_subject_id` int(10) UNSIGNED NOT NULL COMMENT '所属分层科目id',
   `student_id`  int(10) UNSIGNED NOT NULL COMMENT '学生id',
-  `score` float(10,1)  NOT NULL DEFAULT 0 COMMENT '分数',
+  `score` double NOT NULL DEFAULT 0.0 COMMENT '分数',
   `created_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
   `updated_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
   PRIMARY KEY (`id`)
