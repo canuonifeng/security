@@ -27,7 +27,7 @@ public class GradedCourseSchooltime extends BaseEntity {
 	
 	@ManyToOne(targetEntity = BuildingRoom.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "building_room_id")
-	@ApiModelProperty(value = "教师")
+	@ApiModelProperty(value = "教室")
 	private BuildingRoom buildingRoom;
 
 	public GradedSchooltime getGradedSchooltime() {

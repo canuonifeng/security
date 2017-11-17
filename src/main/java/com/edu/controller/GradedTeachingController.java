@@ -92,6 +92,15 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 		return gradedTeachingService.findTimes(conditions);
 	}
 	
+	@RequestMapping(path = "/{id}/courses", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('gradedSchooltime', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public List<GradedCourseAndCourseTime> findCourses(@PathVariable Long id) {
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("gradedId", id);
+		return gradedTeachingService.findCourses(conditions);
+	}
+	
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('gradedTeaching', 'edit')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
