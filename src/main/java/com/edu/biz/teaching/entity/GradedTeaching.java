@@ -30,10 +30,23 @@ public class GradedTeaching extends BaseEntity {
 	@ApiModelProperty(value = "所属学期")
 	private String termCode;
 	
+	@ManyToOne(targetEntity = GradedSubject.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "subject_id")
+	@ApiModelProperty(value = "考试科目")
+	private GradedSubject subject;
+	
 	@OneToMany(targetEntity = Classroom.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "graded_classroom", joinColumns = @JoinColumn(name = "graded_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "classroom_id", referencedColumnName = "id"))
 	@ApiModelProperty(value = "适用班级")
 	private List<Classroom> classrooms;
+
+	public GradedSubject getSubject() {
+		return subject;
+	}
+
+	public void setSubject(GradedSubject subject) {
+		this.subject = subject;
+	}
 
 	public List<Classroom> getClassrooms() {
 		return classrooms;

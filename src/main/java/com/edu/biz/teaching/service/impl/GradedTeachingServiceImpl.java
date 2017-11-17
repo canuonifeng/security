@@ -116,9 +116,9 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	public GradedTeaching updateGradedTeaching(GradedTeaching graded) {
 		GradedTeaching saveGraded = gradedTeachingDao.findOne(graded.getId());
 		if (null == saveGraded) {
-			throw new NotFoundException("该教师不存在");
+			throw new NotFoundException("该分层教学不存在");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(graded, saveGraded, "course", "schooltime", "classrooms");
+		BeanUtils.copyPropertiesWithCopyProperties(graded, saveGraded, "course", "schooltime", "classrooms", "subject");
 		return gradedTeachingDao.save(saveGraded);
 	}
 
