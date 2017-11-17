@@ -31,6 +31,8 @@ import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teaching.service.TermService;
+import com.edu.biz.teaching.specification.GradedCourseSchooltimeSpecification;
+import com.edu.biz.teaching.specification.GradedCourseSpecification;
 import com.edu.biz.teaching.specification.GradedRankSpecification;
 import com.edu.biz.teaching.specification.GradedSchooltimeSpecification;
 import com.edu.biz.teaching.specification.GradedSpecification;
@@ -110,6 +112,22 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	@Override
 	public List<GradedSchooltime> findTimes(Map<String, Object> conditions) {
 		return gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(conditions));
+	}
+	
+	@Override
+	public List<GradedCourseAndCourseTime> findCourses(Map<String, Object> conditions) {
+		List<GradedCourseAndCourseTime> list = new ArrayList<>();
+		List<GradedCourse> courses= gradedCourseDao.findAll(new GradedCourseSpecification(conditions));
+		for (GradedCourse course:courses) {
+			GradedCourseAndCourseTime courseAndCourseTime = new GradedCourseAndCourseTime();
+			courseAndCourseTime.setGradedCourse(course);
+			Map<String, Object> map = new HashMap<>();
+			map.put("gradedCourseId", course.getId());
+			List<GradedCourseSchooltime> time = gradedCourseSchooltimeDao.findAll(new GradedCourseSchooltimeSpecification(map));
+			courseAndCourseTime.setGradedCourseTime(time);
+			list.add(courseAndCourseTime);
+		}
+		return list;
 	}
 	
 	@Override

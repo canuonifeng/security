@@ -28,6 +28,8 @@ public interface GradedTeachingService {
 	
 	public List<GradedSchooltime> findTimes(Map<String, Object> conditions);
 	
+	public List<GradedCourseAndCourseTime> findCourses(Map<String, Object> conditions);
+	
 	public GradedTeaching updateGradedTeaching(GradedTeaching graded);
 
 	public List<Classroom> findGradedTeachingClassrooms(Map<String, Object> conditions);
