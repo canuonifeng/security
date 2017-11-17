@@ -181,21 +181,38 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 				//该节课要排位置在排课中是否存在
 				checkCourseArrangePosition(classroom, periods.get(j), gradedTimeCheckForm.getWeek());
 				//该节课要排位置在分层课程是否存在
-				checkGradedTeachingPosition(classroom, periods.get(j), gradedTimeCheckForm.getWeek());
+				checkGradedTeachingPosition(classroom, periods.get(j), gradedTimeCheckForm.getWeek(), gradedTeaching.getSchooltime());
 			}
 		}
 		return true;
 	}
 
-	private void checkGradedTeachingPosition(Classroom classroom, String period, Integer week) {
+	private void checkGradedTeachingPosition(Classroom classroom, String period, Integer week, String schooltime) {
 		String source[]=period.split("-");
 		Map<String, Object> map = new HashMap<>();
 		map.put("week", week);
 		map.put("timeSlot", source[0]);
 		map.put("period", source[1]);
-		GradedSchooltime gradedSchooletime = gradedSchooltimeDao.findOne(new GradedSchooltimeSpecification(map));
-		if(gradedSchooletime != null){
-			createCheckTeachingTimeError(classroom.getName(), week, period);
+		map.put("classroomId", classroom.getId());
+		List<GradedSchooltime> gradedSchooletimes = gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(map));
+		if(gradedSchooletimes.size() > 0){
+			checkTimeWeekIsCoincide(classroom, gradedSchooletimes, schooltime, period, week);
+		}
+	}
+
+	private void checkTimeWeekIsCoincide(Classroom classroom, List<GradedSchooltime> gradedSchooletimes, String schooltime, String period, Integer week) {
+		String sourceTime[] = schooltime.split("-");
+		int startWeek = Integer.parseInt(sourceTime[0]);
+		int endWeek = Integer.parseInt(sourceTime[1]);
+		for (GradedSchooltime gradedSchooltime : gradedSchooletimes) {
+			GradedTeaching gradedTeaching = getGradedTeaching(gradedSchooltime.getGradedTeaching().getId());
+			String time[] = gradedTeaching.getSchooltime().split("-");
+			if((startWeek <= Integer.parseInt(time[0])) && (Integer.parseInt(time[0]) <= endWeek)){
+				createCheckTeachingTimeError(classroom.getName(), week, period);
+			}
+			if((startWeek <= Integer.parseInt(time[1])) && (Integer.parseInt(time[1]) <= endWeek)){
+				createCheckTeachingTimeError(classroom.getName(), week, period);
+			}
 		}
 	}
 
