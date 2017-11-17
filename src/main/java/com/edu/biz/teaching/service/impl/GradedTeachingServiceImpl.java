@@ -22,6 +22,7 @@ import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.Term;
+import com.edu.biz.teaching.entity.pojo.GradedTeacherCheckForm;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.GradedTeachingService;
@@ -119,7 +120,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 
 	@Override
 	public Boolean checkTeachingTime(GradedTimeCheckForm gradedTimeCheckForm) {
-		List<String> periods = getCheckPeriod(gradedTimeCheckForm);
+		List<String> periods = getCheckPeriod(gradedTimeCheckForm.getMorningLesson(), gradedTimeCheckForm.getAfternoonLesson(), gradedTimeCheckForm.getNightLesson());
 		GradedTeaching gradedTeaching = getGradedTeaching(gradedTimeCheckForm.getGradedId());
 		List<Classroom> classrooms = gradedTeaching.getClassrooms();
 		for (Classroom classroom : classrooms) {
@@ -160,6 +161,30 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 
 	@Override
+	public Boolean checkTeachingTeacher(GradedTeacherCheckForm gradedTeacherCheckForm) {
+		List<String> periods = getCheckPeriod(gradedTeacherCheckForm.getMorningLesson(), gradedTeacherCheckForm.getAfternoonLesson(), gradedTeacherCheckForm.getNightLesson());
+		for (int j = 0; j < periods.size(); j++) {
+			//该老师在该位置排的必修课是否有课要上
+			checkCourseArrangeTeacher(periods.get(j), gradedTeacherCheckForm.getWeek());
+			//该老师在该位置排的分层课是否有课要上
+			checkGradedTeachingTeacher(periods.get(j), gradedTeacherCheckForm.getWeek());
+			//该老师在该位置排的选修课是否有课要上
+			//TO DO
+		}
+		return true;
+	}
+	
+	private void checkGradedTeachingTeacher(String string, Integer week) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void checkCourseArrangeTeacher(String string, Integer week) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public Boolean checkTeachingClassroom(Map<String, Object> conditions) {
 		// 判断教室在某个星期某节课是否被占用
 //		List<String> periods = getCheckPeriod(conditions);
@@ -174,21 +199,21 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		return true;
 	}
 
-	private List<String> getCheckPeriod(GradedTimeCheckForm gradedTimeCheckForm) {
+	private List<String> getCheckPeriod(List<String> morningLesson, List<String> afternoonLesson, List<String> nightLesson) {
 		List<String> periods = new ArrayList<>();
-		if (gradedTimeCheckForm.getMorningLesson() != null) {
-			for (int i = 0; i < gradedTimeCheckForm.getMorningLesson().size(); i++) {
-				periods.add("1-" + gradedTimeCheckForm.getMorningLesson().get(i));
+		if (morningLesson != null) {
+			for (int i = 0; i < morningLesson.size(); i++) {
+				periods.add("1-" + morningLesson.get(i));
 			}
 		}
-		if (gradedTimeCheckForm.getAfternoonLesson() != null) {
-			for (int i = 0; i < gradedTimeCheckForm.getAfternoonLesson().size(); i++) {
-				periods.add("1-" + gradedTimeCheckForm.getAfternoonLesson().get(i));
+		if (afternoonLesson != null) {
+			for (int i = 0; i < afternoonLesson.size(); i++) {
+				periods.add("1-" + afternoonLesson.get(i));
 			}
 		}
-		if (gradedTimeCheckForm.getNightLesson() != null) {
-			for (int i = 0; i < gradedTimeCheckForm.getNightLesson().size(); i++) {
-				periods.add("1-" + gradedTimeCheckForm.getNightLesson().get(i));
+		if (nightLesson != null) {
+			for (int i = 0; i < nightLesson.size(); i++) {
+				periods.add("1-" + nightLesson.get(i));
 			}
 		}
 		return periods;

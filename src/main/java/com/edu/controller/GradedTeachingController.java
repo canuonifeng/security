@@ -17,6 +17,7 @@ import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
+import com.edu.biz.teaching.entity.pojo.GradedTeacherCheckForm;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
@@ -83,6 +84,11 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@RequestMapping(path = "/check/teachingtime", method = RequestMethod.POST)
 	public Boolean checkTeachingTime(@RequestBody GradedTimeCheckForm gradedTimeCheckForm) {
 		return gradedTeachingService.checkTeachingTime(gradedTimeCheckForm);
+	}
+
+	@RequestMapping(path = "/check/teachingteacher", method = RequestMethod.POST)
+	public Boolean checkTeachingTeacher(@RequestBody GradedTeacherCheckForm gradedTeacherCheckForm) {
+		return gradedTeachingService.checkTeachingTeacher(gradedTeacherCheckForm);
 	}
 
 	@RequestMapping(path = "/check/teachingclassroom", method = RequestMethod.GET)
