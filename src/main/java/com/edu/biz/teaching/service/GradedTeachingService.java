@@ -35,4 +35,6 @@ public interface GradedTeachingService {
 	public Boolean checkTeachingTime(GradedTimeCheckForm gradedTimeCheckForm);
 
 	public Boolean checkTeachingClassroom(Map<String, Object> conditions);
+
+	public Boolean checkTeachingTeacher(Long id, Long teacherId);
 }

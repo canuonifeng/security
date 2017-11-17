@@ -111,6 +111,11 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 		return gradedTeachingService.checkTeachingTime(gradedTimeCheckForm);
 	}
 
+	@RequestMapping(path = "/{id}/check/{teacherId}/teachingteacher", method = RequestMethod.GET)
+	public Boolean checkTeachingTeacher(Long id, Long teacherId) {
+		return gradedTeachingService.checkTeachingTeacher(id, teacherId);
+	}
+
 	@RequestMapping(path = "/check/teachingclassroom", method = RequestMethod.GET)
 	public Boolean checkTeachingClassroom(@RequestParam Map<String, Object> conditions) {
 

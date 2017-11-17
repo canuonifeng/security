@@ -20,6 +20,8 @@ public interface CourseArrangeService {
 	
 	public ClassSchedule getClassSchedule(String term, Long couresId);
 	
+	public ScheduleCycle getScheduleCycle(Map<String, Object> conditions);
+	
 	public Map<Integer, Map<String, ScheduleCycleVo>> getCourseArrange(String term, Long classroomId);
 
 	public Boolean deleteScheduleCycle(Long id);
