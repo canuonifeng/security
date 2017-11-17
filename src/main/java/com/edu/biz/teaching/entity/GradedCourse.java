@@ -29,7 +29,8 @@ public class GradedCourse extends BaseEntity {
 	@ApiModelProperty(value = "教师")
 	private Teacher teacher;
 	
-	private Integer studentNumber;
+	@ApiModelProperty(value = "学生数")
+	private int studentNumber;
 
 	public GradedTeaching getGradedTeaching() {
 		return gradedTeaching;
@@ -55,11 +56,11 @@ public class GradedCourse extends BaseEntity {
 		this.teacher = teacher;
 	}
 
-	public Integer getStudentNumber() {
+	public int getStudentNumber() {
 		return studentNumber;
 	}
 
-	public void setStudentNumber(Integer studentNumber) {
+	public void setStudentNumber(int studentNumber) {
 		this.studentNumber = studentNumber;
 	}
 }

@@ -182,14 +182,19 @@ public class ProgramController extends BaseController<Program> {
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<ProgramCourseVo> courses(@RequestParam Map<String, Object> conditions) {
-		Long currentClassroomId = Long.parseLong(conditions.get("currentClassroomId").toString());
-		conditions.remove("currentClassroomId");
+		Long currentClassroomId = 0L;
+		if(conditions.containsKey("currentClassroomId")){
+			currentClassroomId = Long.parseLong(conditions.get("currentClassroomId").toString());
+			conditions.remove("currentClassroomId");
+		}
 		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
 		List<ProgramCourseVo> programCourseVos = new ArrayList<ProgramCourseVo>();
 		for (ProgramCourse programCourse : programCourses) {
 			ProgramCourseVo programCourseVo = new ProgramCourseVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(programCourse, programCourseVo);
-			programCourseVo = buildProgramCourseVo(currentClassroomId, programCourseVo);
+			if(currentClassroomId != 0L){
+				programCourseVo = buildProgramCourseVo(currentClassroomId, programCourseVo);
+			}
 			programCourseVos.add(programCourseVo);
 		}
 		return programCourseVos;

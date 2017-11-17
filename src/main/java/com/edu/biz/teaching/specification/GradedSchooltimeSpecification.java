@@ -26,6 +26,9 @@ public class GradedSchooltimeSpecification implements Specification<GradedSchool
 	public Predicate toPredicate(Root<GradedSchooltime> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> list = new ArrayList<Predicate>();
 		if (null != conditions) {
+			if (conditions.containsKey("gradedId")) {
+				list.add(cb.equal(root.get("gradedTeaching").get("id"), this.conditions.get("gradedId")));
+			}
 			if (conditions.containsKey("period")) {
 				list.add(cb.equal(root.get("period"), conditions.get("period")));
 			}
