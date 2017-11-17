@@ -22,13 +22,14 @@ import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.Term;
-import com.edu.biz.teaching.entity.pojo.GradedTeacherCheckForm;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.GradedSchooltimeSpecification;
 import com.edu.biz.teaching.specification.GradedSpecification;
+import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.service.TeacherService;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
@@ -47,6 +48,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	private ClassroomService classroomService;
 	@Autowired
 	private CourseArrangeService courseArrangeService;
+	@Autowired
+	private TeacherService teacherService;
 
 	@Override
 	public GradedTeaching createGraded(GradedTeaching graded) {
@@ -161,27 +164,55 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 
 	@Override
-	public Boolean checkTeachingTeacher(GradedTeacherCheckForm gradedTeacherCheckForm) {
-		List<String> periods = getCheckPeriod(gradedTeacherCheckForm.getMorningLesson(), gradedTeacherCheckForm.getAfternoonLesson(), gradedTeacherCheckForm.getNightLesson());
-		for (int j = 0; j < periods.size(); j++) {
+	public Boolean checkTeachingTeacher(Long gradedId, Long teacherId) {
+		Teacher teacher = teacherService.getTeacher(teacherId);
+		Map<String, Object> map = new HashMap<>();
+		map.put("gradedId", gradedId);
+		List<GradedSchooltime> gradedSchooltimes = gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(map));
+		for (int j = 0; j < gradedSchooltimes.size(); j++) {
 			//该老师在该位置排的必修课是否有课要上
-			checkCourseArrangeTeacher(periods.get(j), gradedTeacherCheckForm.getWeek());
+			checkCourseArrangeTeacher(gradedSchooltimes.get(j).getTimeSlot()+"-"+gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getWeek(), teacher);
 			//该老师在该位置排的分层课是否有课要上
-			checkGradedTeachingTeacher(periods.get(j), gradedTeacherCheckForm.getWeek());
+			checkGradedTeachingTeacher(gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getTimeSlot(), gradedSchooltimes.get(j).getWeek(), teacher);
 			//该老师在该位置排的选修课是否有课要上
 			//TO DO
 		}
 		return true;
 	}
 	
-	private void checkGradedTeachingTeacher(String string, Integer week) {
-		// TODO Auto-generated method stub
+	private void checkGradedTeachingTeacher(Integer period, Integer timeSlot, Integer week, Teacher teacher) {
+		Term term = termService.getTermByCurrent(1);
+		Map<String, Object> map = new HashMap<>();
+		map.put("week", week);
+		map.put("timeSlot", timeSlot);
+		map.put("period", period);
+		map.put("currentTermCode", term.getCode());
+		map.put("checkGradedTeacherId", teacher.getId());
+		GradedSchooltime gradedSchooltime = gradedSchooltimeDao.findOne(new GradedSchooltimeSpecification(map));
+		if(gradedSchooltime != null){
+			createCheckTeachingTeacherError(teacher.getName(), week, timeSlot+"-"+period);
+		}
+	}
+
+	private void checkCourseArrangeTeacher(String period, Integer week, Teacher teacher) {
+		Term term = termService.getTermByCurrent(1);
+		Map<String, Object> map = new HashMap<>();
+		map.put("week", week);
+		map.put("period", period);
+		map.put("gradedCheckTeacherId", teacher.getId());
+		map.put("currentTermCode", term.getCode());
+		map.put("master", 1);
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(map);
+		if(scheduleCycle != null){
+			createCheckTeachingTeacherError(teacher.getName(), week, period);
+		}
 		
 	}
 
-	private void checkCourseArrangeTeacher(String string, Integer week) {
-		// TODO Auto-generated method stub
-		
+	private void createCheckTeachingTeacherError(String teacherName, Integer week, String period) {
+		throw new InvalidParameterException(
+				"老师" + teacherName + "在周" + week
+						+ TermCodeUtil.getLessonByPeriod(period) + "已有课程要上");
 	}
 
 	@Override

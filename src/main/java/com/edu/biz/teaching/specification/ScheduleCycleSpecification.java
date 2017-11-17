@@ -57,6 +57,15 @@ public class ScheduleCycleSpecification implements Specification<ScheduleCycle> 
 					list.add(cb.equal(join.get("master"), conditions.get("master")));
 				}
 			}
+			if (conditions.containsKey("gradedCheckTeacherId")) {
+				Join<ScheduleCycle, ClassSchedule> joinSchedule = root.join("classSchedule");
+				list.add(cb.equal(joinSchedule.get("term"), conditions.get("currentTermCode")));
+				Join<ClassSchedule, ScheduleTeacher> join = joinSchedule.join("scheduleTeachers");
+				list.add(cb.equal(join.get("teacher").get("id").as(Long.class), conditions.get("gradedCheckTeacherId")));
+				if(conditions.containsKey("master")) {
+					list.add(cb.equal(join.get("master"), conditions.get("master")));
+				}
+			}
 		}
 		
 		Predicate[] p = new Predicate[list.size()];

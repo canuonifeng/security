@@ -7,7 +7,6 @@ import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
-import com.edu.biz.teaching.entity.pojo.GradedTeacherCheckForm;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 
 public interface GradedTeachingService {
@@ -30,5 +29,5 @@ public interface GradedTeachingService {
 
 	public Boolean checkTeachingClassroom(Map<String, Object> conditions);
 
-	public Boolean checkTeachingTeacher(GradedTeacherCheckForm gradedTeacherCheckForm);
+	public Boolean checkTeachingTeacher(Long id, Long teacherId);
 }

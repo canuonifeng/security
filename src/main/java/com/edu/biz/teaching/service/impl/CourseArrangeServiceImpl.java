@@ -180,6 +180,11 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		classScheduleDao.delete(id);
 		return null == classScheduleDao.findOne(id);
 	}
+	
+	@Override
+	public ScheduleCycle getScheduleCycle(Map<String, Object> conditions) {
+		return scheduleCycleDao.findOne(new ScheduleCycleSpecification(conditions));
+	}
 
 	@Override
 	public ClassSchedule getClassSchedule(Long id) {
