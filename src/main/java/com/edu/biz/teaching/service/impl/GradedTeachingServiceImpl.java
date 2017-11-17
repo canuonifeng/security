@@ -36,6 +36,8 @@ import com.edu.biz.teaching.specification.GradedCourseSpecification;
 import com.edu.biz.teaching.specification.GradedRankSpecification;
 import com.edu.biz.teaching.specification.GradedSchooltimeSpecification;
 import com.edu.biz.teaching.specification.GradedSpecification;
+import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.service.TeacherService;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
@@ -58,6 +60,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	private ClassroomService classroomService;
 	@Autowired
 	private CourseArrangeService courseArrangeService;
+	@Autowired
+	private TeacherService teacherService;
 
 	@Override
 	public GradedTeaching createGraded(GradedTeaching graded) {
@@ -169,7 +173,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 
 	@Override
 	public Boolean checkTeachingTime(GradedTimeCheckForm gradedTimeCheckForm) {
-		List<String> periods = getCheckPeriod(gradedTimeCheckForm);
+		List<String> periods = getCheckPeriod(gradedTimeCheckForm.getMorningLesson(), gradedTimeCheckForm.getAfternoonLesson(), gradedTimeCheckForm.getNightLesson());
 		GradedTeaching gradedTeaching = getGradedTeaching(gradedTimeCheckForm.getGradedId());
 		List<Classroom> classrooms = gradedTeaching.getClassrooms();
 		for (Classroom classroom : classrooms) {
@@ -210,6 +214,58 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 
 	@Override
+	public Boolean checkTeachingTeacher(Long gradedId, Long teacherId) {
+		Teacher teacher = teacherService.getTeacher(teacherId);
+		Map<String, Object> map = new HashMap<>();
+		map.put("gradedId", gradedId);
+		List<GradedSchooltime> gradedSchooltimes = gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(map));
+		for (int j = 0; j < gradedSchooltimes.size(); j++) {
+			//该老师在该位置排的必修课是否有课要上
+			checkCourseArrangeTeacher(gradedSchooltimes.get(j).getTimeSlot()+"-"+gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getWeek(), teacher);
+			//该老师在该位置排的分层课是否有课要上
+			checkGradedTeachingTeacher(gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getTimeSlot(), gradedSchooltimes.get(j).getWeek(), teacher);
+			//该老师在该位置排的选修课是否有课要上
+			//TO DO
+		}
+		return true;
+	}
+	
+	private void checkGradedTeachingTeacher(Integer period, Integer timeSlot, Integer week, Teacher teacher) {
+		Term term = termService.getTermByCurrent(1);
+		Map<String, Object> map = new HashMap<>();
+		map.put("week", week);
+		map.put("timeSlot", timeSlot);
+		map.put("period", period);
+		map.put("currentTermCode", term.getCode());
+		map.put("checkGradedTeacherId", teacher.getId());
+		GradedSchooltime gradedSchooltime = gradedSchooltimeDao.findOne(new GradedSchooltimeSpecification(map));
+		if(gradedSchooltime != null){
+			createCheckTeachingTeacherError(teacher.getName(), week, timeSlot+"-"+period);
+		}
+	}
+
+	private void checkCourseArrangeTeacher(String period, Integer week, Teacher teacher) {
+		Term term = termService.getTermByCurrent(1);
+		Map<String, Object> map = new HashMap<>();
+		map.put("week", week);
+		map.put("period", period);
+		map.put("gradedCheckTeacherId", teacher.getId());
+		map.put("currentTermCode", term.getCode());
+		map.put("master", 1);
+		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(map);
+		if(scheduleCycle != null){
+			createCheckTeachingTeacherError(teacher.getName(), week, period);
+		}
+		
+	}
+
+	private void createCheckTeachingTeacherError(String teacherName, Integer week, String period) {
+		throw new InvalidParameterException(
+				"老师" + teacherName + "在周" + week
+						+ TermCodeUtil.getLessonByPeriod(period) + "已有课程要上");
+	}
+
+	@Override
 	public Boolean checkTeachingClassroom(Map<String, Object> conditions) {
 		// 判断教室在某个星期某节课是否被占用
 //		List<String> periods = getCheckPeriod(conditions);
@@ -224,21 +280,21 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		return true;
 	}
 
-	private List<String> getCheckPeriod(GradedTimeCheckForm gradedTimeCheckForm) {
+	private List<String> getCheckPeriod(List<String> morningLesson, List<String> afternoonLesson, List<String> nightLesson) {
 		List<String> periods = new ArrayList<>();
-		if (gradedTimeCheckForm.getMorningLesson() != null) {
-			for (int i = 0; i < gradedTimeCheckForm.getMorningLesson().size(); i++) {
-				periods.add("1-" + gradedTimeCheckForm.getMorningLesson().get(i));
+		if (morningLesson != null) {
+			for (int i = 0; i < morningLesson.size(); i++) {
+				periods.add("1-" + morningLesson.get(i));
 			}
 		}
-		if (gradedTimeCheckForm.getAfternoonLesson() != null) {
-			for (int i = 0; i < gradedTimeCheckForm.getAfternoonLesson().size(); i++) {
-				periods.add("1-" + gradedTimeCheckForm.getAfternoonLesson().get(i));
+		if (afternoonLesson != null) {
+			for (int i = 0; i < afternoonLesson.size(); i++) {
+				periods.add("1-" + afternoonLesson.get(i));
 			}
 		}
-		if (gradedTimeCheckForm.getNightLesson() != null) {
-			for (int i = 0; i < gradedTimeCheckForm.getNightLesson().size(); i++) {
-				periods.add("1-" + gradedTimeCheckForm.getNightLesson().get(i));
+		if (nightLesson != null) {
+			for (int i = 0; i < nightLesson.size(); i++) {
+				periods.add("1-" + nightLesson.get(i));
 			}
 		}
 		return periods;

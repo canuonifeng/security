@@ -29,7 +29,7 @@ public class GradedCourse extends BaseEntity {
 	@ApiModelProperty(value = "教师")
 	private Teacher teacher;
 	
-	@ApiModelProperty(value = "教师")
+	@ApiModelProperty(value = "学生数")
 	private int studentNumber;
 
 	public GradedTeaching getGradedTeaching() {
