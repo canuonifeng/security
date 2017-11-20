@@ -7,11 +7,16 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.edu.biz.teaching.entity.GradedCourse;
+import com.edu.biz.teaching.entity.GradedCourseAndCourseTime;
+import com.edu.biz.teaching.entity.GradedCourseSchooltime;
 import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.service.GradedTeachingService;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.Course;
+import com.edu.biz.teachingres.entity.Teacher;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
@@ -48,7 +53,7 @@ public class GradedTeachingServiceTest extends BaseServiceTest {
 		time.setGradedTeaching(teaching);
 		time.setWeek(1);
 		time.setTimeSlot(1);
-		time.setPeriod(1);
+		time.setPeriod(2);
 		List<GradedSchooltime> list = new ArrayList<>();
 		list.add(time);
 		gradedTeachingService.createSchooltimes(list);
@@ -60,13 +65,48 @@ public class GradedTeachingServiceTest extends BaseServiceTest {
 		GradedRank rank = new GradedRank();
 		GradedTeaching teaching = new GradedTeaching();
 		teaching.setId(1L);
-		rank.setName("A");
+		rank.setName("B");
 		rank.setGradedTeaching(teaching);
-		rank.setMinScore("0");
-		rank.setMaxScore("100");
+		rank.setMinScore("60");
+		rank.setMaxScore("80");
 		List<GradedRank> list = new ArrayList<>();
 		list.add(rank);
 		gradedTeachingService.createRank(list);
+	}
+	
+	@Test
+	@ExpectedDatabase(value = "gradedTeachingService.createCourse.expectedData.xml", assertionMode = DatabaseAssertionMode.NON_STRICT)
+	public void testCreateCourse() {
+		List<GradedCourseAndCourseTime> list = new ArrayList<>();
+		GradedCourseAndCourseTime courseAndCourseTime =  new GradedCourseAndCourseTime();
+		
+		GradedCourse course = new GradedCourse();
+		GradedTeaching teaching = new GradedTeaching();
+		teaching.setId(1L);
+		GradedRank rank = new GradedRank();
+		rank.setId(1L);
+		Teacher teacher = new Teacher();
+		teacher.setId(1L);
+		course.setGradedRank(rank);
+		course.setGradedTeaching(teaching);
+		course.setTeacher(teacher);
+		course.setStudentNumber(50);
+		courseAndCourseTime.setGradedCourse(course);
+		
+		List<GradedCourseSchooltime> courseTimes = new ArrayList<>();
+		GradedCourseSchooltime courseTime = new GradedCourseSchooltime();
+		GradedSchooltime time = new GradedSchooltime();
+		time.setId(1L);
+		BuildingRoom room = new BuildingRoom();
+		room.setId(1L);
+		courseTime.setBuildingRoom(room);
+		courseTime.setGradedSchooltime(time);
+		courseTimes.add(courseTime);
+		
+		courseAndCourseTime.setGradedCourseTime(courseTimes);
+		list.add(courseAndCourseTime);
+		
+		gradedTeachingService.createCourse(list);
 	}
 	
 //	@Test
