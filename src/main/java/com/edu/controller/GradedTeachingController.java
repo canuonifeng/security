@@ -21,6 +21,7 @@ import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.GradedTeachingService;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.validgroup.Update;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -124,10 +125,9 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	public Boolean checkTeachingTeacher(Long id, Long teacherId) {
 		return gradedTeachingService.checkTeachingTeacher(id, teacherId);
 	}
-
-	@RequestMapping(path = "/check/teachingclassroom", method = RequestMethod.GET)
-	public Boolean checkTeachingClassroom(@RequestParam Map<String, Object> conditions) {
-
-		return gradedTeachingService.checkTeachingClassroom(conditions);
+	
+	@RequestMapping(path = "/{id}/teachingbuildingroom", method = RequestMethod.GET)
+	public Map<String, List<BuildingRoom>> findWeekBuildingRoom(Long id) {
+		return gradedTeachingService.findWeekBuildingRoom(id);
 	}
 }

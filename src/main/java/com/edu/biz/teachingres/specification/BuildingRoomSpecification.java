@@ -34,6 +34,12 @@ public class BuildingRoomSpecification implements Specification<BuildingRoom> {
 			if (conditions.containsKey("name")) {
 				list.add(cb.like(root.get("name"), "%" + this.conditions.get("roomType") + "%"));
 			}
+			if (conditions.containsKey("notBuildingRoomIds")) {
+				List<Long> ids = (List<Long>) this.conditions.get("notBuildingRoomIds");
+				if(ids != null && ids.size()>0) {
+					list.add(cb.not(root.get("id").in(ids.toArray())));
+				}
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
