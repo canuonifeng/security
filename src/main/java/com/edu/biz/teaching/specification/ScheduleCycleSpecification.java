@@ -66,6 +66,16 @@ public class ScheduleCycleSpecification implements Specification<ScheduleCycle> 
 					list.add(cb.equal(join.get("master"), conditions.get("master")));
 				}
 			}
+			if (conditions.containsKey("periods")) {
+				List<String> periods = (List<String>) this.conditions.get("periods");
+				if(periods.size()>0) {
+					list.add(root.get("period").in(periods.toArray()));
+				}
+				if (conditions.containsKey("currentTermCode")){
+					Join<ScheduleCycle, ClassSchedule> joinSchedule = root.join("classSchedule");
+					list.add(cb.equal(joinSchedule.get("term"), conditions.get("currentTermCode")));
+				}
+			}
 		}
 		
 		Predicate[] p = new Predicate[list.size()];
