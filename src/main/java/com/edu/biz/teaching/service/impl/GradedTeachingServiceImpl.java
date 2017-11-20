@@ -180,16 +180,27 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 
 	@Override
 	@Transactional
-	public void createCourse(List<GradedCourseAndCourseTime> list) {
-		for (GradedCourseAndCourseTime gradedCourseAndCourseTime : list) {
+	public void saveCourse(List<GradedCourseAndCourseTime> list) {
+		for(GradedCourseAndCourseTime gradedCourseAndCourseTime: list) {
 			GradedCourse gradedCourse = gradedCourseDao.save(gradedCourseAndCourseTime.getGradedCourse());
-			for (GradedCourseSchooltime courseSchooltime : gradedCourseAndCourseTime.getGradedCourseTime()) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("gradedCourseId", gradedCourse.getId());
+			List<GradedCourseSchooltime> times = findSchooltimesByCourseId(map);
+			if (!times.isEmpty()) {
+				gradedCourseSchooltimeDao.deleteByGradedCourseId(gradedCourse.getId());
+			}
+			for (GradedCourseSchooltime courseSchooltime: gradedCourseAndCourseTime.getGradedCourseTime()) {
 				courseSchooltime.setGradedCourse(gradedCourse);
 				gradedCourseSchooltimeDao.save(courseSchooltime);
 			}
 		}
 	}
 
+	@Override
+	public List<GradedCourseSchooltime> findSchooltimesByCourseId(Map<String, Object> conditions) {
+		return gradedCourseSchooltimeDao.findAll(new GradedCourseSchooltimeSpecification(conditions));
+	}
+	
 	@Override
 	public List<GradedTeaching> findGradedTeachings(Map<String, Object> conditions) {
 		return gradedTeachingDao.findAll(new GradedSpecification(conditions));
@@ -235,6 +246,28 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(graded, saveGraded, "course", "schooltime", "classrooms", "subject");
 		return gradedTeachingDao.save(saveGraded);
+	}
+	
+	@Override
+	@Transactional
+	public void updateGradedTimes(Long id, List<GradedSchooltime> list) {
+		GradedTeaching saveGraded = gradedTeachingDao.findOne(id);
+		if (null == saveGraded) {
+			throw new NotFoundException("该分层教学不存在");
+		}
+		gradedSchooltimeDao.deleteByGradedTeachingId(id);
+		createSchooltimes(list);
+	}
+	
+	@Override
+	@Transactional
+	public void updateGradedRanks(Long id, List<GradedRank> list) {
+		GradedTeaching saveGraded = gradedTeachingDao.findOne(id);
+		if (null == saveGraded) {
+			throw new NotFoundException("该分层教学不存在");
+		}
+		gradedRankDao.deleteByGradedTeachingId(id);
+		createRank(list);
 	}
 
 	@Override

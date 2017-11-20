@@ -54,9 +54,9 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	}
 	
 	@RequestMapping(path= "/course",method = RequestMethod.POST)
-	@PreAuthorize("hasPermission('gradedRank', 'add')")
-	public void addCourse(@RequestBody List<GradedCourseAndCourseTime> list) {
-		gradedTeachingService.createCourse(list);
+	@PreAuthorize("hasPermission('gradedCourse', 'add')")
+	public void saveCourse(@RequestBody List<GradedCourseAndCourseTime> list) {
+		gradedTeachingService.saveCourse(list);
 	}
 	
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
@@ -94,7 +94,7 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	}
 	
 	@RequestMapping(path = "/{id}/courses", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission('gradedSchooltime', 'get')")
+	@PreAuthorize("hasPermission('gradedCourse', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<GradedCourseAndCourseTime> findCourses(@PathVariable Long id) {
 		Map<String, Object> conditions = new HashMap<>();
@@ -108,6 +108,18 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	public GradedTeaching edit(@PathVariable Long id, @Validated({ Update.class }) @RequestBody GradedTeaching graded) {
 		graded.setId(id);
 		return gradedTeachingService.updateGradedTeaching(graded);
+	}
+	
+	@RequestMapping(path = "/{id}/times", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedTime', 'edit')")
+	public void editTimes(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<GradedSchooltime> list) {
+		gradedTeachingService.updateGradedTimes(id, list);
+	}
+	
+	@RequestMapping(path = "/{id}/ranks", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedRank', 'edit')")
+	public void editRanks(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<GradedRank> list) {
+		gradedTeachingService.updateGradedRanks(id, list);
 	}
 
 	@RequestMapping(path = "/course/{courseId}/classrooms", method = RequestMethod.GET)
