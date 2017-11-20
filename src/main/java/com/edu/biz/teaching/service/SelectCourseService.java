@@ -1,0 +1,22 @@
+package com.edu.biz.teaching.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.edu.biz.teaching.entity.SelectCourse;
+import com.edu.biz.teaching.entity.SelectCourseClassAndClassCourse;
+import com.edu.biz.teaching.entity.SelectCourseClassSchooltime;
+import com.edu.biz.teaching.entity.SelectCourseSchooltime;
+
+public interface SelectCourseService {
+	
+	public List<SelectCourse> findSelectCourses(Map<String, Object> conditions);
+	
+	public SelectCourse createSelectCourse(SelectCourse selectCourse);
+	
+	public void createSchooltimes(List<SelectCourseSchooltime> list);
+	
+	public void saveClass(List<SelectCourseClassAndClassCourse> list);
+	
+	public List<SelectCourseClassSchooltime> findSchooltimesByClassId(Map<String, Object> conditions);
+}
