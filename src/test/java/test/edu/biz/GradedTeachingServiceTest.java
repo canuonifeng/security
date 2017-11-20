@@ -106,7 +106,7 @@ public class GradedTeachingServiceTest extends BaseServiceTest {
 		courseAndCourseTime.setGradedCourseTime(courseTimes);
 		list.add(courseAndCourseTime);
 		
-		gradedTeachingService.createCourse(list);
+		gradedTeachingService.saveCourse(list);
 	}
 	
 //	@Test
