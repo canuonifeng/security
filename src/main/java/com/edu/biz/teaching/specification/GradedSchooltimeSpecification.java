@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 
@@ -37,6 +38,11 @@ public class GradedSchooltimeSpecification implements Specification<GradedSchool
 			}
 			if (conditions.containsKey("week")) {
 				list.add(cb.equal(root.get("week"), this.conditions.get("week")));
+			}
+			if (conditions.containsKey("classroomId")) {
+				Join<GradedSchooltime, GradedTeaching> join = root.join("gradedTeaching");
+				Join<GradedTeaching, Classroom> joinClassroom = join.join("classrooms");
+				list.add(cb.equal(joinClassroom.get("id").as(Long.class), this.conditions.get("classroomId")));
 			}
 			if (conditions.containsKey("checkGradedTeacherId")) {
 				Join<GradedSchooltime, GradedTeaching> joinGradedTeaching = root.join("gradedTeaching");
