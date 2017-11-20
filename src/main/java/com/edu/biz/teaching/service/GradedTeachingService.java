@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.teaching.entity.GradedCourse;
 import com.edu.biz.teaching.entity.GradedCourseAndCourseTime;
 import com.edu.biz.teaching.entity.GradedCourseSchooltime;
 import com.edu.biz.teaching.entity.GradedRank;
@@ -47,4 +49,12 @@ public interface GradedTeachingService {
 	public Map<String, List<BuildingRoom>> findWeekBuildingRoom(Long id);
 
 	public List<GradedCourseSchooltime> findSchooltimesByCourseId(Map<String, Object> conditions);
+
+	public GradedCourse getGradedCourse(Map<String, Object> conditions);
+
+	public GradedCourse updateGradedCourse(GradedCourse gradedCourse);
+
+	public List<Student> findAddStudents(Map<String, Object> map);
+
+	public List<Classroom> findGradedClassrooms(Long rankId, Long teacherId);
 }
