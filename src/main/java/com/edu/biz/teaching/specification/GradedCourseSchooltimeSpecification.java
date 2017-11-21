@@ -27,6 +27,9 @@ public class GradedCourseSchooltimeSpecification implements Specification<Graded
 			if (conditions.containsKey("gradedCourseId")) {
 				list.add(cb.equal(root.get("gradedCourse").get("id"), this.conditions.get("gradedCourseId")));
 			}
+			if (conditions.containsKey("gradedId")) {
+				list.add(cb.equal(root.get("gradedCourse").get("gradedTeaching").get("id"), this.conditions.get("gradedId")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];

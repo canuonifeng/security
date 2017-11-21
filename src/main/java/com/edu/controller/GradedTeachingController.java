@@ -120,6 +120,12 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	public void editRanks(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<GradedRank> list) {
 		gradedTeachingService.updateGradedRanks(id, list);
 	}
+	
+	@RequestMapping(path = "/{id}/course", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedCourse', 'edit')")
+	public void editCourse(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<GradedCourseAndCourseTime> list) {
+		gradedTeachingService.updateGradedCourse(id, list);
+	}
 
 	@RequestMapping(path = "/course/{courseId}/classrooms", method = RequestMethod.GET)
 	public List<Classroom> findGradedTeachingClassrooms(@PathVariable Long courseId, @RequestParam Map<String, Object> conditions) {
