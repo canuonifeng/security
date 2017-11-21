@@ -7,6 +7,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -16,8 +18,11 @@ import com.edu.biz.base.BaseEntity;
 import com.edu.biz.dict.Gender;
 import com.edu.biz.dict.IDType;
 import com.edu.biz.dict.Nation;
+import com.edu.biz.teaching.entity.GradedCourse;
+import com.edu.biz.teaching.entity.TeachingJsonViews;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -83,6 +88,11 @@ public class Student extends BaseEntity {
 	
 	@ApiModelProperty(value = "排序")
 	private int seq;
+
+	@ManyToMany(targetEntity = GradedCourse.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "graded_classroom_member", joinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "graded_course_id", referencedColumnName = "id"))
+	@JsonView({ TeachingJsonViews.CascadeGradedCourse.class })
+	private List<GradedCourse> gradedCourses;
 	
 	public String getBirthday() {
 		return birthday;
@@ -241,5 +251,13 @@ public class Student extends BaseEntity {
 
 	public void setChanges(List<StudentChange> changes) {
 		this.changes = changes;
+	}
+
+	public List<GradedCourse> getGradedCourses() {
+		return gradedCourses;
+	}
+
+	public void setGradedCourses(List<GradedCourse> gradedCourses) {
+		this.gradedCourses = gradedCourses;
 	}
 }

@@ -6,12 +6,16 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.teaching.entity.GradedCourse;
+import com.edu.biz.teaching.entity.GradedTeaching;
 
 public class StudentSpecification implements Specification<Student> {
 	
@@ -61,6 +65,33 @@ public class StudentSpecification implements Specification<Student> {
 			}
 			if (conditions.containsKey("gender")) {
 				list.add(cb.equal(root.get("gender").as(String.class), this.conditions.get("gender")));
+			}
+			if (conditions.containsKey("studentIds")) {
+				List<Long> ids = (List<Long>) this.conditions.get("studentIds");
+				if(ids.size()>0) {
+					list.add(root.get("id").in(ids.toArray()));
+				}
+			}
+			if (conditions.containsKey("notStudentIds")) {
+				List<Long> ids = (List<Long>) this.conditions.get("notStudentIds");
+				if(ids.size()>0) {
+					list.add(cb.not(root.get("id").in(ids.toArray())));
+				}
+			}
+			if (conditions.containsKey("classroomIds")) {
+				List<Long> ids = (List<Long>) this.conditions.get("classroomIds");
+				if(ids.size()>0) {
+					list.add(root.get("classroom").get("id").as(Long.class).in(ids.toArray()));
+				}
+			}
+			if (conditions.containsKey("rankId")) {
+				Join<Student, GradedCourse> join = root.join("gradedCourses");
+				list.add(cb.equal(join.get("gradedRank").get("id").as(Long.class), conditions.get("rankId")));
+				list.add(cb.equal(join.get("teacher").get("id").as(Long.class), conditions.get("teacherId")));
+			}
+			if (conditions.containsKey("gradedId")) {
+				Join<Student, GradedCourse> join = root.join("gradedCourses");
+				list.add(cb.equal(join.get("gradedTeaching").get("id").as(Long.class), conditions.get("gradedId")));
 			}
 		}
 
