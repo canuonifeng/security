@@ -46,8 +46,7 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedTeaching', 'add')")
 	public GradedTeaching add(@RequestBody GradedTeaching graded) {
-		GradedTeaching gradedTeaching = gradedTeachingService.createGraded(graded);
-		return gradedTeaching;
+		return gradedTeachingService.createGraded(graded);
 	}
 
 	@RequestMapping(path = "/schooltime", method = RequestMethod.POST)
