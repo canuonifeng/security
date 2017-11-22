@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.SelectCourse;
-import com.edu.biz.teaching.entity.SelectCourseClassAndClassCourse;
+import com.edu.biz.teaching.entity.SelectCourseClassAndClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
 import com.edu.biz.teaching.service.SelectCourseService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
@@ -47,7 +47,7 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('selectCourse', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public List<SelectCourse> findGradedTeaching(@RequestParam Map<String, Object> conditions) {
+	public List<SelectCourse> findSelectCourse(@RequestParam Map<String, Object> conditions) {
 		List<SelectCourse> list = selectCourseService.findSelectCourses(conditions);
 
 		return list;
@@ -55,7 +55,7 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	
 	@RequestMapping(path= "/class",method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('selectCourseClass', 'add')")
-	public void saveCourse(@RequestBody List<SelectCourseClassAndClassCourse> list) {
+	public void saveCourse(@RequestBody List<SelectCourseClassAndClassSchooltime> list) {
 		selectCourseService.saveClass(list);
 	}
 	
@@ -73,6 +73,13 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("selectCourseId", id);
 		return selectCourseService.findTimes(conditions);
+	}
+	
+	@RequestMapping(path = "/{id}/class", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('selectCourseClass', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public List<SelectCourseClassAndClassSchooltime> findClass(@PathVariable Long id) {
+		return selectCourseService.findClass(id);
 	}
 	
 	@RequestMapping(path = "/{id}/times", method = RequestMethod.PUT)
@@ -93,5 +100,11 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	public List<Classroom> findGradedTeachingClassrooms(@PathVariable Long courseId, @RequestParam Map<String, Object> conditions) {
 		conditions.put("courseId", courseId);
 		return selectCourseService.findSelectCourseClassrooms(conditions);
+	}
+
+	@RequestMapping(path = "/{id}/class", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('selectCourseClass', 'edit')")
+	public void editClass(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<SelectCourseClassAndClassSchooltime> list) {
+		selectCourseService.updateSelectCourseClass(id, list);
 	}
 }
