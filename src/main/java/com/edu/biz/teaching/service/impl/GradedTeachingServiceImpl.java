@@ -363,7 +363,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	public Boolean checkTeachingTime(GradedTimeCheckForm gradedTimeCheckForm) {
 		List<String> periods = getCheckPeriod(gradedTimeCheckForm.getMorningLesson(),
 				gradedTimeCheckForm.getAfternoonLesson(), gradedTimeCheckForm.getNightLesson());
-		GradedTeaching gradedTeaching = getGradedTeaching(gradedTimeCheckForm.getGradedId());
+		GradedTeaching gradedTeaching = getGradedTeaching(gradedTimeCheckForm.getGradedTeachingId());
 		List<Classroom> classrooms = gradedTeaching.getClassrooms();
 		for (Classroom classroom : classrooms) {
 			for (int j = 0; j < periods.size(); j++) {
