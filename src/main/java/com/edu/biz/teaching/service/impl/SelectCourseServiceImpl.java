@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.teaching.dao.SelectCourseClassDao;
@@ -21,7 +22,10 @@ import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.SelectCourseService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.SelectCourseClassSchooltimeSpecification;
+import com.edu.biz.teaching.specification.SelectCourseSchooltimeSpecification;
 import com.edu.biz.teaching.specification.SelectCourseSpecification;
+import com.edu.core.exception.NotFoundException;
+import com.edu.core.util.BeanUtils;
 
 @Service
 public class SelectCourseServiceImpl extends BaseService implements SelectCourseService {
@@ -71,5 +75,36 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 	@Override
 	public List<SelectCourseClassSchooltime> findSchooltimesByClassId(Map<String, Object> conditions) {
 		return selectCourseClassSchooltimeDao.findAll(new SelectCourseClassSchooltimeSpecification(conditions));
+	}
+	
+	@Override
+	public SelectCourse getSelectCourse(Long id) {
+		return selectCourseDao.findOne(id);
+	}
+	
+	@Override
+	public List<SelectCourseSchooltime> findTimes(Map<String, Object> conditions) {
+		return selectCourseSchooltimeDao.findAll(new SelectCourseSchooltimeSpecification(conditions));
+	}
+	
+	@Override
+	@Transactional
+	public void updateSchooltimes(Long id, List<SelectCourseSchooltime> list) {
+		SelectCourse saveSelectCourse = selectCourseDao.findOne(id);
+		if (null == saveSelectCourse) {
+			throw new NotFoundException("该选课不存在");
+		}
+		selectCourseSchooltimeDao.deleteBySelectCourseId(id);
+		createSchooltimes(list);
+	}
+	
+	@Override
+	public SelectCourse updateSelectCourse(SelectCourse selectCourse) {
+		SelectCourse saveSelectCourse = selectCourseDao.findOne(selectCourse.getId());
+		if (null == saveSelectCourse) {
+			throw new NotFoundException("该选课不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(selectCourse, saveSelectCourse, "course", "schooltime", "classrooms");
+		return selectCourseDao.save(saveSelectCourse);
 	}
 }

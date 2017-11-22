@@ -1,10 +1,13 @@
 package com.edu.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +19,7 @@ import com.edu.biz.teaching.entity.SelectCourseClassAndClassCourse;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
 import com.edu.biz.teaching.service.SelectCourseService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
+import com.edu.biz.validgroup.Update;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
@@ -49,8 +53,38 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	}
 	
 	@RequestMapping(path= "/class",method = RequestMethod.POST)
-	@PreAuthorize("hasPermission('gradedCourse', 'add')")
+	@PreAuthorize("hasPermission('selectCourseClass', 'add')")
 	public void saveCourse(@RequestBody List<SelectCourseClassAndClassCourse> list) {
 		selectCourseService.saveClass(list);
+	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('selectCourse', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public SelectCourse get(@PathVariable Long id) {
+		return selectCourseService.getSelectCourse(id);
+	}
+	
+	@RequestMapping(path = "/{id}/times", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('selectCourseSchooltime', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public List<SelectCourseSchooltime> findTimes(@PathVariable Long id) {
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("selectCourseId", id);
+		return selectCourseService.findTimes(conditions);
+	}
+	
+	@RequestMapping(path = "/{id}/times", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedTime', 'edit')")
+	public void editTimes(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<SelectCourseSchooltime> list) {
+		selectCourseService.updateSchooltimes(id, list);
+	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('selectCourse', 'edit')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	public SelectCourse edit(@PathVariable Long id, @Validated({ Update.class }) @RequestBody SelectCourse selectCourse) {
+		selectCourse.setId(id);
+		return selectCourseService.updateSelectCourse(selectCourse);
 	}
 }
