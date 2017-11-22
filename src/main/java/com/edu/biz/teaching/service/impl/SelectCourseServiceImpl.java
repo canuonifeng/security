@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.biz.base.BaseService;
+import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.dao.SelectCourseClassDao;
 import com.edu.biz.teaching.dao.SelectCourseClassSchooltimeDao;
 import com.edu.biz.teaching.dao.SelectCourseDao;
@@ -39,6 +41,8 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 	private SelectCourseClassSchooltimeDao selectCourseClassSchooltimeDao;
 	@Autowired
 	private TermService termService;
+	@Autowired
+	private ClassroomService classroomService;
 	
 	public List<SelectCourse> findSelectCourses(Map<String, Object> conditions) {
 		return selectCourseDao.findAll(new SelectCourseSpecification(conditions));
@@ -106,5 +110,16 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(selectCourse, saveSelectCourse, "course", "schooltime", "classrooms");
 		return selectCourseDao.save(saveSelectCourse);
+	}
+	
+	@Override
+	public List<Classroom> findSelectCourseClassrooms(Map<String, Object> conditions) {
+		Term term = termService.getTermByCurrent(1);
+		conditions.put("selectCourseId", conditions.get("courseId"));
+		conditions.put("currentTermCode", term.getCode());
+		conditions.put("facultyId", conditions.get("facultyId"));
+		conditions.put("grade", conditions.get("grade"));
+		conditions.put("nature", "elective");
+		return classroomService.findClassrooms(conditions);
 	}
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.SelectCourse;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassCourse;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
@@ -86,5 +87,11 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	public SelectCourse edit(@PathVariable Long id, @Validated({ Update.class }) @RequestBody SelectCourse selectCourse) {
 		selectCourse.setId(id);
 		return selectCourseService.updateSelectCourse(selectCourse);
+	}
+	
+	@RequestMapping(path = "/course/{courseId}/classrooms", method = RequestMethod.GET)
+	public List<Classroom> findGradedTeachingClassrooms(@PathVariable Long courseId, @RequestParam Map<String, Object> conditions) {
+		conditions.put("courseId", courseId);
+		return selectCourseService.findSelectCourseClassrooms(conditions);
 	}
 }
