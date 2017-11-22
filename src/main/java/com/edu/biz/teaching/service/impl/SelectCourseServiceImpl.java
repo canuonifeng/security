@@ -17,7 +17,9 @@ import com.edu.biz.teaching.entity.SelectCourseClass;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassCourse;
 import com.edu.biz.teaching.entity.SelectCourseClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
+import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.SelectCourseService;
+import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.SelectCourseClassSchooltimeSpecification;
 import com.edu.biz.teaching.specification.SelectCourseSpecification;
 
@@ -31,12 +33,16 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 	private SelectCourseClassDao selectCourseClassDao;
 	@Autowired
 	private SelectCourseClassSchooltimeDao selectCourseClassSchooltimeDao;
+	@Autowired
+	private TermService termService;
 	
 	public List<SelectCourse> findSelectCourses(Map<String, Object> conditions) {
 		return selectCourseDao.findAll(new SelectCourseSpecification(conditions));
 	}
 	
 	public SelectCourse createSelectCourse(SelectCourse selectCourse) {
+		Term term = termService.getTermByCurrent(1);
+		selectCourse.setTermCode(term.getCode());
 		return selectCourseDao.save(selectCourse);
 	}
 	
