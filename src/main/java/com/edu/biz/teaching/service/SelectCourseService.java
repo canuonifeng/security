@@ -19,4 +19,12 @@ public interface SelectCourseService {
 	public void saveClass(List<SelectCourseClassAndClassCourse> list);
 	
 	public List<SelectCourseClassSchooltime> findSchooltimesByClassId(Map<String, Object> conditions);
+	
+	public SelectCourse getSelectCourse(Long id);
+	
+	public SelectCourse updateSelectCourse(SelectCourse selectCourse);
+	
+	public void updateSchooltimes(Long id, List<SelectCourseSchooltime> list);
+	
+	public List<SelectCourseSchooltime> findTimes(Map<String, Object> conditions);
 }
