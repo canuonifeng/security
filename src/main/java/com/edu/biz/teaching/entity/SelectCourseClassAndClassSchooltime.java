@@ -2,7 +2,7 @@ package com.edu.biz.teaching.entity;
 
 import java.util.List;
 
-public class SelectCourseClassAndClassCourse {
+public class SelectCourseClassAndClassSchooltime {
 	
 	private SelectCourseClass selectCourseClass;
 	
