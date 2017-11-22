@@ -27,9 +27,11 @@ import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.teaching.entity.GradedSubject;
 import com.edu.biz.teaching.entity.GradedSubjectResult;
+import com.edu.biz.teaching.entity.TeachingJsonViews;
 import com.edu.biz.teaching.service.GradedSubjectService;
 import com.edu.biz.validgroup.Update;
 import com.edu.core.util.BeanUtils;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -47,12 +49,14 @@ public class StudentController extends BaseController<Student> {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('student', 'add')")
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
 	public Student add(@RequestBody Student student) {
 		return studentService.createStudent(student);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('student', 'edit')")
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
 	public Student edit(@PathVariable Long id, @Validated({ Update.class }) @RequestBody Student student) {
 		student.setId(id);
 		return studentService.updateStudent(student);
@@ -66,6 +70,7 @@ public class StudentController extends BaseController<Student> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
 	public Student get(@PathVariable Long id) {
 		Student student = new Student();
 		student.setId(id);
@@ -74,6 +79,7 @@ public class StudentController extends BaseController<Student> {
 
 	@RequestMapping(path = "/join/{classroomId}/classroom", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('student', 'put')")
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
 	public Boolean joinClassroom(@PathVariable Long classroomId, @RequestBody Map<String, String> studentIds) {
 		Classroom classroom = classroomService.getClassroom(classroomId);
 		if (classroom.getIsAssignNum() == 1) {
@@ -103,6 +109,7 @@ public class StudentController extends BaseController<Student> {
 
 	@RequestMapping(path = "/{classroomId}/assginnum", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('student', 'put')")
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
 	public Boolean assginNum(@PathVariable Long classroomId, @RequestBody Map<Integer, String> studentIds) {
 		Classroom classroom = classroomService.getClassroom(classroomId);
 		int num = 0;
@@ -122,6 +129,7 @@ public class StudentController extends BaseController<Student> {
 
 	@RequestMapping(path = "/{classroomId}/studentssort", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('student', 'put')")
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
 	public Boolean studentSort(@RequestBody Map<Integer, String> studentIds) {
 		for (Integer i = 0, seq = 1; i < studentIds.size(); i++) {
 			Student student = studentService.getStudent(Long.parseLong(studentIds.get(i)));
@@ -134,6 +142,7 @@ public class StudentController extends BaseController<Student> {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
 	public Page<Student> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<Student> page = studentService.searchStudents(conditions, pageable);
@@ -143,6 +152,7 @@ public class StudentController extends BaseController<Student> {
 
 	@RequestMapping(path = "/all", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('student', 'get')")
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
 	public List<StudentVo> findStudents(@RequestParam Map<String, Object> conditions) {
 		List<Student> list = studentService.findStudents(conditions);
 		List<StudentVo> studentVos = new ArrayList<StudentVo>();

@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,14 +16,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.service.StudentService;
+import com.edu.biz.teaching.entity.GradedCourse;
 import com.edu.biz.teaching.entity.GradedCourseAndCourseTime;
 import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
+import com.edu.biz.teaching.entity.TeachingJsonViews;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.GradedTeachingService;
+import com.edu.biz.teaching.specification.GradedCourseSpecification;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.validgroup.Update;
+import com.edu.core.exception.NotFoundException;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
@@ -33,6 +41,8 @@ import io.swagger.annotations.Api;
 public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@Autowired
 	private GradedTeachingService gradedTeachingService;
+	@Autowired
+	private StudentService studentService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedTeaching', 'add')")
@@ -142,10 +152,83 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	public Boolean checkTeachingTeacher(Long id, Long teacherId) {
 		return gradedTeachingService.checkTeachingTeacher(id, teacherId);
 	}
-
-	@RequestMapping(path = "/check/teachingclassroom", method = RequestMethod.GET)
-	public Boolean checkTeachingClassroom(@RequestParam Map<String, Object> conditions) {
-
-		return gradedTeachingService.checkTeachingClassroom(conditions);
+	
+	@RequestMapping(path = "/{id}/teachingbuildingroom", method = RequestMethod.GET)
+	public Map<String, List<BuildingRoom>> findWeekBuildingRoom(Long id) {
+		return gradedTeachingService.findWeekBuildingRoom(id);
+	}
+	
+	@RequestMapping(path = "/gradedcourses", method = RequestMethod.GET)
+	@JsonView({ TeachingJsonViews.CascadeGradedCourse.class })
+	public GradedCourse getGradedCourse(@RequestParam Map<String, Object> conditions) {
+		return gradedTeachingService.getGradedCourse(conditions);
+	}
+	
+	@RequestMapping(path = "/gradedcourses/rank/{rankId}/teacher/{teacherId}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedCourse', 'edit')")
+	public void addGradedCourseStudents(@PathVariable Long rankId,@PathVariable Long teacherId, @RequestBody Map<String, String> studentIds) {
+		List<Long> addStudentIds = new ArrayList<>();
+		for (String key : studentIds.keySet()) {
+			addStudentIds.add(Long.parseLong(studentIds.get(key)));
+		}
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("studentIds", addStudentIds);
+		List<Student> students = studentService.findStudents(conditions);
+		conditions.clear();
+		conditions.put("rankId", rankId);
+		conditions.put("teacherId", teacherId);
+		List<Student> exitStudents = studentService.findStudents(conditions);
+		GradedCourse gradedCourse = gradedTeachingService.getGradedCourse(conditions);
+		gradedCourse.setStudents(exitStudents);
+		gradedCourse.getStudents().addAll(students);
+		gradedTeachingService.updateGradedCourse(gradedCourse);
+	}
+	
+	@RequestMapping(path = "/gradedcourses/rank/{rankId}/teacher/{teacherId}/student/{studentId}/remove", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedCourse', 'edit')")
+	@JsonView({ TeachingJsonViews.CascadeGradedCourse.class })
+	public void removeGradedCourseStudents(@PathVariable Long rankId,@PathVariable Long teacherId, @PathVariable Long studentId) {
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("rankId", rankId);
+		conditions.put("teacherId", teacherId);
+		GradedCourse gradedCourse = gradedTeachingService.getGradedCourse(conditions);
+		Student student = studentService.getStudent(studentId);
+		if(student == null){
+			throw new NotFoundException("该学生不存在");
+		}
+		conditions.clear();
+		conditions.put("rankId", rankId);
+		conditions.put("teacherId", teacherId);
+		List<Student> students = studentService.findStudents(conditions);
+		for (int i = 0; i < students.size(); i++) {
+			if(students.get(i).getId().equals(student.getId())){
+				students.remove(i);
+				break;
+			}
+		}
+		gradedCourse.setStudents(students);
+		gradedTeachingService.updateGradedCourse(gradedCourse);
+	}
+	
+	@RequestMapping(path = "/gradedcourses/rank/{rankId}/teacher/{teacherId}/students", method = RequestMethod.GET)
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
+	public List<Student> findGradedCourseStudent(@PathVariable Long rankId,@PathVariable Long teacherId, @RequestParam Map<String, Object> map) {
+		map.put("rankId", rankId);
+		map.put("teacherId", teacherId);
+		return studentService.findStudents(map);
+	}	
+	
+	@RequestMapping(path = "/gradedcourses/rank/{rankId}/teacher/{teacherId}/addstudents", method = RequestMethod.GET)
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
+	public List<Student> findGradedCourseAddStudent(@PathVariable Long rankId,@PathVariable Long teacherId, @RequestParam Map<String, Object> map) {
+		map.put("rankId", rankId);
+		map.put("teacherId", teacherId);
+		return gradedTeachingService.findAddStudents(map);
+	}
+	
+	@RequestMapping(path = "/gradedcourses/rank/{rankId}/teacher/{teacherId}/classrooms", method = RequestMethod.GET)
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
+	public List<Classroom> findGradedClassroom(@PathVariable Long rankId,@PathVariable Long teacherId) {
+		return gradedTeachingService.findGradedClassrooms(rankId, teacherId);
 	}
 }

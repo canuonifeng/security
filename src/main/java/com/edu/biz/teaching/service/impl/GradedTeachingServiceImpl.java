@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.common.util.TermCodeUtil;
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.service.ClassroomService;
+import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.teaching.dao.GradedCourseDao;
 import com.edu.biz.teaching.dao.GradedCourseSchooltimeDao;
 import com.edu.biz.teaching.dao.GradedRankDao;
@@ -36,7 +38,9 @@ import com.edu.biz.teaching.specification.GradedCourseSpecification;
 import com.edu.biz.teaching.specification.GradedRankSpecification;
 import com.edu.biz.teaching.specification.GradedSchooltimeSpecification;
 import com.edu.biz.teaching.specification.GradedSpecification;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.Teacher;
+import com.edu.biz.teachingres.service.BuildingService;
 import com.edu.biz.teachingres.service.TeacherService;
 import com.edu.core.exception.InvalidParameterException;
 import com.edu.core.exception.NotFoundException;
@@ -62,6 +66,10 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	private CourseArrangeService courseArrangeService;
 	@Autowired
 	private TeacherService teacherService;
+	@Autowired
+	private StudentService studentService;
+	@Autowired
+	private BuildingService buildingService;
 
 	@Override
 	public GradedTeaching createGraded(GradedTeaching graded) {
@@ -79,6 +87,96 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 
 	@Override
+	public Map<String, List<BuildingRoom>> findWeekBuildingRoom(Long id) {
+		Map<String, List<BuildingRoom>> initBuildingRooms = initWeekBuildingRoom();
+		return dealWeekBuildingRoom(initBuildingRooms, id);
+	}
+
+	private Map<String, List<BuildingRoom>> dealWeekBuildingRoom(Map<String, List<BuildingRoom>> initBuildingRooms,
+			Long id) {
+		Map<String, List<Long>> notBuildingRoomIds = new HashMap<>();
+		Map<String, List<String>> weekPeriods = getWeekPeriods(id);
+		Term term = termService.getTermByCurrent(1);
+		Map<String, Object> conditions = new HashMap<>();
+		for (String key : weekPeriods.keySet()) {
+			// 获取排课星期的教室id集合
+			conditions.clear();
+			conditions.put("periods", weekPeriods.get(key));
+			conditions.put("currentTermCode", term.getCode());
+			List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(conditions);
+			for (ScheduleCycle scheduleCycle : scheduleCycles) {
+				if (scheduleCycle.getBuildingRoom() != null) {
+					if (notBuildingRoomIds.containsKey(key)) {
+						notBuildingRoomIds.get(key).add(scheduleCycle.getBuildingRoom().getId());
+					} else {
+						List<Long> classroomIds = new ArrayList<>();
+						classroomIds.add(scheduleCycle.getBuildingRoom().getId());
+						notBuildingRoomIds.put(key, classroomIds);
+					}
+				}
+			}
+
+			// 获取分层星期的教室id集合
+			for (int i = 0; i < weekPeriods.get(key).size(); i++) {
+				String sourceTime[] = weekPeriods.get(key).get(i).split("-");
+				int timeSlot = Integer.parseInt(sourceTime[0]);
+				int period = Integer.parseInt(sourceTime[1]);
+				conditions.clear();
+				conditions.put("timeSlot", timeSlot);
+				conditions.put("period", period);
+				conditions.put("week", key);
+				conditions.put("currentTermCode", term.getCode());
+				List<GradedCourseSchooltime> gradedCourseSchooltimes = gradedCourseSchooltimeDao
+						.findAll(new GradedCourseSchooltimeSpecification(conditions));
+				for (GradedCourseSchooltime gradedCourseSchooltime : gradedCourseSchooltimes) {
+					if (gradedCourseSchooltime.getBuildingRoom() != null) {
+						if (notBuildingRoomIds.containsKey(key)) {
+							notBuildingRoomIds.get(key).add(gradedCourseSchooltime.getBuildingRoom().getId());
+						} else {
+							List<Long> classroomIds = new ArrayList<>();
+							classroomIds.add(gradedCourseSchooltime.getBuildingRoom().getId());
+							notBuildingRoomIds.put(key, classroomIds);
+						}
+					}
+				}
+			}
+		}
+		for (String week : initBuildingRooms.keySet()) {
+			conditions.clear();
+			conditions.put("notBuildingRoomIds", notBuildingRoomIds.get(week));
+			List<BuildingRoom> rooms = buildingService.findAllrooms(conditions);
+			initBuildingRooms.put(week, rooms);
+		}
+		return initBuildingRooms;
+	}
+
+	private Map<String, List<String>> getWeekPeriods(Long id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("gradedId", id);
+		Map<String, List<String>> periods = new HashMap<>();
+		List<GradedSchooltime> gradedSchooltimes = gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(map));
+		for (GradedSchooltime gradedSchooltime : gradedSchooltimes) {
+			if (periods.containsKey(gradedSchooltime.getWeek())) {
+				periods.get(gradedSchooltime.getWeek())
+						.add(gradedSchooltime.getTimeSlot() + "-" + gradedSchooltime.getPeriod());
+			} else {
+				List<String> schooltime = new ArrayList<>();
+				schooltime.add(gradedSchooltime.getTimeSlot() + "-" + gradedSchooltime.getPeriod());
+				periods.put(String.valueOf(gradedSchooltime.getWeek()), schooltime);
+			}
+		}
+		return periods;
+	}
+
+	private Map<String, List<BuildingRoom>> initWeekBuildingRoom() {
+		Map<String, List<BuildingRoom>> buildingRooms = new HashMap<>();
+		for (int i = 1; i <= 7; i++) {
+			buildingRooms.put(String.valueOf(i), null);
+		}
+		return buildingRooms;
+	}
+
+	@Override
 	@Transactional
 	public void createRank(List<GradedRank> list) {
 		for (GradedRank rank : list) {
@@ -89,7 +187,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	@Override
 	@Transactional
 	public void saveCourse(List<GradedCourseAndCourseTime> list) {
-		for(GradedCourseAndCourseTime gradedCourseAndCourseTime: list) {
+		for (GradedCourseAndCourseTime gradedCourseAndCourseTime : list) {
 			GradedCourse gradedCourse = gradedCourseDao.save(gradedCourseAndCourseTime.getGradedCourse());
 			Map<String, Object> map = new HashMap<>();
 			map.put("gradedCourseId", gradedCourse.getId());
@@ -97,18 +195,18 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 			if (!times.isEmpty()) {
 				gradedCourseSchooltimeDao.deleteByGradedCourseId(gradedCourse.getId());
 			}
-			for (GradedCourseSchooltime courseSchooltime: gradedCourseAndCourseTime.getGradedCourseTime()) {
+			for (GradedCourseSchooltime courseSchooltime : gradedCourseAndCourseTime.getGradedCourseTime()) {
 				courseSchooltime.setGradedCourse(gradedCourse);
 				gradedCourseSchooltimeDao.save(courseSchooltime);
 			}
 		}
 	}
-	
+
 	@Override
 	public List<GradedCourseSchooltime> findSchooltimesByCourseId(Map<String, Object> conditions) {
 		return gradedCourseSchooltimeDao.findAll(new GradedCourseSchooltimeSpecification(conditions));
 	}
-	
+
 	@Override
 	public List<GradedTeaching> findGradedTeachings(Map<String, Object> conditions) {
 		return gradedTeachingDao.findAll(new GradedSpecification(conditions));
@@ -120,31 +218,32 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 
 	@Override
-	public List<GradedRank> findRanks(Map<String, Object> conditions){
+	public List<GradedRank> findRanks(Map<String, Object> conditions) {
 		return gradedRankDao.findAll(new GradedRankSpecification(conditions));
 	}
-	
+
 	@Override
 	public List<GradedSchooltime> findTimes(Map<String, Object> conditions) {
 		return gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(conditions));
 	}
-	
+
 	@Override
 	public List<GradedCourseAndCourseTime> findCourses(Map<String, Object> conditions) {
 		List<GradedCourseAndCourseTime> list = new ArrayList<>();
-		List<GradedCourse> courses= gradedCourseDao.findAll(new GradedCourseSpecification(conditions));
-		for (GradedCourse course:courses) {
+		List<GradedCourse> courses = gradedCourseDao.findAll(new GradedCourseSpecification(conditions));
+		for (GradedCourse course : courses) {
 			GradedCourseAndCourseTime courseAndCourseTime = new GradedCourseAndCourseTime();
 			courseAndCourseTime.setGradedCourse(course);
 			Map<String, Object> map = new HashMap<>();
 			map.put("gradedCourseId", course.getId());
-			List<GradedCourseSchooltime> time = gradedCourseSchooltimeDao.findAll(new GradedCourseSchooltimeSpecification(map));
+			List<GradedCourseSchooltime> time = gradedCourseSchooltimeDao
+					.findAll(new GradedCourseSchooltimeSpecification(map));
 			courseAndCourseTime.setGradedCourseTime(time);
 			list.add(courseAndCourseTime);
 		}
 		return list;
 	}
-	
+
 	@Override
 	public GradedTeaching updateGradedTeaching(GradedTeaching graded) {
 		GradedTeaching saveGraded = gradedTeachingDao.findOne(graded.getId());
@@ -154,7 +253,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		BeanUtils.copyPropertiesWithCopyProperties(graded, saveGraded, "course", "schooltime", "classrooms", "subject");
 		return gradedTeachingDao.save(saveGraded);
 	}
-	
+
 	@Override
 	@Transactional
 	public void updateGradedTimes(Long id, List<GradedSchooltime> list) {
@@ -165,7 +264,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		gradedSchooltimeDao.deleteByGradedTeachingId(id);
 		createSchooltimes(list);
 	}
-	
+
 	@Override
 	@Transactional
 	public void updateGradedRanks(Long id, List<GradedRank> list) {
@@ -192,6 +291,45 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		}
 		gradedCourseDao.deleteByGradedTeachingId(id);
 		saveCourse(list);
+	}
+
+	@Override
+	public GradedCourse getGradedCourse(Map<String, Object> conditions) {
+		return gradedCourseDao.findOne(new GradedCourseSpecification(conditions));
+	}
+
+	@Override
+	public List<Student> findAddStudents(Map<String, Object> map) {
+		GradedCourse gradedCourse = gradedCourseDao.findOne(new GradedCourseSpecification(map));
+
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("gradedId", gradedCourse.getGradedTeaching().getId());
+		List<Student> students = studentService.findStudents(conditions);
+		List<Long> notStudentIds = new ArrayList<>();
+		for (Student student : students) {
+			notStudentIds.add(student.getId());
+		}
+		GradedTeaching gradedTeaching = gradedTeachingDao.findOne(gradedCourse.getGradedTeaching().getId());
+		List<Classroom> classrooms = gradedTeaching.getClassrooms();
+		List<Long> classroomIds = new ArrayList<>();
+		for (Classroom classroom : classrooms) {
+			classroomIds.add(classroom.getId());
+		}
+		map.remove("rankId");
+		map.remove("teacherId");
+		map.put("classroomIds", classroomIds);
+		map.put("notStudentIds", notStudentIds);
+		return studentService.findStudents(map);
+	}
+
+	@Override
+	public GradedCourse updateGradedCourse(GradedCourse gradedCourse) {
+		GradedCourse saveGradedCourse = gradedCourseDao.findOne(gradedCourse.getId());
+		if (null == saveGradedCourse) {
+			throw new NotFoundException("该分层课程不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(gradedCourse, saveGradedCourse, "students");
+		return gradedCourseDao.save(saveGradedCourse);
 	}
 
 	@Override
@@ -223,52 +361,54 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 
 	@Override
 	public Boolean checkTeachingTime(GradedTimeCheckForm gradedTimeCheckForm) {
-		List<String> periods = getCheckPeriod(gradedTimeCheckForm.getMorningLesson(), gradedTimeCheckForm.getAfternoonLesson(), gradedTimeCheckForm.getNightLesson());
+		List<String> periods = getCheckPeriod(gradedTimeCheckForm.getMorningLesson(),
+				gradedTimeCheckForm.getAfternoonLesson(), gradedTimeCheckForm.getNightLesson());
 		GradedTeaching gradedTeaching = getGradedTeaching(gradedTimeCheckForm.getGradedId());
 		List<Classroom> classrooms = gradedTeaching.getClassrooms();
 		for (Classroom classroom : classrooms) {
 			for (int j = 0; j < periods.size(); j++) {
-				//该节课要排位置在排课中是否存在
+				// 该节课要排位置在排课中是否存在
 				checkCourseArrangePosition(classroom, periods.get(j), gradedTimeCheckForm.getWeek());
-				//该节课要排位置在分层课程是否存在
-				checkGradedTeachingPosition(classroom, periods.get(j), gradedTimeCheckForm.getWeek(), gradedTeaching.getSchooltime());
+				// 该节课要排位置在分层课程是否存在
+				checkGradedTeachingPosition(classroom, periods.get(j), gradedTimeCheckForm.getWeek(),
+						gradedTeaching.getSchooltime());
 			}
 		}
 		return true;
 	}
 
 	private void checkGradedTeachingPosition(Classroom classroom, String period, Integer week, String schooltime) {
-		String source[]=period.split("-");
+		String source[] = period.split("-");
 		Map<String, Object> map = new HashMap<>();
 		map.put("week", week);
 		map.put("timeSlot", source[0]);
 		map.put("period", source[1]);
 		map.put("classroomId", classroom.getId());
 		List<GradedSchooltime> gradedSchooletimes = gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(map));
-		if(gradedSchooletimes.size() > 0){
+		if (gradedSchooletimes.size() > 0) {
 			checkTimeWeekIsCoincide(classroom, gradedSchooletimes, schooltime, period, week);
 		}
 	}
 
-	private void checkTimeWeekIsCoincide(Classroom classroom, List<GradedSchooltime> gradedSchooletimes, String schooltime, String period, Integer week) {
+	private void checkTimeWeekIsCoincide(Classroom classroom, List<GradedSchooltime> gradedSchooletimes,
+			String schooltime, String period, Integer week) {
 		String sourceTime[] = schooltime.split("-");
 		int startWeek = Integer.parseInt(sourceTime[0]);
 		int endWeek = Integer.parseInt(sourceTime[1]);
 		for (GradedSchooltime gradedSchooltime : gradedSchooletimes) {
 			GradedTeaching gradedTeaching = getGradedTeaching(gradedSchooltime.getGradedTeaching().getId());
 			String time[] = gradedTeaching.getSchooltime().split("-");
-			if((startWeek <= Integer.parseInt(time[0])) && (Integer.parseInt(time[0]) <= endWeek)){
+			if ((startWeek <= Integer.parseInt(time[0])) && (Integer.parseInt(time[0]) <= endWeek)) {
 				createCheckTeachingTimeError(classroom.getName(), week, period);
 			}
-			if((startWeek <= Integer.parseInt(time[1])) && (Integer.parseInt(time[1]) <= endWeek)){
+			if ((startWeek <= Integer.parseInt(time[1])) && (Integer.parseInt(time[1]) <= endWeek)) {
 				createCheckTeachingTimeError(classroom.getName(), week, period);
 			}
 		}
 	}
 
 	private void checkCourseArrangePosition(Classroom classroom, String period, Integer week) {
-		List<ScheduleCycle> scheduleCycles = hasCourseArrange(classroom.getId(), period,
-				week);
+		List<ScheduleCycle> scheduleCycles = hasCourseArrange(classroom.getId(), period, week);
 		if (scheduleCycles.size() != 0) {
 			createCheckTeachingTimeError(classroom.getName(), week, period);
 		}
@@ -276,8 +416,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 
 	private void createCheckTeachingTimeError(String classroomName, Integer week, String period) {
 		throw new InvalidParameterException(
-				"班级" + classroomName + "在周" + week
-						+ TermCodeUtil.getLessonByPeriod(period) + "已有课程被排");
+				"班级" + classroomName + "在周" + week + TermCodeUtil.getLessonByPeriod(period) + "已有课程被排");
 	}
 
 	@Override
@@ -287,16 +426,19 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		map.put("gradedId", gradedId);
 		List<GradedSchooltime> gradedSchooltimes = gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(map));
 		for (int j = 0; j < gradedSchooltimes.size(); j++) {
-			//该老师在该位置排的必修课是否有课要上
-			checkCourseArrangeTeacher(gradedSchooltimes.get(j).getTimeSlot()+"-"+gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getWeek(), teacher);
-			//该老师在该位置排的分层课是否有课要上
-			checkGradedTeachingTeacher(gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getTimeSlot(), gradedSchooltimes.get(j).getWeek(), teacher);
-			//该老师在该位置排的选修课是否有课要上
-			//TO DO
+			// 该老师在该位置排的必修课是否有课要上
+			checkCourseArrangeTeacher(
+					gradedSchooltimes.get(j).getTimeSlot() + "-" + gradedSchooltimes.get(j).getPeriod(),
+					gradedSchooltimes.get(j).getWeek(), teacher);
+			// 该老师在该位置排的分层课是否有课要上
+			checkGradedTeachingTeacher(gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getTimeSlot(),
+					gradedSchooltimes.get(j).getWeek(), teacher);
+			// 该老师在该位置排的选修课是否有课要上
+			// TO DO
 		}
 		return true;
 	}
-	
+
 	private void checkGradedTeachingTeacher(Integer period, Integer timeSlot, Integer week, Teacher teacher) {
 		Term term = termService.getTermByCurrent(1);
 		Map<String, Object> map = new HashMap<>();
@@ -306,8 +448,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		map.put("currentTermCode", term.getCode());
 		map.put("checkGradedTeacherId", teacher.getId());
 		GradedSchooltime gradedSchooltime = gradedSchooltimeDao.findOne(new GradedSchooltimeSpecification(map));
-		if(gradedSchooltime != null){
-			createCheckTeachingTeacherError(teacher.getName(), week, timeSlot+"-"+period);
+		if (gradedSchooltime != null) {
+			createCheckTeachingTeacherError(teacher.getName(), week, timeSlot + "-" + period);
 		}
 	}
 
@@ -320,34 +462,19 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		map.put("currentTermCode", term.getCode());
 		map.put("master", 1);
 		ScheduleCycle scheduleCycle = courseArrangeService.getScheduleCycle(map);
-		if(scheduleCycle != null){
+		if (scheduleCycle != null) {
 			createCheckTeachingTeacherError(teacher.getName(), week, period);
 		}
-		
+
 	}
 
 	private void createCheckTeachingTeacherError(String teacherName, Integer week, String period) {
 		throw new InvalidParameterException(
-				"老师" + teacherName + "在周" + week
-						+ TermCodeUtil.getLessonByPeriod(period) + "已有课程要上");
+				"老师" + teacherName + "在周" + week + TermCodeUtil.getLessonByPeriod(period) + "已有课程要上");
 	}
 
-	@Override
-	public Boolean checkTeachingClassroom(Map<String, Object> conditions) {
-		// 判断教室在某个星期某节课是否被占用
-//		List<String> periods = getCheckPeriod(conditions);
-//		for (int j = 0; j < periods.size(); j++) {
-//			ScheduleCycle cycle = courseArrangeService.getScheduleCycle(
-//					Long.parseLong(conditions.get("buildingRoomId").toString()), periods.get(j),
-//					Integer.parseInt(conditions.get("week").toString()));
-//			if (cycle != null) {
-//				throw new InvalidParameterException("该教室在此时间被占用");
-//			}
-//		}
-		return true;
-	}
-
-	private List<String> getCheckPeriod(List<String> morningLesson, List<String> afternoonLesson, List<String> nightLesson) {
+	private List<String> getCheckPeriod(List<String> morningLesson, List<String> afternoonLesson,
+			List<String> nightLesson) {
 		List<String> periods = new ArrayList<>();
 		if (morningLesson != null) {
 			for (int i = 0; i < morningLesson.size(); i++) {
@@ -375,5 +502,14 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		map.put("classroomId", classroomId);
 		map.put("termCode", term.getCode());
 		return courseArrangeService.findScheduleCycles(map);
+	}
+
+	@Override
+	public List<Classroom> findGradedClassrooms(Long rankId, Long teacherId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("rankId", rankId);
+		map.put("teacherId", teacherId);
+		GradedCourse gradedCourse = gradedCourseDao.findOne(new GradedCourseSpecification(map));
+		return gradedCourse.getGradedTeaching().getClassrooms();
 	}
 }

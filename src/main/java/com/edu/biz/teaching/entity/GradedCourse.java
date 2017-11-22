@@ -1,13 +1,19 @@
 package com.edu.biz.teaching.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.edu.biz.base.BaseEntity;
+import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.teachingres.entity.Teacher;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -28,6 +34,11 @@ public class GradedCourse extends BaseEntity {
 	@JoinColumn(name = "teacher_id")
 	@ApiModelProperty(value = "教师")
 	private Teacher teacher;
+
+	@ManyToMany(targetEntity = Student.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "graded_classroom_member", joinColumns = @JoinColumn(name = "graded_course_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"))
+	@JsonView({ TeachingJsonViews.CascadeStudent.class })
+	private List<Student> students;
 	
 	@ApiModelProperty(value = "学生数")
 	private int studentNumber;
@@ -62,5 +73,13 @@ public class GradedCourse extends BaseEntity {
 
 	public void setStudentNumber(int studentNumber) {
 		this.studentNumber = studentNumber;
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 }
