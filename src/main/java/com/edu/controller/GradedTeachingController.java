@@ -26,7 +26,6 @@ import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.TeachingJsonViews;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.GradedTeachingService;
-import com.edu.biz.teaching.specification.GradedCourseSpecification;
 import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.validgroup.Update;
@@ -47,7 +46,8 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedTeaching', 'add')")
 	public GradedTeaching add(@RequestBody GradedTeaching graded) {
-		return gradedTeachingService.createGraded(graded);
+		GradedTeaching gradedTeaching = gradedTeachingService.createGraded(graded);
+		return gradedTeaching;
 	}
 
 	@RequestMapping(path = "/schooltime", method = RequestMethod.POST)

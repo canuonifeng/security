@@ -495,4 +495,9 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		GradedCourse gradedCourse = gradedCourseDao.findOne(new GradedCourseSpecification(map));
 		return gradedCourse.getGradedTeaching().getClassrooms();
 	}
+	
+	@Override
+	public GradedTeaching getGradedTeaching(Map<String, Object> map) {
+		return gradedTeachingDao.findOne(new GradedSpecification(map));
+	}
 }
