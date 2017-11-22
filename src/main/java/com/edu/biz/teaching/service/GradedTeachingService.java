@@ -39,6 +39,8 @@ public interface GradedTeachingService {
 	public void updateGradedTimes(Long id, List<GradedSchooltime> list);
 	
 	public void updateGradedRanks(Long id, List<GradedRank> list);
+	
+	public void updateGradedCourse(Long id, List<GradedCourseAndCourseTime> list);
 
 	public List<Classroom> findGradedTeachingClassrooms(Map<String, Object> conditions);
 

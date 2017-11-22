@@ -5,4 +5,6 @@ import com.edu.biz.teaching.entity.GradedCourseSchooltime;
 
 public interface GradedCourseSchooltimeDao extends BaseDao<GradedCourseSchooltime> {
 	public void deleteByGradedCourseId(Long id);
+	
+	public void deleteByGradedCourseGradedTeachingId(Long id);
 }

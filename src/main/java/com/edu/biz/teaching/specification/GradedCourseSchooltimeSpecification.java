@@ -30,6 +30,9 @@ public class GradedCourseSchooltimeSpecification implements Specification<Graded
 			if (conditions.containsKey("gradedCourseId")) {
 				list.add(cb.equal(root.get("gradedCourse").get("id"), this.conditions.get("gradedCourseId")));
 			}
+			if (conditions.containsKey("gradedId")) {
+				list.add(cb.equal(root.get("gradedCourse").get("gradedTeaching").get("id"), this.conditions.get("gradedId")));
+			}
 			if (conditions.containsKey("currentTermCode")) {
 				Join<GradedCourseSchooltime, GradedSchooltime> join = root.join("gradedSchooltime");
 				Join<GradedSchooltime, GradedTeaching> joinGradedTeaching = join.join("gradedTeaching");
@@ -43,7 +46,6 @@ public class GradedCourseSchooltimeSpecification implements Specification<Graded
 				if(conditions.containsKey("period")){
 					list.add(cb.equal(join.get("period"), this.conditions.get("period")));
 				}
-				
 			}
 		}
 

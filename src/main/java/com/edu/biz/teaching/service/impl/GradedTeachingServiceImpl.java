@@ -275,6 +275,23 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		gradedRankDao.deleteByGradedTeachingId(id);
 		createRank(list);
 	}
+	
+	@Override
+	@Transactional
+	public void updateGradedCourse(Long id, List<GradedCourseAndCourseTime> list) {
+		GradedTeaching saveGraded = gradedTeachingDao.findOne(id);
+		if (null == saveGraded) {
+			throw new NotFoundException("该分层教学不存在");
+		}
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("gradedId", id);
+		List<GradedCourseSchooltime> courseTimes = gradedCourseSchooltimeDao.findAll(new GradedCourseSchooltimeSpecification(conditions));
+		for(GradedCourseSchooltime courseTime : courseTimes) {
+			gradedCourseSchooltimeDao.delete(courseTime.getId());
+		}
+		gradedCourseDao.deleteByGradedTeachingId(id);
+		saveCourse(list);
+	}
 
 	@Override
 	public GradedCourse getGradedCourse(Map<String, Object> conditions) {
