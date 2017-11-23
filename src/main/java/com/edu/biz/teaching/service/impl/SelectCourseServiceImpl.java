@@ -42,22 +42,26 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 	@Autowired
 	private TermService termService;
 	
+	@Override
 	public List<SelectCourse> findSelectCourses(Map<String, Object> conditions) {
 		return selectCourseDao.findAll(new SelectCourseSpecification(conditions));
 	}
 	
+	@Override
 	public SelectCourse createSelectCourse(SelectCourse selectCourse) {
 		Term term = termService.getTermByCurrent(1);
 		selectCourse.setTermCode(term.getCode());
 		return selectCourseDao.save(selectCourse);
 	}
 	
+	@Override
 	public void createSchooltimes(List<SelectCourseSchooltime> list) {
 		for (SelectCourseSchooltime time : list) {
 			selectCourseSchooltimeDao.save(time);
 		}
 	}
 	
+	@Override
 	public void saveClass(List<SelectCourseClassAndClassSchooltime> list) {
 		for(SelectCourseClassAndClassSchooltime selectCourseClassAndClassCourse: list) {
 			SelectCourseClass selectCourseClass = selectCourseClassDao.save(selectCourseClassAndClassCourse.getSelectCourseClass());
@@ -136,13 +140,18 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 		if (null == selectCourse) {
 			throw new NotFoundException("该选课不存在");
 		}
-		Map<String, Object> conditions = new HashMap<>();
-		conditions.put("selectCourseId", id);
-		List<SelectCourseClassSchooltime> classTimes = selectCourseClassSchooltimeDao.findAll(new SelectCourseClassSchooltimeSpecification(conditions));
-		for(SelectCourseClassSchooltime classTime : classTimes) {
-			selectCourseClassSchooltimeDao.delete(classTime.getId());
-		}
+		selectCourseClassSchooltimeDao.deleteBySelectCourseClassSelectCourseId(id);
 		selectCourseClassDao.deleteBySelectCourseId(id);
 		saveClass(list);
+	}
+	
+	@Override
+	@Transactional
+	public boolean deleteSelectCourse(Long id) {
+		selectCourseClassSchooltimeDao.deleteBySelectCourseClassSelectCourseId(id);
+		selectCourseSchooltimeDao.deleteBySelectCourseId(id);
+		selectCourseClassDao.deleteBySelectCourseId(id);
+		selectCourseDao.delete(id);
+		return true;
 	}
 }

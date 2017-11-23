@@ -31,4 +31,6 @@ public interface SelectCourseService {
 	public List<SelectCourseSchooltime> findTimes(Map<String, Object> conditions);
 	
 	public List<SelectCourseClassAndClassSchooltime> findClass(Long id);
+	
+	public boolean deleteSelectCourse(Long id);
 }

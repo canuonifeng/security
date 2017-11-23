@@ -283,12 +283,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		if (null == saveGraded) {
 			throw new NotFoundException("该分层教学不存在");
 		}
-		Map<String, Object> conditions = new HashMap<>();
-		conditions.put("gradedId", id);
-		List<GradedCourseSchooltime> courseTimes = gradedCourseSchooltimeDao.findAll(new GradedCourseSchooltimeSpecification(conditions));
-		for(GradedCourseSchooltime courseTime : courseTimes) {
-			gradedCourseSchooltimeDao.delete(courseTime.getId());
-		}
+		gradedCourseSchooltimeDao.deleteByGradedCourseGradedTeachingId(id);
 		gradedCourseDao.deleteByGradedTeachingId(id);
 		saveCourse(list);
 	}
@@ -330,6 +325,17 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(gradedCourse, saveGradedCourse, "students");
 		return gradedCourseDao.save(saveGradedCourse);
+	}
+	
+	@Override
+	@Transactional
+	public boolean deleteGradedTeaching(Long id) {
+		gradedCourseSchooltimeDao.deleteByGradedCourseGradedTeachingId(id);
+		gradedSchooltimeDao.deleteByGradedTeachingId(id);
+		gradedCourseDao.deleteByGradedTeachingId(id);
+		gradedRankDao.deleteByGradedTeachingId(id);
+		gradedTeachingDao.delete(id);
+		return true;
 	}
 
 	@Override
