@@ -59,6 +59,8 @@ public interface GradedTeachingService {
 	public List<Student> findAddStudents(Map<String, Object> map);
 
 	public List<Classroom> findGradedClassrooms(Long rankId, Long teacherId);
+	
+	public boolean deleteGradedTeaching(Long id);
 
 	public GradedTeaching getGradedTeaching(Map<String, Object> map);
 }

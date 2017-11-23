@@ -135,6 +135,12 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	public void editCourse(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<GradedCourseAndCourseTime> list) {
 		gradedTeachingService.updateGradedCourse(id, list);
 	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('gradedTeaching', 'delete')")
+	public boolean deleteGradedTeaching(@PathVariable Long id) {
+		return gradedTeachingService.deleteGradedTeaching(id);
+	}
 
 	@RequestMapping(path = "/course/{courseId}/classrooms", method = RequestMethod.GET)
 	public List<Classroom> findGradedTeachingClassrooms(@PathVariable Long courseId, @RequestParam Map<String, Object> conditions) {

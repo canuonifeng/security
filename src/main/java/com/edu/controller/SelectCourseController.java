@@ -107,4 +107,10 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	public void editClass(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<SelectCourseClassAndClassSchooltime> list) {
 		selectCourseService.updateSelectCourseClass(id, list);
 	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+	@PreAuthorize("hasPermission('selectCourse', 'delete')")
+	public boolean deleteSelectCourse(@PathVariable Long id) {
+		return selectCourseService.deleteSelectCourse(id);
+	}
 }
