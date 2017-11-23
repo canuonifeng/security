@@ -3,6 +3,7 @@ package com.edu.biz.teaching.service;
 import java.util.List;
 import java.util.Map;
 
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.SelectCourse;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseClassSchooltime;
@@ -29,6 +30,8 @@ public interface SelectCourseService {
 	public void updateSelectCourseClass(Long id, List<SelectCourseClassAndClassSchooltime> list);
 	
 	public List<SelectCourseSchooltime> findTimes(Map<String, Object> conditions);
+
+	public List<Classroom> findSelectCourseClassrooms(Map<String, Object> conditions);
 	
 	public List<SelectCourseClassAndClassSchooltime> findClass(Long id);
 	

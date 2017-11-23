@@ -6,7 +6,7 @@ public class GradedTimeCheckForm {
 	private List<String> morningLesson;
 	private List<String> afternoonLesson;
 	private List<String> nightLesson;
-	private Long gradedId;
+	private Long gradedTeachingId;
 	private Integer week;
 
 	public List<String> getMorningLesson() {
@@ -41,11 +41,11 @@ public class GradedTimeCheckForm {
 		this.week = week;
 	}
 
-	public Long getGradedId() {
-		return gradedId;
+	public Long getGradedTeachingId() {
+		return gradedTeachingId;
 	}
 
-	public void setGradedId(Long gradedId) {
-		this.gradedId = gradedId;
+	public void setGradedTeachingId(Long gradedTeachingId) {
+		this.gradedTeachingId = gradedTeachingId;
 	}
 }

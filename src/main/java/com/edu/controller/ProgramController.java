@@ -182,19 +182,12 @@ public class ProgramController extends BaseController<Program> {
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<ProgramCourseVo> courses(@RequestParam Map<String, Object> conditions) {
-		Long currentClassroomId = 0L;
-		if(conditions.containsKey("currentClassroomId")){
-			currentClassroomId = Long.parseLong(conditions.get("currentClassroomId").toString());
-			conditions.remove("currentClassroomId");
-		}
 		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
 		List<ProgramCourseVo> programCourseVos = new ArrayList<ProgramCourseVo>();
 		for (ProgramCourse programCourse : programCourses) {
 			ProgramCourseVo programCourseVo = new ProgramCourseVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(programCourse, programCourseVo);
-			if(currentClassroomId != 0L){
-				programCourseVo = buildProgramCourseVo(currentClassroomId, programCourseVo);
-			}
+			programCourseVo = buildProgramCourseVo(programCourseVo);
 			programCourseVos.add(programCourseVo);
 		}
 		return programCourseVos;
@@ -222,14 +215,14 @@ public class ProgramController extends BaseController<Program> {
 		return true;
 	}
 	
-	private ProgramCourseVo buildProgramCourseVo(Long currentClassroomId, ProgramCourseVo programCourseVo) {
+	private ProgramCourseVo buildProgramCourseVo(ProgramCourseVo programCourseVo) {
 		if(programCourseVo.getMergeClassroomIds() != null) {
 			String[] classroomIds = programCourseVo.getMergeClassroomIds().split(",");
+			if(classroomIds.length == 0){
+				return programCourseVo;
+			}
 			List<Long> ids = new ArrayList<>();
 			for (int i = 0; i < classroomIds.length; i++) {
-				if(Long.parseLong(classroomIds[i]) == currentClassroomId) {
-					continue;
-				}
 				ids.add(Long.parseLong(classroomIds[i]));
 			}
 			Map<String, Object> conditions = new HashMap<>();

@@ -369,7 +369,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	public Boolean checkTeachingTime(GradedTimeCheckForm gradedTimeCheckForm) {
 		List<String> periods = getCheckPeriod(gradedTimeCheckForm.getMorningLesson(),
 				gradedTimeCheckForm.getAfternoonLesson(), gradedTimeCheckForm.getNightLesson());
-		GradedTeaching gradedTeaching = getGradedTeaching(gradedTimeCheckForm.getGradedId());
+		GradedTeaching gradedTeaching = getGradedTeaching(gradedTimeCheckForm.getGradedTeachingId());
 		List<Classroom> classrooms = gradedTeaching.getClassrooms();
 		for (Classroom classroom : classrooms) {
 			for (int j = 0; j < periods.size(); j++) {
@@ -517,5 +517,10 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		map.put("teacherId", teacherId);
 		GradedCourse gradedCourse = gradedCourseDao.findOne(new GradedCourseSpecification(map));
 		return gradedCourse.getGradedTeaching().getClassrooms();
+	}
+	
+	@Override
+	public GradedTeaching getGradedTeaching(Map<String, Object> map) {
+		return gradedTeachingDao.findOne(new GradedSpecification(map));
 	}
 }

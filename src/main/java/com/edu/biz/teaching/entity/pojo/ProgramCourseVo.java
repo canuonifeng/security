@@ -9,6 +9,7 @@ public class ProgramCourseVo extends ProgramCourse {
 	
 	private Integer remainderCourseNum;
 	private List<Classroom> mergeClassroom;
+	private Boolean isGradedCourse;
 	
 	public Integer getRemainderCourseNum() {
 		return remainderCourseNum;
@@ -24,5 +25,13 @@ public class ProgramCourseVo extends ProgramCourse {
 
 	public void setMergeClassroom(List<Classroom> mergeClassroom) {
 		this.mergeClassroom = mergeClassroom;
+	}
+
+	public Boolean getIsGradedCourse() {
+		return isGradedCourse;
+	}
+
+	public void setIsGradedCourse(Boolean isGradedCourse) {
+		this.isGradedCourse = isGradedCourse;
 	}
 }
