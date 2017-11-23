@@ -24,12 +24,14 @@ import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.TeachingJsonViews;
+import com.edu.biz.teaching.entity.pojo.GradedTeachingVo;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.validgroup.Update;
 import com.edu.core.exception.NotFoundException;
+import com.edu.core.util.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
@@ -70,9 +72,18 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('gradedTeaching', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public List<GradedTeaching> findGradedTeaching(@RequestParam Map<String, Object> conditions) {
-		List<GradedTeaching> list = gradedTeachingService.findGradedTeachings(conditions);
-
+	public List<GradedTeachingVo> findGradedTeaching(@RequestParam Map<String, Object> conditions) {
+		List<GradedTeachingVo> list = new ArrayList<>();
+		List<GradedTeaching> gradeds = gradedTeachingService.findGradedTeachings(conditions);
+		for (GradedTeaching graded : gradeds) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("gradedId", graded.getId());
+			List<GradedSchooltime> times = gradedTeachingService.findTimes(map);
+			GradedTeachingVo gradedTeachingVo = new GradedTeachingVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(graded, gradedTeachingVo);
+			gradedTeachingVo.setGradedSchooltimes(times);
+			list.add(gradedTeachingVo);
+		}
 		return list;
 	}
 

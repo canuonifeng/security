@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +19,11 @@ import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.SelectCourse;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
+import com.edu.biz.teaching.entity.pojo.SelectCourseVo;
 import com.edu.biz.teaching.service.SelectCourseService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.validgroup.Update;
+import com.edu.core.util.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
@@ -47,9 +50,18 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('selectCourse', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public List<SelectCourse> findSelectCourse(@RequestParam Map<String, Object> conditions) {
-		List<SelectCourse> list = selectCourseService.findSelectCourses(conditions);
-
+	public List<SelectCourseVo> findSelectCourse(@RequestParam Map<String, Object> conditions) {
+		List<SelectCourseVo> list = new ArrayList<>();
+		List<SelectCourse> selectCourses = selectCourseService.findSelectCourses(conditions);
+		for (SelectCourse selectCourse : selectCourses) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("selectCourseId", selectCourse.getId());
+			List<SelectCourseSchooltime> times = selectCourseService.findTimes(map);
+			SelectCourseVo selectCourseVo = new SelectCourseVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(selectCourse, selectCourseVo);
+			selectCourseVo.setSelectCourseSchooltimes(times);
+			list.add(selectCourseVo);
+		}
 		return list;
 	}
 	
