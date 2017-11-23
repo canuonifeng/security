@@ -39,6 +39,9 @@ public class ProgramCourseSpecification implements Specification<ProgramCourse> 
 		if (conditions.containsKey("termNum")) {
 			list.add(cb.equal(root.get("termNum"), this.conditions.get("termNum")));
 		}
+		if (conditions.containsKey("nature")) {
+			list.add(cb.equal(root.get("nature"), this.conditions.get("nature")));
+		}
 		Predicate[] p = new Predicate[list.size()];
 		return cb.and(list.toArray(p));
 	}

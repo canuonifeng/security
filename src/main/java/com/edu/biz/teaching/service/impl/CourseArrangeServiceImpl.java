@@ -17,10 +17,16 @@ import com.edu.biz.teaching.dao.ClassScheduleDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.dao.ScheduleTeacherDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
+import com.edu.biz.teaching.entity.GradedCourse;
+import com.edu.biz.teaching.entity.GradedSchooltime;
+import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.ScheduleTeacher;
+import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
 import com.edu.biz.teaching.service.CourseArrangeService;
+import com.edu.biz.teaching.service.GradedTeachingService;
+import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.ClassScheduleSpecification;
 import com.edu.biz.teaching.specification.ScheduleCycleSpecification;
 import com.edu.biz.teaching.specification.ScheduleTeacherSpecification;
@@ -43,6 +49,10 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	private ScheduleTeacherDao scheduleTeacherDao;
 	@Autowired
 	private SettingService settingService;
+	@Autowired
+	private TermService termService;
+	@Autowired
+	private GradedTeachingService gradedTeachingService;
 
 	@Override
 	public ClassSchedule createClassSchedule(ClassSchedule classSchedule) {
@@ -58,7 +68,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		BeanUtils.copyPropertiesWithCopyProperties(classSchedule, savedClassSchedule, "classrooms");
 		return classScheduleDao.save(savedClassSchedule);
 	}
-	
+
 	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("term", term);
@@ -73,7 +83,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		conditions.put("courseId", couresId);
 		return classScheduleDao.findOne(new ClassScheduleSpecification(conditions));
 	}
-	
+
 	public List<ClassSchedule> findClassSchedules(String term, Long classroomId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("term", term);
@@ -86,8 +96,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return scheduleCycleDao.save(scheduleCycle);
 	}
 
-	public Map<Integer, Map<String, ScheduleCycleVo>> getCourseArrange(String term, Long classroomId) {
-		HashMap<Integer, Map<String, ScheduleCycleVo>> map = new HashMap<>();
+	public Map<Integer, Map<String, Object>> getCourseArrange(String term, Long classroomId) {
 		Setting setting = settingService.getSettingByCode("course_arrange_limit");
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -109,8 +118,42 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 
 		List<ClassSchedule> classSchedules = findClassSchedules(term, classroomId);
 
+		HashMap<Integer, Map<String, Object>> result = initScheduleData(limit);
+		//排课数据添加
+		for (ClassSchedule classSchedule : classSchedules) {
+			for (ScheduleCycle scheduleCycle : classSchedule.getScheduleCycles()) {
+				ScheduleCycleVo scheduleCycleVo = new ScheduleCycleVo();
+				BeanUtils.copyPropertiesWithIgnoreProperties(scheduleCycle, scheduleCycleVo);
+				HashMap<String, Object> conditions = new HashMap<String, Object>();
+				conditions.put("scheduleId", scheduleCycle.getClassSchedule().getId());
+				List<ScheduleTeacher> scheduleTeachers = findScheduleTeachers(conditions);
+				scheduleCycleVo.setScheduleTeacher(scheduleTeachers);
+
+				result.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), scheduleCycleVo);
+			}
+		}
+		//分层数据添加
+		Map<String, Object> map = new HashMap<>();
+		Term currentTerm = termService.getTermByCurrent(1);
+		map.put("classroomId", classroomId);
+		map.put("termCode", currentTerm.getCode());
+		List<GradedTeaching> gradedTeachings = gradedTeachingService.findGradedTeachings(map);
+		for (GradedTeaching gradedTeaching : gradedTeachings) {
+			map.clear();
+			map.put("gradedId", gradedTeaching.getId());
+			List<GradedSchooltime> gradedSchooltimes = gradedTeachingService.findTimes(map);
+			for (GradedSchooltime gradedSchooltime : gradedSchooltimes) {
+				result.get(gradedSchooltime.getWeek()).put(gradedSchooltime.getTimeSlot()+"-"+gradedSchooltime.getPeriod(), gradedTeaching.getCourse());
+			}
+		}
+		return result;
+	}
+
+	private HashMap<Integer, Map<String, Object>> initScheduleData(Map<String, Object> limit) {
+
+		HashMap<Integer, Map<String, Object>> result = new HashMap<>();
 		for (int i = 1; i <= 7; i++) {
-			Map<String, ScheduleCycleVo> weekSchedules = new LinkedHashMap<>();
+			Map<String, Object> weekSchedules = new LinkedHashMap<>();
 			for (int courseNum = 1, prefix = 1; courseNum <= Integer
 					.parseInt(limit.get("morning").toString()); courseNum++) {
 				weekSchedules.put(prefix + "-" + courseNum, null);
@@ -123,21 +166,9 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 					.parseInt(limit.get("night").toString()); courseNum++) {
 				weekSchedules.put(prefix + "-" + courseNum, null);
 			}
-			map.put(i, weekSchedules);
+			result.put(i, weekSchedules);
 		}
-		for (ClassSchedule classSchedule : classSchedules) {
-			for (ScheduleCycle scheduleCycle : classSchedule.getScheduleCycles()) {
-				ScheduleCycleVo scheduleCycleVo = new ScheduleCycleVo();
-				BeanUtils.copyPropertiesWithIgnoreProperties(scheduleCycle, scheduleCycleVo);
-				HashMap<String, Object> conditions = new HashMap<String, Object>();
-				conditions.put("scheduleId", scheduleCycle.getClassSchedule().getId());
-				List<ScheduleTeacher> scheduleTeachers = findScheduleTeachers(conditions);
-				scheduleCycleVo.setScheduleTeacher(scheduleTeachers);
-
-				map.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), scheduleCycleVo);
-			}
-		}
-		return map;
+		return result;
 	}
 
 	@Override
@@ -153,7 +184,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		conditions.put("week", week);
 		return scheduleCycleDao.findOne(new ScheduleCycleSpecification(conditions));
 	}
-	
+
 	@Override
 	public ScheduleTeacher createScheduleTeacher(ScheduleTeacher scheduleTeacher) {
 		return scheduleTeacherDao.save(scheduleTeacher);
@@ -180,7 +211,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		classScheduleDao.delete(id);
 		return null == classScheduleDao.findOne(id);
 	}
-	
+
 	@Override
 	public ScheduleCycle getScheduleCycle(Map<String, Object> conditions) {
 		return scheduleCycleDao.findOne(new ScheduleCycleSpecification(conditions));
@@ -195,14 +226,14 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	public Long countScheduleCyle(Map<String, Object> map) {
 		return scheduleCycleDao.count(new ScheduleCycleSpecification(map));
 	}
-	
+
 	@Override
 	@Transactional
 	public Boolean deleteScheduleTeacherByScheduleId(Long scheduleId) {
 		scheduleTeacherDao.deleteByClassScheduleId(scheduleId);
 		return true;
 	}
-	
+
 	@Override
 	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId) {
 		Map<String, Object> conditions = new HashMap<>();

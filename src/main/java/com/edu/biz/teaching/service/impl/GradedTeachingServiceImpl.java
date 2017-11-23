@@ -245,6 +245,11 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 
 	@Override
+	public List<GradedCourse> findGradedCourses(Map<String, Object> conditions) {
+		return gradedCourseDao.findAll(new GradedCourseSpecification(conditions));
+	}
+	
+	@Override
 	public GradedTeaching updateGradedTeaching(GradedTeaching graded) {
 		GradedTeaching saveGraded = gradedTeachingDao.findOne(graded.getId());
 		if (null == saveGraded) {

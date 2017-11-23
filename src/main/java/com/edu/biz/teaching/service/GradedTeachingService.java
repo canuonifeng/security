@@ -56,6 +56,8 @@ public interface GradedTeachingService {
 
 	public GradedCourse updateGradedCourse(GradedCourse gradedCourse);
 
+	public List<GradedCourse> findGradedCourses(Map<String, Object> conditions);
+
 	public List<Student> findAddStudents(Map<String, Object> map);
 
 	public List<Classroom> findGradedClassrooms(Long rankId, Long teacherId);
