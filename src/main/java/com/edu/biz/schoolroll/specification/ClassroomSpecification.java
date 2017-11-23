@@ -79,6 +79,12 @@ public class ClassroomSpecification implements Specification<Classroom> {
 					list.add(root.get("id").in(ids.toArray()));
 				}
 			}
+			if (conditions.containsKey("notClassroomIds")) {
+				List<Long> ids = (List<Long>) this.conditions.get("notClassroomIds");
+				if(ids.size()>0) {
+					list.add(cb.not(root.get("id").in(ids.toArray())));
+				}
+			}
 		}
 		Predicate[] p = new Predicate[list.size()];
 		return cb.and(list.toArray(p));
