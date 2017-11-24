@@ -15,7 +15,6 @@ import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.ClassSchedule;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.ScheduleTeacher;
-import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.Course;
@@ -132,7 +131,7 @@ public class CourseArrangeServiceTest extends BaseServiceTest {
 		setting.setCode("course_arrange_limit");
 		setting.setValue("{\"week\":[1,2,3,4,5],\"morning\":\"2\",\"afternoon\":\"4\",\"night\":\"1\"}");
 		settingService.modifySetting(setting);
-		Map<Integer, Map<String, ScheduleCycleVo>> result = courseArrangeService.getCourseArrange("17-18-1", 1L);
+		Map<Integer, Map<String, Object>> result = courseArrangeService.getCourseArrange("17-18-1", 1L);
 		Assert.assertNotEquals(null, result.get(1).get("1-1"));
 	}
 	
