@@ -36,6 +36,15 @@ public class GradedSubjectResultSpecification implements Specification<GradedSub
 			if (conditions.containsKey("gradedSubjectId")) {
 				list.add(cb.equal(root.get("gradedSubject").get("id"), this.conditions.get("gradedSubjectId")));
 			}
+			if (conditions.containsKey("classrooms")) {
+				list.add(root.get("student").get("classroom").in(this.conditions.get("classrooms")));
+			}
+			if (conditions.containsKey("minScore")) {
+				list.add(cb.greaterThanOrEqualTo(root.get("score"), Integer.parseInt(this.conditions.get("minScore").toString())));
+			}
+			if (conditions.containsKey("maxScore")) {
+				list.add(cb.lessThanOrEqualTo(root.get("score"), Integer.parseInt(this.conditions.get("maxScore").toString())));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
