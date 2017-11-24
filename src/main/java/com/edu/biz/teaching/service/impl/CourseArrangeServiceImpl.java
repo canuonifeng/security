@@ -17,7 +17,6 @@ import com.edu.biz.teaching.dao.ClassScheduleDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.dao.ScheduleTeacherDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
-import com.edu.biz.teaching.entity.GradedCourse;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.ScheduleCycle;
