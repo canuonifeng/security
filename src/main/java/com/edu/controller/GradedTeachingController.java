@@ -22,10 +22,13 @@ import com.edu.biz.teaching.entity.GradedCourse;
 import com.edu.biz.teaching.entity.GradedCourseAndCourseTime;
 import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
+import com.edu.biz.teaching.entity.GradedSubjectResult;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.TeachingJsonViews;
+import com.edu.biz.teaching.entity.pojo.GradedRankVo;
 import com.edu.biz.teaching.entity.pojo.GradedTeachingVo;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
+import com.edu.biz.teaching.service.GradedSubjectService;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
@@ -44,6 +47,8 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	private GradedTeachingService gradedTeachingService;
 	@Autowired
 	private StudentService studentService;
+	@Autowired
+	private GradedSubjectService gradedSubjectService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedTeaching', 'add')")
@@ -97,10 +102,24 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	@RequestMapping(path = "/{id}/ranks", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('gradedRank', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public List<GradedRank> findRanks(@PathVariable Long id) {
-		Map<String, Object> conditions = new HashMap<>();
-		conditions.put("gradedId", id);
-		return gradedTeachingService.findRanks(conditions);
+	public List<GradedRankVo> findRanks(@PathVariable Long id) {
+		List<GradedRankVo> list = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
+		map.put("gradedId", id);
+		List<GradedRank> ranks = gradedTeachingService.findRanks(map);
+		for (GradedRank rank:ranks) {
+			Map<String, Object> conditions = new HashMap<>();
+			conditions.put("classrooms", rank.getGradedTeaching().getClassrooms());
+			conditions.put("gradedSubjectId", rank.getGradedTeaching().getSubject().getId());
+			conditions.put("minScore", rank.getMinScore());
+			conditions.put("maxScore", rank.getMaxScore());
+			List<GradedSubjectResult> results = gradedSubjectService.findGradedSubjectResults(conditions);
+			GradedRankVo rankVo = new GradedRankVo();
+			BeanUtils.copyPropertiesWithIgnoreProperties(rank, rankVo);
+			rankVo.setStudentNumber(results.size());
+			list.add(rankVo);
+		}
+		return list;
 	}
 	
 	@RequestMapping(path = "/{id}/times", method = RequestMethod.GET)
