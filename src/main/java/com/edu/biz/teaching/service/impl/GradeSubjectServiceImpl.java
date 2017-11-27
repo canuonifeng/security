@@ -44,6 +44,16 @@ public class GradeSubjectServiceImpl extends BaseService implements GradedSubjec
 	public List<GradedSubject> findGradedSubjects(Map<String, Object> conditions) {
 		return gradedSubjectDao.findAll(new GradedSubjectSpecification(conditions));
 	}
+	
+	@Override
+	public GradedSubject updateGradedSubject(GradedSubject gradedSubject) {
+		GradedSubject savedSubject = gradedSubjectDao.findOne(gradedSubject.getId());
+		if (null == savedSubject) {
+			throw new NotFoundException("科目不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(gradedSubject, savedSubject, "name", "grade");
+		return gradedSubjectDao.save(savedSubject);
+	}
 
 	@Override
 	public GradedSubjectResult createResult(GradedSubjectResult gradedSubjectResult) {
