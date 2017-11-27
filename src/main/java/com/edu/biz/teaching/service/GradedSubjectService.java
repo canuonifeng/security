@@ -21,4 +21,6 @@ public interface GradedSubjectService {
 	public List<GradedSubjectResult> findGradedSubjectResults(Map<String, Object> map);
 
 	public GradedSubjectResult getGradedSubjectResult(Map<String, Object> map);
+	
+	public GradedSubject updateGradedSubject(GradedSubject gradedSubject);
 }

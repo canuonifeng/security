@@ -26,13 +26,16 @@ public class GradedSubjectController extends BaseController<GradedSubject> {
 	@Autowired
 	private GradedSubjectService gradedSubjectService;
 
-	@RequestMapping(path = "/batch", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedSubject', 'add')")
-	public Boolean create(@RequestBody Map<String, GradedSubject> gradedSubjects) {
-		for (String key : gradedSubjects.keySet()) {
-			gradedSubjectService.createGradedSubject(gradedSubjects.get(key));
-		}
-		return true;
+	public GradedSubject create(@RequestBody GradedSubject gradedSubject) {
+		return gradedSubjectService.createGradedSubject(gradedSubject);
+	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedSubject', 'edit')")
+	public GradedSubject edit(@RequestBody GradedSubject gradedSubject) {
+		return gradedSubjectService.updateGradedSubject(gradedSubject);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
@@ -61,7 +64,7 @@ public class GradedSubjectController extends BaseController<GradedSubject> {
 		return gradedSubjectService.updateResult(gradedSubjectResult);
 	}
 
-	@RequestMapping(path = "/{resultId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "/result/{resultId}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classroom', 'edit')")
 	public GradedSubjectResult edit(@PathVariable Long resultId, @RequestBody GradedSubjectResult gradedSubjectResult) {
 		gradedSubjectResult.setId(resultId);
