@@ -140,10 +140,28 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 	@Override
 	public List<Classroom> findSelectCourseClassrooms(Map<String, Object> conditions) {
 		Term term = termService.getTermByCurrent(1);
+		Map<String, Object> map = new HashMap<>();
+		map.put("courseId", conditions.get("courseId"));
+		map.put("termCode", term.getCode());
+		List<SelectCourse> selectCourses = findSelectCourses(map);
+
+		List<Classroom> notClassrooms = new ArrayList<>();
+		if (selectCourses.size() != 0) {
+			for (SelectCourse selectCourse : selectCourses) {
+				if(conditions.containsKey("selectCourseId") && selectCourse.getId().equals(conditions.get("selectCourseId"))){
+					continue;
+				}
+				List<Classroom> classrooms = selectCourse.getClassrooms();
+				notClassrooms.addAll(classrooms);
+			}
+		}
+		List<Long> notClassroomIds = new ArrayList<>();
+		for (int i = 0; i < notClassrooms.size(); i++) {
+			notClassroomIds.add(notClassrooms.get(i).getId());
+		}
 		conditions.put("selectCourseId", conditions.get("courseId"));
 		conditions.put("currentTermCode", term.getCode());
-		conditions.put("facultyId", conditions.get("facultyId"));
-		conditions.put("grade", conditions.get("grade"));
+		conditions.put("notClassroomIds", notClassroomIds);
 		conditions.put("nature", "elective");
 		return classroomService.findClassrooms(conditions);
 	}
