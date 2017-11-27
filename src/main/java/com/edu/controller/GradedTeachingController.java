@@ -178,6 +178,13 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 		return gradedTeachingService.findGradedTeachingClassrooms(conditions);
 	}
 
+	@RequestMapping(path = "/{id}/course/{courseId}/classrooms", method = RequestMethod.GET)
+	public List<Classroom> findUpdateGradedTeachingClassrooms(@PathVariable Long courseId, @PathVariable Long id, @RequestParam Map<String, Object> conditions) {
+		conditions.put("courseId", courseId);
+		conditions.put("gradedId", id);
+		return gradedTeachingService.findGradedTeachingClassrooms(conditions);
+	}
+	
 	@RequestMapping(path = "/check/teachingtime", method = RequestMethod.POST)
 	public Boolean checkTeachingTime(@RequestBody GradedTimeCheckForm gradedTimeCheckForm) {
 		return gradedTeachingService.checkTeachingTime(gradedTimeCheckForm);

@@ -359,10 +359,15 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		Map<String, Object> map = new HashMap<>();
 		map.put("courseId", conditions.get("courseId"));
 		map.put("termCode", term.getCode());
-		GradedTeaching gradedTeaching = gradedTeachingDao.findOne(new GradedSpecification(map));
-		if (gradedTeaching != null) {
-			List<Classroom> gradedTeachingClassrooms = gradedTeaching.getClassrooms();
-			notClassrooms.addAll(gradedTeachingClassrooms);
+		List<GradedTeaching> gradedTeachings = gradedTeachingDao.findAll(new GradedSpecification(map));
+		if (gradedTeachings.size() != 0) {
+			for (GradedTeaching gradedTeaching : gradedTeachings) {
+				if(conditions.containsKey("gradedId") && gradedTeaching.getId().equals(conditions.get("gradedId"))){
+					continue;
+				}
+				List<Classroom> gradedTeachingClassrooms = gradedTeaching.getClassrooms();
+				notClassrooms.addAll(gradedTeachingClassrooms);
+			}
 		}
 		List<Long> notClassroomIds = new ArrayList<>();
 		for (int i = 0; i < notClassrooms.size(); i++) {
