@@ -19,6 +19,10 @@ import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.pojo.ClassroomVo;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.ClassSchedule;
+import com.edu.biz.teaching.entity.GradedCourse;
+import com.edu.biz.teaching.entity.GradedSchooltime;
+import com.edu.biz.teaching.entity.GradedTeaching;
+import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.ScheduleTeacher;
@@ -26,6 +30,7 @@ import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.entity.pojo.ProgramCourseVo;
 import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
 import com.edu.biz.teaching.service.CourseArrangeService;
+import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teaching.service.ProgramService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.BuildingRoom;
@@ -60,6 +65,8 @@ public class CourseArrangeController extends BaseController<Course> {
 	private TeacherService teacherService;
 	@Autowired
 	private ProgramService programService;
+	@Autowired
+	private GradedTeachingService gradedTeachingService;
 
 	@RequestMapping(path = "/schedule", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classSchedule', 'add')")
@@ -85,7 +92,7 @@ public class CourseArrangeController extends BaseController<Course> {
 
 		return scheduleCycleVo;
 	}
-	
+
 	@RequestMapping(path = "schedule/{scheduleId}/mergeclassroom", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classSchedule', 'edit')")
 	public Boolean mergeClassroom(@PathVariable Long scheduleId, @RequestBody Map<String, String> classroomIds) {
@@ -97,15 +104,14 @@ public class CourseArrangeController extends BaseController<Course> {
 		conditions.put("classroomIds", mergeClassroomIds);
 		List<Classroom> classrooms = classroomService.findClassrooms(conditions);
 		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
-		if(classSchedule == null) {
+		if (classSchedule == null) {
 			throw new NotFoundException("该排课不存在");
 		}
 		classSchedule.setClassrooms(classrooms);
 		courseArrangeService.updateClassSchedule(classSchedule);
 		return true;
 	}
-	
-	
+
 	@RequestMapping(path = "schedule/{scheduleId}/cycle/{cycleId}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classSchedule', 'edit')")
 	public ScheduleCycle updateCourseArrange(@PathVariable Long scheduleId, @PathVariable Long cycleId,
@@ -144,9 +150,22 @@ public class CourseArrangeController extends BaseController<Course> {
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<ProgramCourseVo> termCourses(@RequestParam Map<String, Object> conditions) {
+		conditions.put("nature", "compulsory");
 		List<ProgramCourse> programCourses = programService.searchAllProgramCourse(conditions);
 		List<ProgramCourseVo> programCourseVos = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
+		Program program = programService.getProgram(Long.parseLong(conditions.get("programId").toString()));
 		for (ProgramCourse programCourse : programCourses) {
+			// 判断该课程在该班级是不是分层课程
+			map.clear();
+			map.put("termCode", TermCodeUtil.getTermCode(program.getGrade(),
+					Integer.parseInt(conditions.get("termNum").toString())));
+			map.put("courseId", programCourse.getCourse().getId());
+			map.put("classroomId", conditions.get("classroomId"));
+			GradedTeaching gradedTeaching = gradedTeachingService.getGradedTeaching(map);
+			if (gradedTeaching != null) {
+				continue;
+			}
 			ProgramCourseVo programCourseVo = buildProgramCourseVo(programCourse, conditions);
 			if (programCourseVo.getRemainderCourseNum().equals(0)) {
 				continue;
@@ -159,8 +178,8 @@ public class CourseArrangeController extends BaseController<Course> {
 	@RequestMapping(path = "/schedule", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classSchedule', 'get')")
 	@JsonView(TeachingresJsonViews.CascadeCourse.class)
-	public Map<Integer, Map<String, ScheduleCycleVo>> getCourseArrange(@RequestParam Map<String, String> conditions) {
-		Map<Integer, Map<String, ScheduleCycleVo>> list = courseArrangeService.getCourseArrange(conditions.get("code"),
+	public Map<Integer, Map<String, Object>> getCourseArrange(@RequestParam Map<String, String> conditions) {
+		Map<Integer, Map<String, Object>> list = courseArrangeService.getCourseArrange(conditions.get("code"),
 				Long.parseLong(conditions.get("classroomId")));
 		return list;
 	}
@@ -178,11 +197,12 @@ public class CourseArrangeController extends BaseController<Course> {
 
 		return scheduleCycleVo;
 	}
-	
+
 	@RequestMapping(path = "schedule/{scheduleId}/mergeclassroom", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
 	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
-	public List<ClassroomVo> getMergeClassroom(@PathVariable Long scheduleId, @RequestParam Map<String, Object> conditions) {
+	public List<ClassroomVo> getMergeClassroom(@PathVariable Long scheduleId,
+			@RequestParam Map<String, Object> conditions) {
 		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
 		if (classSchedule == null) {
 			throw new NotFoundException("该排课不存在");
@@ -191,14 +211,14 @@ public class CourseArrangeController extends BaseController<Course> {
 		map.put("mergeCourseId", classSchedule.getCourse().getId());
 		map.put("termCode", conditions.get("termCode"));
 		List<Classroom> classrooms = classroomService.findClassrooms(map);
-		
-		//判断班级集合在位置集合有没有冲突
+
+		// 判断班级集合在位置集合有没有冲突
 		map.clear();
 		map.put("scheduleId", classSchedule.getId());
 		List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(map);
 		return classroomCategory(classrooms, scheduleCycles);
 	}
-	
+
 	@RequestMapping(path = "/schedule/{scheduleId}/cycle/{cycleId}/setroom", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classSchedule', 'put')")
 	public ScheduleCycle setCourseRoom(@PathVariable Long scheduleId, @PathVariable Long cycleId,
@@ -231,14 +251,10 @@ public class CourseArrangeController extends BaseController<Course> {
 	private ScheduleCycleVo createScheduleCycle(Map<String, String> conditions, ClassSchedule classSchedule) {
 		String period = TermCodeUtil.getCoursePeriod(conditions.get("period"), conditions.get("type"));
 		Integer week = Integer.parseInt(conditions.get("week"));
-		List<ScheduleCycle> scheduleCycles = classroomHasOtherCourseArrange(Long.parseLong(conditions.get("classroomId")), period, week);
-		if (scheduleCycles.size() != 0) {
-			throw new InvalidParameterException("该位置已有课程被排");
-		}
+		checkScheduleTime(classSchedule, period, week);
 		ScheduleTeacher scheduleTeacher = courseArrangeService.getMasterScheduleTeacher(classSchedule.getId());
-		// 判断老师在某个星期某节课。是否有其他课程需要上
-		if(scheduleTeacher != null) {
-			teacherHasOtherCourseArrange(scheduleTeacher.getTeacher().getId(), period, week);
+		if (scheduleTeacher != null) {
+			checkScheduleTeacher(scheduleTeacher, period, week);
 		}
 
 		ScheduleCycle scheduleCycle = new ScheduleCycle();
@@ -255,6 +271,65 @@ public class CourseArrangeController extends BaseController<Course> {
 		return scheduleCycleVo;
 	}
 
+	private void checkScheduleTeacher(ScheduleTeacher scheduleTeacher, String period, Integer week) {
+		// 判断老师在某个星期某节课。是否有其他课程需要上
+		teacherHasOtherCourseArrange(scheduleTeacher.getTeacher().getId(), period, week);
+
+		Map<String, Object> map = new HashMap<>();
+		String sourcePeriod[] = period.split("-");
+		Term term = termService.getTermByCurrent(1);
+		if (term == null) {
+			throw new NotFoundException("未设置当前学期");
+		}
+		map.put("period", sourcePeriod[1]);
+		map.put("timeSlot", sourcePeriod[1]);
+		map.put("week", week);
+		map.put("termCode", term.getCode());
+		List<GradedSchooltime> gradedSchooltimes = gradedTeachingService.findTimes(map);
+		List<Long> gradedTeachingIds = new ArrayList<>();
+		for (GradedSchooltime gradedSchooltime : gradedSchooltimes) {
+			gradedTeachingIds.add(gradedSchooltime.getGradedTeaching().getId());
+		}
+		map.clear();
+		map.put("teacherId", scheduleTeacher.getId());
+		map.put("gradedIds", gradedTeachingIds);
+		List<GradedCourse> gradedCourses = gradedTeachingService.findGradedCourses(map);
+		if (gradedCourses.size() != 0) {
+			throw new InvalidParameterException("老师在该时间段还有其他分层课程需要上");
+		}
+	}
+
+	private void checkScheduleTime(ClassSchedule classSchedule, String period, Integer week) {
+		List<Classroom> classrooms = classSchedule.getClassrooms();
+		Term term = termService.getTermByCurrent(1);
+		Map<String, Object> map = new HashMap<>();
+		String sourcePeriod[] = period.split("-");
+		
+		for (Classroom classroom : classrooms) {
+			//排课时间点是否冲突
+			List<ScheduleCycle> scheduleCycles = classroomHasOtherCourseArrange(classroom.getId(), period, week);
+			if (scheduleCycles.size() != 0) {
+				throw new InvalidParameterException(classroom.getName()+"该位置已有课程被排");
+			}
+			//分层时间点是否冲突
+			map.clear();
+			map.put("classroomId", classroom.getId());
+			map.put("termCode", term.getCode());
+			List<GradedTeaching> gradedTeachings = gradedTeachingService.findGradedTeachings(map);
+			for (GradedTeaching gradedTeaching : gradedTeachings) {
+				map.clear();
+				map.put("timeSlot", sourcePeriod[0]);
+				map.put("period", sourcePeriod[1]);
+				map.put("gradedId", gradedTeaching.getId());
+				List<GradedSchooltime> gradedSchooltimes = gradedTeachingService.findTimes(map);
+				if (gradedSchooltimes.size() != 0) {
+					throw new InvalidParameterException(classroom.getName()+"该位置已有分层课程被排");
+				}
+			}
+		}
+		
+	}
+
 	private List<ScheduleTeacher> createScheduleTeachers(Long scheduleId, Map<String, Object> conditions) {
 		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(scheduleId);
 		if (classSchedule == null) {
@@ -263,12 +338,13 @@ public class CourseArrangeController extends BaseController<Course> {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("scheduleId", scheduleId);
 		List<ScheduleCycle> scheduleCycles = courseArrangeService.findScheduleCycles(map);
-		//判断所有该课程位置上主带老师是否有课要上
+		// 判断所有该课程位置上主带老师是否有课要上
 		for (ScheduleCycle scheduleCycle : scheduleCycles) {
-			teacherHasOtherCourseArrange((Long.parseLong(conditions.get("0").toString())), scheduleCycle.getPeriod(), scheduleCycle.getWeek());
+			teacherHasOtherCourseArrange((Long.parseLong(conditions.get("0").toString())), scheduleCycle.getPeriod(),
+					scheduleCycle.getWeek());
 		}
 		courseArrangeService.deleteScheduleTeacherByScheduleId(classSchedule.getId());
-		List<ScheduleTeacher> scheduleTeachers = new ArrayList<>();	
+		List<ScheduleTeacher> scheduleTeachers = new ArrayList<>();
 		for (String key : conditions.keySet()) {
 			Teacher teacher = teacherService.getTeacher(Long.parseLong(conditions.get(key).toString()));
 			if (teacher == null) {
@@ -332,11 +408,16 @@ public class CourseArrangeController extends BaseController<Course> {
 		if (teacher == null) {
 			throw new NotFoundException("老师不存在");
 		}
+		Term term = termService.getTermByCurrent(1);
+		if (term == null) {
+			throw new NotFoundException("未设置当前学期");
+		}
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("period", period);
 		map.put("week", week);
 		map.put("teacherId", teacher.getId());
 		map.put("master", 1);
+		map.put("termCode", term.getCode());
 		List<ScheduleCycle> scheduleCycle = courseArrangeService.findScheduleCycles(map);
 		if (scheduleCycle.size() != 0) {
 			throw new InvalidParameterException("老师在该时间段还有其他课程需要上");
@@ -347,7 +428,7 @@ public class CourseArrangeController extends BaseController<Course> {
 	private List<ScheduleCycle> classroomHasOtherCourseArrange(Long classroomId, String period, Integer week) {
 		HashMap<String, Object> map = new HashMap<>();
 		Term term = termService.getTermByCurrent(1);
-		if(term == null) {
+		if (term == null) {
 			throw new NotFoundException("未设置当前学期");
 		}
 		map.put("period", period);
@@ -357,15 +438,16 @@ public class CourseArrangeController extends BaseController<Course> {
 		// 判断某个星期的某节课，是否有课程
 		return courseArrangeService.findScheduleCycles(map);
 	}
-	
-	private List<ClassroomVo> classroomCategory(List<Classroom> classrooms, List<ScheduleCycle> scheduleCycles){
+
+	private List<ClassroomVo> classroomCategory(List<Classroom> classrooms, List<ScheduleCycle> scheduleCycles) {
 		List<ClassroomVo> classroomVos = new ArrayList<>();
 		for (int i = 0; i < classrooms.size(); i++) {
 			ClassroomVo classroomVo = new ClassroomVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(classrooms.get(i), classroomVo);
 			for (int j = 0; j < scheduleCycles.size(); j++) {
-				List<ScheduleCycle> cycles = classroomHasOtherCourseArrange(classroomVo.getId(), scheduleCycles.get(j).getPeriod(), scheduleCycles.get(j).getWeek());
-				if(cycles.size() != 0) {
+				List<ScheduleCycle> cycles = classroomHasOtherCourseArrange(classroomVo.getId(),
+						scheduleCycles.get(j).getPeriod(), scheduleCycles.get(j).getWeek());
+				if (cycles.size() != 0) {
 					classroomVo.setHasOtherCourse(1);
 					break;
 				}

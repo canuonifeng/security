@@ -245,6 +245,11 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 
 	@Override
+	public List<GradedCourse> findGradedCourses(Map<String, Object> conditions) {
+		return gradedCourseDao.findAll(new GradedCourseSpecification(conditions));
+	}
+	
+	@Override
 	public GradedTeaching updateGradedTeaching(GradedTeaching graded) {
 		GradedTeaching saveGraded = gradedTeachingDao.findOne(graded.getId());
 		if (null == saveGraded) {
@@ -344,21 +349,35 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		// 判断该课程是否已经排课
 		ClassSchedule classSchedule = courseArrangeService.getClassSchedule(term.getCode(),
 				Long.parseLong(conditions.get("courseId").toString()));
+
+		List<Classroom> notClassrooms = new ArrayList<>();
 		if (classSchedule != null) {
-			return null;
+			List<Classroom> scheduleClassrooms = classSchedule.getClassrooms();
+			notClassrooms.addAll(scheduleClassrooms);
 		}
 		// 判断该课程是否已经分层
 		Map<String, Object> map = new HashMap<>();
 		map.put("courseId", conditions.get("courseId"));
 		map.put("termCode", term.getCode());
-		GradedTeaching gradedTeaching = gradedTeachingDao.findOne(new GradedSpecification(map));
-		if (gradedTeaching != null) {
-			return null;
+		List<GradedTeaching> gradedTeachings = gradedTeachingDao.findAll(new GradedSpecification(map));
+		if (gradedTeachings.size() != 0) {
+			for (GradedTeaching gradedTeaching : gradedTeachings) {
+				if(conditions.containsKey("gradedId") && gradedTeaching.getId().equals(conditions.get("gradedId"))){
+					continue;
+				}
+				List<Classroom> gradedTeachingClassrooms = gradedTeaching.getClassrooms();
+				notClassrooms.addAll(gradedTeachingClassrooms);
+			}
+		}
+		List<Long> notClassroomIds = new ArrayList<>();
+		for (int i = 0; i < notClassrooms.size(); i++) {
+			notClassroomIds.add(notClassrooms.get(i).getId());
 		}
 		// 判断该课程是否属于选课
 		// TO DO
 		map.clear();
 		map.put("gradedCourseId", conditions.get("courseId"));
+		map.put("notClassroomIds", notClassroomIds);
 		map.put("currentTermCode", term.getCode());
 		map.put("facultyId", conditions.get("facultyId"));
 		map.put("grade", conditions.get("grade"));

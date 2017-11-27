@@ -6,12 +6,14 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.teaching.entity.GradedCourse;
+import com.edu.biz.teaching.entity.GradedTeaching;
 
 public class GradedCourseSpecification implements Specification<GradedCourse> {
 	private Map<String, Object> conditions;
@@ -36,6 +38,16 @@ public class GradedCourseSpecification implements Specification<GradedCourse> {
 			}
 			if (conditions.containsKey("studentNumber")) {
 				list.add(cb.equal(root.get("studentNumber").as(String.class), conditions.get("studentNumber")));
+			}
+			if (conditions.containsKey("termCode")) {
+				list.add(cb.equal(root.get("gradedTeaching").get("termCode").as(Long.class), conditions.get("termCode")));
+			}
+			if (conditions.containsKey("gradedIds")) {
+				List<Long> ids = (List<Long>) this.conditions.get("gradedIds");
+				if(ids.size()>0) {
+					Join<GradedCourse, GradedTeaching> join = root.join("gradedTeaching");
+					list.add(join.get("id").in(ids.toArray()));
+				}
 			}
 		}
 
