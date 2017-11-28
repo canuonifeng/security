@@ -24,6 +24,8 @@ public interface ProgramService {
 	public Page<Program> searchPrograms(Map<String, Object> conditions, Pageable pageable);
 
 	public Page<ProgramCourse> searchProgramCourse(Map<String, Object> conditions, Pageable pageable);
+	
+	public List<ProgramCourse> findProgramCourse(Map<String, Object> conditions);
 
 	public Page<Course> searchCoursesNotInProgram(Long programId, Map<String, Object> conditions, Pageable pageable);
 
