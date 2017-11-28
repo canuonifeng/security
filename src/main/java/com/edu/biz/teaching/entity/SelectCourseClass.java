@@ -18,7 +18,7 @@ public class SelectCourseClass extends BaseEntity {
 	@ManyToOne(targetEntity = SelectCourse.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "select_course_id")
 	@ApiModelProperty(value = "选课")
-	@JsonView({ TeachingJsonViews.CascadeSelectCourse.class })	
+	@JsonView({ TeachingJsonViews.CascadeSelectCourse.class })
 	private SelectCourse selectCourse;
 	
 	@ManyToOne(targetEntity = Teacher.class, fetch = FetchType.LAZY)

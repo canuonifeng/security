@@ -9,6 +9,8 @@ import com.edu.biz.teaching.entity.SelectCourseClass;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
+import com.edu.biz.teaching.entity.pojo.SelectCourseTimeCheckForm;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 
 public interface SelectCourseService {
 	
@@ -20,7 +22,7 @@ public interface SelectCourseService {
 	
 	public void saveClass(List<SelectCourseClassAndClassSchooltime> list);
 	
-	public List<SelectCourseClassSchooltime> findSchooltimesByClassId(Map<String, Object> conditions);
+	public List<SelectCourseClassSchooltime> findClassSchooltimes(Map<String, Object> conditions);
 	
 	public SelectCourse getSelectCourse(Long id);
 	
@@ -39,4 +41,8 @@ public interface SelectCourseService {
 	public boolean deleteSelectCourse(Long id);
 
 	public List<SelectCourseClass> findSelectCourseClasses(Map<String, Object> map);
+
+	public Boolean checkSelectCourseTime(SelectCourseTimeCheckForm selectCourseTimeCheckForm);
+
+	public Map<String, List<BuildingRoom>> findWeekBuildingRoom(Long id);
 }

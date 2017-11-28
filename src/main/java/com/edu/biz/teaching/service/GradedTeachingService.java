@@ -50,7 +50,7 @@ public interface GradedTeachingService {
 
 	public Map<String, List<BuildingRoom>> findWeekBuildingRoom(Long id);
 
-	public List<GradedCourseSchooltime> findSchooltimesByCourseId(Map<String, Object> conditions);
+	public List<GradedCourseSchooltime> findSchooltimes(Map<String, Object> conditions);
 
 	public GradedCourse getGradedCourse(Map<String, Object> conditions);
 
