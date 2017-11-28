@@ -13,7 +13,6 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.edu.biz.schoolroll.entity.Classroom;
-import com.edu.biz.teaching.entity.GradedCourse;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 

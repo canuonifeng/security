@@ -8,6 +8,7 @@ import javax.persistence.Table;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.teachingres.entity.Teacher;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -17,6 +18,7 @@ public class SelectCourseClass extends BaseEntity {
 	@ManyToOne(targetEntity = SelectCourse.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "select_course_id")
 	@ApiModelProperty(value = "选课")
+	@JsonView({ TeachingJsonViews.CascadeSelectCourse.class })	
 	private SelectCourse selectCourse;
 	
 	@ManyToOne(targetEntity = Teacher.class, fetch = FetchType.LAZY)

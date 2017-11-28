@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.SelectCourse;
+import com.edu.biz.teaching.entity.SelectCourseClass;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
@@ -36,4 +37,6 @@ public interface SelectCourseService {
 	public List<SelectCourseClassAndClassSchooltime> findClass(Long id);
 	
 	public boolean deleteSelectCourse(Long id);
+
+	public List<SelectCourseClass> findSelectCourseClasses(Map<String, Object> map);
 }

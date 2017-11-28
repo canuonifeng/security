@@ -26,12 +26,14 @@ import com.edu.biz.teaching.entity.Program;
 import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.ScheduleTeacher;
+import com.edu.biz.teaching.entity.SelectCourseClass;
 import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.entity.pojo.ProgramCourseVo;
 import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teaching.service.ProgramService;
+import com.edu.biz.teaching.service.SelectCourseService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.Course;
@@ -67,6 +69,8 @@ public class CourseArrangeController extends BaseController<Course> {
 	private ProgramService programService;
 	@Autowired
 	private GradedTeachingService gradedTeachingService;
+	@Autowired
+	private SelectCourseService selectCourseService;
 
 	@RequestMapping(path = "/schedule", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('classSchedule', 'add')")
@@ -296,6 +300,27 @@ public class CourseArrangeController extends BaseController<Course> {
 		List<GradedCourse> gradedCourses = gradedTeachingService.findGradedCourses(map);
 		if (gradedCourses.size() != 0) {
 			throw new InvalidParameterException("老师在该时间段还有其他分层课程需要上");
+		}
+		
+		teacherHasOtherSelectCourse(scheduleTeacher.getTeacher().getId(), period, week);
+	}
+
+	private void teacherHasOtherSelectCourse(Long id, String period, Integer week) {
+
+		Map<String, Object> map = new HashMap<>();
+		String sourcePeriod[] = period.split("-");
+		Term term = termService.getTermByCurrent(1);
+		if (term == null) {
+			throw new NotFoundException("未设置当前学期");
+		}
+		map.put("period", sourcePeriod[1]);
+		map.put("timeSlot", sourcePeriod[1]);
+		map.put("week", week);
+		map.put("termCode", term.getCode());
+		map.put("teacherId", id);
+		List<SelectCourseClass> selectCourseClasses = selectCourseService.findSelectCourseClasses(map);
+		if (selectCourseClasses.size() != 0) {
+			throw new InvalidParameterException("老师在该时间段还有其他选课需要上");
 		}
 	}
 

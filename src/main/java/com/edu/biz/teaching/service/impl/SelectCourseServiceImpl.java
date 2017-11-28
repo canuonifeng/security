@@ -83,6 +83,11 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 	}
 	
 	@Override
+	public List<SelectCourseClass> findSelectCourseClasses(Map<String, Object> map) {
+		return selectCourseClassDao.findAll(new SelectCourseClassSpecification(map));
+	}
+	
+	@Override
 	public List<SelectCourseClassSchooltime> findSchooltimesByClassId(Map<String, Object> conditions) {
 		return selectCourseClassSchooltimeDao.findAll(new SelectCourseClassSchooltimeSpecification(conditions));
 	}
