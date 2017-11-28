@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.exam.entity.ExamAboutFacultyAndGrade;
+import com.edu.biz.exam.entity.ExamAboutFacultyAndGradeAndTestWay;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.schoolroll.entity.Classroom;
@@ -34,8 +34,8 @@ public class ExamArrangeController extends BaseController<Faculty> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('examArrange', 'get')")
-	public List<ExamAboutFacultyAndGrade> examList(@RequestParam Map<String, Object> conditions) {
-		List<ExamAboutFacultyAndGrade> list = new ArrayList<>();
+	public List<ExamAboutFacultyAndGradeAndTestWay> examList(@RequestParam Map<String, Object> conditions) {
+		List<ExamAboutFacultyAndGradeAndTestWay> list = new ArrayList<>();
 		List<Faculty> facultys = facultyService.findFacultys(conditions);
 		for (Faculty faculty:facultys) {
 			Map<String, Object> classroomMap = new HashMap<>();
@@ -43,7 +43,7 @@ public class ExamArrangeController extends BaseController<Faculty> {
 			classroomMap.put("facultyId", faculty.getId());
 			List<Classroom> classroomList = classroomService.findClassrooms(classroomMap);
 			int count = programService.countWrittenProgramCourses(conditions.get("grade").toString(), faculty.getId(), "written");
-			ExamAboutFacultyAndGrade examList = new ExamAboutFacultyAndGrade();
+			ExamAboutFacultyAndGradeAndTestWay examList = new ExamAboutFacultyAndGradeAndTestWay();
 			examList.setFaculty(faculty);
 			examList.setGrade(conditions.get("grade").toString());
 			examList.setClassNumber(classroomList.size());

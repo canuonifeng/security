@@ -2,7 +2,7 @@ package com.edu.biz.exam.entity;
 
 import com.edu.biz.org.entity.Faculty;
 
-public class ExamAboutFacultyAndGrade {
+public class ExamAboutFacultyAndGradeAndTestWay {
 	
 	private Faculty faculty;
 	
