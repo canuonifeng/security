@@ -19,6 +19,7 @@ import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.teaching.entity.SelectCourse;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
+import com.edu.biz.teaching.entity.TeachingJsonViews;
 import com.edu.biz.teaching.entity.pojo.SelectCourseVo;
 import com.edu.biz.teaching.service.SelectCourseService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
@@ -49,7 +50,7 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('selectCourse', 'get')")
-	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
+	@JsonView({ TeachingJsonViews.CascadeSelectCourseClassAndTeacher.class })
 	public List<SelectCourseVo> findSelectCourse(@RequestParam Map<String, Object> conditions) {
 		List<SelectCourseVo> list = new ArrayList<>();
 		List<SelectCourse> selectCourses = selectCourseService.findSelectCourses(conditions);

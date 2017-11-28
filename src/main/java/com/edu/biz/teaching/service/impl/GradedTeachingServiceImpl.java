@@ -472,8 +472,17 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		map.put("period", period);
 		map.put("currentTermCode", term.getCode());
 		map.put("checkGradedTeacherId", teacher.getId());
-		GradedSchooltime gradedSchooltime = gradedSchooltimeDao.findOne(new GradedSchooltimeSpecification(map));
-		if (gradedSchooltime != null) {
+		List<GradedSchooltime> gradedSchooltimes = gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(map));
+		
+		List<Long> gradedTeachingIds = new ArrayList<>();
+		for (GradedSchooltime gradedSchooltime : gradedSchooltimes) {
+			gradedTeachingIds.add(gradedSchooltime.getGradedTeaching().getId());
+		}
+		map.clear();
+		map.put("teacherId", teacher.getId());
+		map.put("gradedIds", gradedTeachingIds);
+		List<GradedCourse> gradedCourses = findGradedCourses(map);
+		if (gradedCourses.size() != 0) {
 			createCheckTeachingTeacherError(teacher.getName(), week, timeSlot + "-" + period);
 		}
 	}
