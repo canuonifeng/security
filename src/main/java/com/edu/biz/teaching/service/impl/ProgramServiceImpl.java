@@ -107,8 +107,8 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	}
 	
 	@Override
-	public List<ProgramCourse> findProgramCourse(Map<String, Object> conditions) {
-		return programCourseDao.findAll(new ProgramCourseSpecification(conditions));
+	public int countWrittenProgramCourses(String grade, Long facultyId, String testWay) {
+		return programCourseDao.countWrittenProgramCourses(grade, facultyId, testWay);
 	}
 
 	@Override

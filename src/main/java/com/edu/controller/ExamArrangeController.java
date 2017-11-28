@@ -17,7 +17,6 @@ import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
-import com.edu.biz.teaching.entity.ProgramCourse;
 import com.edu.biz.teaching.service.ProgramService;
 
 import io.swagger.annotations.Api;
@@ -43,16 +42,12 @@ public class ExamArrangeController extends BaseController<Faculty> {
 			classroomMap.put("grade", conditions.get("grade"));
 			classroomMap.put("facultyId", faculty.getId());
 			List<Classroom> classroomList = classroomService.findClassrooms(classroomMap);
-			Map<String, Object> programCourseMap = new HashMap<>();
-			programCourseMap.put("grade", conditions.get("grade"));
-			programCourseMap.put("facultyId", faculty.getId());
-			programCourseMap.put("testWay", "written");
-			List<ProgramCourse> programCourses = programService.findProgramCourse(programCourseMap);
+			int count = programService.countWrittenProgramCourses(conditions.get("grade").toString(), faculty.getId(), "written");
 			ExamAboutFacultyAndGrade examList = new ExamAboutFacultyAndGrade();
 			examList.setFaculty(faculty);
 			examList.setGrade(conditions.get("grade").toString());
 			examList.setClassNumber(classroomList.size());
-			examList.setExamNumber(programCourses.size());
+			examList.setExamNumber(count);
 			list.add(examList);
 		}
 		
