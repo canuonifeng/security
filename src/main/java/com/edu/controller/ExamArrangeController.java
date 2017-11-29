@@ -50,14 +50,14 @@ public class ExamArrangeController extends BaseController<Faculty> {
 			Map<String, Object> classroomMap = new HashMap<>();
 			classroomMap.put("grade", conditions.get("grade"));
 			classroomMap.put("facultyId", faculty.getId());
-			List<Classroom> classroomList = classroomService.findClassrooms(classroomMap);
+			Long classroomCount = classroomService.countClassroom(classroomMap);
 			Term currenTerm = TermService.getTermByCurrent(1);
-			int count = programService.findWrittenProgramCourses(conditions.get("grade").toString(), faculty.getId(), "written", currenTerm.getCode());
+			int courseCount = programService.countWrittenProgramCourses(conditions.get("grade").toString(), faculty.getId(), "written", currenTerm.getCode());
 			ExamAboutFacultyAndGradeAndTestWay examList = new ExamAboutFacultyAndGradeAndTestWay();
 			examList.setFaculty(faculty);
 			examList.setGrade(conditions.get("grade").toString());
-			examList.setClassNumber(classroomList.size());
-			examList.setExamNumber(count);
+			examList.setClassNumber(Integer.valueOf(classroomCount.toString()));
+			examList.setExamNumber(courseCount);
 			list.add(examList);
 		}
 		
