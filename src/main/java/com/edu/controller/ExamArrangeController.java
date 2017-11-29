@@ -17,7 +17,10 @@ import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
+import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.ProgramService;
+import com.edu.biz.teaching.service.TermService;
+import com.edu.biz.teachingres.entity.Course;
 
 import io.swagger.annotations.Api;
 
@@ -31,6 +34,8 @@ public class ExamArrangeController extends BaseController<Faculty> {
 	private ClassroomService classroomService;
 	@Autowired
 	private ProgramService programService;
+	@Autowired
+	private TermService TermService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('examArrange', 'get')")
@@ -42,7 +47,8 @@ public class ExamArrangeController extends BaseController<Faculty> {
 			classroomMap.put("grade", conditions.get("grade"));
 			classroomMap.put("facultyId", faculty.getId());
 			List<Classroom> classroomList = classroomService.findClassrooms(classroomMap);
-			int count = programService.countWrittenProgramCourses(conditions.get("grade").toString(), faculty.getId(), "written");
+			Term currenTerm = TermService.getTermByCurrent(1);
+			int count = programService.findWrittenProgramCourses(conditions.get("grade").toString(), faculty.getId(), "written", currenTerm.getCode());
 			ExamAboutFacultyAndGradeAndTestWay examList = new ExamAboutFacultyAndGradeAndTestWay();
 			examList.setFaculty(faculty);
 			examList.setGrade(conditions.get("grade").toString());
