@@ -235,6 +235,11 @@ public class CourseArrangeController extends BaseController<Course> {
 		return updateScheduleCycle(cycleId, conditions);
 	}
 
+	@RequestMapping(path = "/{cycleId}/buildingroom", method = RequestMethod.GET)
+	public List<BuildingRoom> findBuildingRooms(@PathVariable Long cycleId) {
+		return courseArrangeService.findBuildingRooms(cycleId);
+	}
+	
 	private ClassSchedule createClassSchedule(Map<String, String> conditions, Long classroomId) {
 		Term term = termService.getTermByCode(conditions.get("code"));
 		Course course = courseService.getCourse(Long.parseLong(conditions.get("courseId")));
