@@ -28,10 +28,13 @@ import com.edu.biz.teaching.entity.GradedRank;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.ScheduleCycle;
+import com.edu.biz.teaching.entity.SelectCourseClassSchooltime;
+import com.edu.biz.teaching.entity.SelectCourseSchooltime;
 import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.entity.pojo.GradedTimeCheckForm;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.GradedTeachingService;
+import com.edu.biz.teaching.service.SelectCourseService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.GradedCourseSchooltimeSpecification;
 import com.edu.biz.teaching.specification.GradedCourseSpecification;
@@ -70,6 +73,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	private StudentService studentService;
 	@Autowired
 	private BuildingService buildingService;
+	@Autowired
+	private SelectCourseService selectCourseService;
 
 	@Override
 	public GradedTeaching createGraded(GradedTeaching graded) {
@@ -116,7 +121,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 				}
 			}
 
-			// 获取分层星期的教室id集合
+			// 获取分层星期的教室id集合(未判断周是否重合)
 			for (int i = 0; i < weekPeriods.get(key).size(); i++) {
 				String sourceTime[] = weekPeriods.get(key).get(i).split("-");
 				int timeSlot = Integer.parseInt(sourceTime[0]);
@@ -140,6 +145,31 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 					}
 				}
 			}
+			
+			//获取选课星期的教室id集合(未判断周是否重合)
+			for (int i = 0; i < weekPeriods.get(key).size(); i++) {
+				String sourceTime[] = weekPeriods.get(key).get(i).split("-");
+				int timeSlot = Integer.parseInt(sourceTime[0]);
+				int period = Integer.parseInt(sourceTime[1]);
+				conditions.clear();
+				conditions.put("timeSlot", timeSlot);
+				conditions.put("period", period);
+				conditions.put("week", key);
+				conditions.put("currentTermCode", term.getCode());
+				List<SelectCourseClassSchooltime> selectCourseSchooltimes = selectCourseService
+						.findClassSchooltimes(conditions);
+				for (SelectCourseClassSchooltime selectCourseSchooltime : selectCourseSchooltimes) {
+					if (selectCourseSchooltime.getBuildingRoom() != null) {
+						if (notBuildingRoomIds.containsKey(key)) {
+							notBuildingRoomIds.get(key).add(selectCourseSchooltime.getBuildingRoom().getId());
+						} else {
+							List<Long> classroomIds = new ArrayList<>();
+							classroomIds.add(selectCourseSchooltime.getBuildingRoom().getId());
+							notBuildingRoomIds.put(key, classroomIds);
+						}
+					}
+				}
+			}
 		}
 		for (String week : initBuildingRooms.keySet()) {
 			conditions.clear();
@@ -156,8 +186,8 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 		Map<String, List<String>> periods = new HashMap<>();
 		List<GradedSchooltime> gradedSchooltimes = gradedSchooltimeDao.findAll(new GradedSchooltimeSpecification(map));
 		for (GradedSchooltime gradedSchooltime : gradedSchooltimes) {
-			if (periods.containsKey(gradedSchooltime.getWeek())) {
-				periods.get(gradedSchooltime.getWeek())
+			if (periods.containsKey(String.valueOf(gradedSchooltime.getWeek()))) {
+				periods.get(String.valueOf(gradedSchooltime.getWeek()))
 						.add(gradedSchooltime.getTimeSlot() + "-" + gradedSchooltime.getPeriod());
 			} else {
 				List<String> schooltime = new ArrayList<>();
@@ -191,7 +221,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 			GradedCourse gradedCourse = gradedCourseDao.save(gradedCourseAndCourseTime.getGradedCourse());
 			Map<String, Object> map = new HashMap<>();
 			map.put("gradedCourseId", gradedCourse.getId());
-			List<GradedCourseSchooltime> times = findSchooltimesByCourseId(map);
+			List<GradedCourseSchooltime> times = findSchooltimes(map);
 			if (!times.isEmpty()) {
 				gradedCourseSchooltimeDao.deleteByGradedCourseId(gradedCourse.getId());
 			}
@@ -203,7 +233,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 
 	@Override
-	public List<GradedCourseSchooltime> findSchooltimesByCourseId(Map<String, Object> conditions) {
+	public List<GradedCourseSchooltime> findSchooltimes(Map<String, Object> conditions) {
 		return gradedCourseSchooltimeDao.findAll(new GradedCourseSchooltimeSpecification(conditions));
 	}
 
@@ -459,9 +489,27 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 			checkGradedTeachingTeacher(gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getTimeSlot(),
 					gradedSchooltimes.get(j).getWeek(), teacher);
 			// 该老师在该位置排的选修课是否有课要上
-			// TO DO
+			checkSelectCourseTeacher(gradedSchooltimes.get(j).getPeriod(), gradedSchooltimes.get(j).getTimeSlot(),
+					gradedSchooltimes.get(j).getWeek(), teacher);
 		}
 		return true;
+	}
+
+	private void checkSelectCourseTeacher(int period, int timeSlot, int week, Teacher teacher) {
+		Term term = termService.getTermByCurrent(1);
+		if (term == null) {
+			throw new NotFoundException("未设置当前学期");
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("period", period);
+		map.put("timeSlot", timeSlot);
+		map.put("week", week);
+		map.put("termCode", term.getCode());
+		map.put("teacherId", teacher.getId());
+		List<SelectCourseSchooltime> selectCourseSchooltimes = selectCourseService.findTimes(map);
+		if (selectCourseSchooltimes.size() != 0) {
+			createCheckTeachingTeacherError(teacher.getName(), week, timeSlot + "-" + period);
+		}
 	}
 
 	private void checkGradedTeachingTeacher(Integer period, Integer timeSlot, Integer week, Teacher teacher) {

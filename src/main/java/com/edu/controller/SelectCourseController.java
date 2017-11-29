@@ -20,8 +20,10 @@ import com.edu.biz.teaching.entity.SelectCourse;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
 import com.edu.biz.teaching.entity.TeachingJsonViews;
+import com.edu.biz.teaching.entity.pojo.SelectCourseTimeCheckForm;
 import com.edu.biz.teaching.entity.pojo.SelectCourseVo;
 import com.edu.biz.teaching.service.SelectCourseService;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.biz.validgroup.Update;
 import com.edu.core.util.BeanUtils;
@@ -50,7 +52,7 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	
 	@RequestMapping(path = "/all",method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('selectCourse', 'get')")
-	@JsonView({ TeachingJsonViews.CascadeSelectCourseClassAndTeacher.class })
+	@JsonView({ TeachingJsonViews.CascadeSelectCourseClass.class })
 	public List<SelectCourseVo> findSelectCourse(@RequestParam Map<String, Object> conditions) {
 		List<SelectCourseVo> list = new ArrayList<>();
 		List<SelectCourse> selectCourses = selectCourseService.findSelectCourses(conditions);
@@ -64,6 +66,11 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 			list.add(selectCourseVo);
 		}
 		return list;
+	}
+
+	@RequestMapping(path = "/check/selectcoursetime", method = RequestMethod.POST)
+	public Boolean checkTeachingTime(@RequestBody SelectCourseTimeCheckForm selectCourseTimeCheckForm) {
+		return selectCourseService.checkSelectCourseTime(selectCourseTimeCheckForm);
 	}
 	
 	@RequestMapping(path= "/class",method = RequestMethod.POST)
@@ -90,15 +97,24 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	
 	@RequestMapping(path = "/{id}/class", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('selectCourseClass', 'get')")
-	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public List<SelectCourseClassAndClassSchooltime> findClass(@PathVariable Long id) {
-		return selectCourseService.findClass(id);
+		List<SelectCourseClassAndClassSchooltime> selectCourseClassAndClassSchooltimes = selectCourseService.findClass(id);
+		for (SelectCourseClassAndClassSchooltime selectCourseClassAndClassSchooltime : selectCourseClassAndClassSchooltimes) {
+			selectCourseClassAndClassSchooltime.getSelectCourseClass().getTeacher().setCourses(null);
+			selectCourseClassAndClassSchooltime.getSelectCourseClass().getSelectCourse().setSelectCourseClasses(null);
+		}
+		return selectCourseClassAndClassSchooltimes;
 	}
 	
 	@RequestMapping(path = "/{id}/times", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('gradedTime', 'edit')")
 	public void editTimes(@PathVariable Long id, @Validated({ Update.class }) @RequestBody List<SelectCourseSchooltime> list) {
 		selectCourseService.updateSchooltimes(id, list);
+	}
+
+	@RequestMapping(path = "/{id}/selectcoursebuildingroom", method = RequestMethod.GET)
+	public Map<String, List<BuildingRoom>> findWeekBuildingRoom(Long id) {
+		return selectCourseService.findWeekBuildingRoom(id);
 	}
 	
 	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)

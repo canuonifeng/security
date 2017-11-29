@@ -12,7 +12,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.edu.biz.teaching.entity.GradedCourse;
+import com.edu.biz.teaching.entity.SelectCourse;
 import com.edu.biz.teaching.entity.SelectCourseClass;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
 
@@ -40,9 +40,9 @@ public class SelectCourseSchooltimeSpecification implements Specification<Select
 				list.add(cb.equal(root.get("selectCourse").get("id"), this.conditions.get("selectCourseId")));
 			}
 			if (conditions.containsKey("teacherId")) {
-				Join<SelectCourseSchooltime, GradedCourse> join = root.join("gradedCourse");
+				Join<SelectCourseSchooltime, SelectCourse> join = root.join("selectCourse");
 				list.add(cb.equal(join.get("termCode"), this.conditions.get("termCode")));
-				Join<GradedCourse, SelectCourseClass> joinSelectCourseClass = join.join("selectCourseClasses");
+				Join<SelectCourse, SelectCourseClass> joinSelectCourseClass = join.join("selectCourseClasses");
 				list.add(cb.equal(joinSelectCourseClass.get("teacher").get("id"), this.conditions.get("teacherId")));
 			}
 		}
