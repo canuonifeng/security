@@ -15,9 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.teaching.entity.GradedSubject;
 import com.edu.biz.teaching.entity.GradedSubjectResult;
+import com.edu.biz.teaching.entity.SubjectStatus;
 import com.edu.biz.teaching.service.GradedSubjectService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/gradesubject")
@@ -26,13 +31,27 @@ public class GradedSubjectController extends BaseController<GradedSubject> {
 	@Autowired
 	private GradedSubjectService gradedSubjectService;
 
-	@RequestMapping(path = "/batch", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedSubject', 'add')")
-	public Boolean create(@RequestBody Map<String, GradedSubject> gradedSubjects) {
-		for (String key : gradedSubjects.keySet()) {
-			gradedSubjectService.createGradedSubject(gradedSubjects.get(key));
-		}
-		return true;
+	public GradedSubject create(@RequestBody GradedSubject gradedSubject) {
+		return gradedSubjectService.createGradedSubject(gradedSubject);
+	}
+	
+	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedSubject', 'edit')")
+	public GradedSubject edit(@PathVariable Long id, @RequestBody GradedSubject gradedSubject) {
+		gradedSubject.setId(id);
+		return gradedSubjectService.updateGradedSubject(gradedSubject);
+	}
+	
+	@RequestMapping(path = "/{id}/status", method = RequestMethod.PUT)
+	@PreAuthorize("hasPermission('gradedSubject', 'edit')")
+	@ApiOperation(value = "修改科目状态")
+	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
+	public GradedSubject changeSubjectStatus(@PathVariable @ApiParam(name = "id", value = "科目ID", required = true) Long id,
+			@RequestBody @ApiParam(name = "status", value = "enable(启用)，disable(禁用)", required = true) Map<String, String> params) {
+		SubjectStatus status = SubjectStatus.valueOf(params.get("status"));
+		return gradedSubjectService.changeSubjectStatus(id, status);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
@@ -61,7 +80,7 @@ public class GradedSubjectController extends BaseController<GradedSubject> {
 		return gradedSubjectService.updateResult(gradedSubjectResult);
 	}
 
-	@RequestMapping(path = "/{resultId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "/result/{resultId}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('classroom', 'edit')")
 	public GradedSubjectResult edit(@PathVariable Long resultId, @RequestBody GradedSubjectResult gradedSubjectResult) {
 		gradedSubjectResult.setId(resultId);

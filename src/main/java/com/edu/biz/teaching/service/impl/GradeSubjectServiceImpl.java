@@ -11,6 +11,7 @@ import com.edu.biz.teaching.dao.GradedSubjectDao;
 import com.edu.biz.teaching.dao.GradedSubjectResultDao;
 import com.edu.biz.teaching.entity.GradedSubject;
 import com.edu.biz.teaching.entity.GradedSubjectResult;
+import com.edu.biz.teaching.entity.SubjectStatus;
 import com.edu.biz.teaching.service.GradedSubjectService;
 import com.edu.biz.teaching.specification.GradedSubjectResultSpecification;
 import com.edu.biz.teaching.specification.GradedSubjectSpecification;
@@ -44,6 +45,16 @@ public class GradeSubjectServiceImpl extends BaseService implements GradedSubjec
 	public List<GradedSubject> findGradedSubjects(Map<String, Object> conditions) {
 		return gradedSubjectDao.findAll(new GradedSubjectSpecification(conditions));
 	}
+	
+	@Override
+	public GradedSubject updateGradedSubject(GradedSubject gradedSubject) {
+		GradedSubject savedSubject = gradedSubjectDao.findOne(gradedSubject.getId());
+		if (null == savedSubject) {
+			throw new NotFoundException("科目不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(gradedSubject, savedSubject, "name", "grade");
+		return gradedSubjectDao.save(savedSubject);
+	}
 
 	@Override
 	public GradedSubjectResult createResult(GradedSubjectResult gradedSubjectResult) {
@@ -63,5 +74,15 @@ public class GradeSubjectServiceImpl extends BaseService implements GradedSubjec
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(gradedSubjectResult, savedResult, "sorce");
 		return gradedSubjectResultDao.save(gradedSubjectResult);
+	}
+	
+	@Override
+	public GradedSubject changeSubjectStatus(Long id, SubjectStatus status) {
+		GradedSubject savedSubject = gradedSubjectDao.findOne(id);
+		if (null == savedSubject) {
+			throw new NotFoundException("该科目不存在");
+		}
+		savedSubject.setStatus(status);
+		return gradedSubjectDao.save(savedSubject);
 	}
 }

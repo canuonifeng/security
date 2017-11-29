@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.edu.biz.teaching.entity.GradedSubject;
 import com.edu.biz.teaching.entity.GradedSubjectResult;
+import com.edu.biz.teaching.entity.SubjectStatus;
 
 public interface GradedSubjectService {
 	
@@ -21,4 +22,8 @@ public interface GradedSubjectService {
 	public List<GradedSubjectResult> findGradedSubjectResults(Map<String, Object> map);
 
 	public GradedSubjectResult getGradedSubjectResult(Map<String, Object> map);
+	
+	public GradedSubject updateGradedSubject(GradedSubject gradedSubject);
+	
+	public GradedSubject changeSubjectStatus(Long id, SubjectStatus status);
 }

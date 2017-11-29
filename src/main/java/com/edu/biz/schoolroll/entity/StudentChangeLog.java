@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 public class StudentChangeLog extends BaseEntity {
 	@ManyToOne(targetEntity = StudentChange.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "change_id" , insertable = false)
+	@JoinColumn(name = "change_id")
 	@ApiModelProperty(value = "学籍异动")
 	private StudentChange change;
 	

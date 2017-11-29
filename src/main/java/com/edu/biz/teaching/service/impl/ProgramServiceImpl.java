@@ -105,6 +105,11 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 	public Page<ProgramCourse> searchProgramCourse(Map<String, Object> conditions, Pageable pageable) {
 		return programCourseDao.findAll(new ProgramCourseSpecification(conditions), pageable);
 	}
+	
+	@Override
+	public int countWrittenProgramCourses(String grade, Long facultyId, String testWay) {
+		return programCourseDao.countWrittenProgramCourses(grade, facultyId, testWay);
+	}
 
 	@Override
 	public Page<Course> searchCoursesNotInProgram(Long programId, Map<String, Object> conditions, Pageable pageable) {
