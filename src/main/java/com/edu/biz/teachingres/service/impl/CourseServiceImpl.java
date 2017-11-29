@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
+import com.edu.biz.teaching.specification.ExamCourseSpecification;
 import com.edu.biz.teachingres.dao.CourseDao;
 import com.edu.biz.teachingres.entity.Course;
 import com.edu.biz.teachingres.entity.CourseStatus;
@@ -96,5 +97,10 @@ public class CourseServiceImpl extends BaseService implements CourseService {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public List<Course> findProgramCourses(Map<String, Object> conditions) {
+		return courseDao.findAll(new ExamCourseSpecification(conditions));
 	}
 }

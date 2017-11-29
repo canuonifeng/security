@@ -28,4 +28,6 @@ public interface CourseService {
 	public Course giveTeachers(Course course);
 	
 	public List<Course> findCourses(Map<String, Object> conditions);
+	
+	public List<Course> findProgramCourses(Map<String, Object> conditions);
 }
