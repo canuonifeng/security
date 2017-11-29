@@ -15,6 +15,6 @@ public interface ProgramCourseDao extends BaseDao<ProgramCourse> {
 	@Query(value = "select new com.edu.biz.teaching.entity.CountProgramCourseCategory(pc.category, count(pc)) from ProgramCourse pc where pc.program.id=:programId group by pc.category")
 	public List<CountProgramCourseCategory> countProgramCourseByProgramIdGroupByCategory(@Param("programId") Long programId);
 	
-	@Query(value="select COUNT(distinct course_id) from ProgramCourse pc where pc.program.major.faculty.id = :facultyId and pc.program.grade = :grade and pc.testWay = :testWay and pc.termCode = :term")
+	@Query(value="select COUNT(distinct course_id) from ProgramCourse pc where pc.course.faculty.id = :facultyId and pc.program.grade = :grade and pc.testWay = :testWay and pc.termCode = :term")
 	public int countWrittenProgramCourses(@Param("grade")String grade, @Param("facultyId")Long facultyId, @Param("testWay")String testWay, @Param("term")String term);
 }

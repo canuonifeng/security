@@ -20,7 +20,6 @@ import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.ProgramService;
 import com.edu.biz.teaching.service.TermService;
-import com.edu.biz.teachingres.entity.Course;
 
 import io.swagger.annotations.Api;
 
