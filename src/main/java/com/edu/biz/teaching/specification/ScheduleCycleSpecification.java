@@ -71,10 +71,10 @@ public class ScheduleCycleSpecification implements Specification<ScheduleCycle> 
 				if(periods.size()>0) {
 					list.add(root.get("period").in(periods.toArray()));
 				}
-				if (conditions.containsKey("currentTermCode")){
-					Join<ScheduleCycle, ClassSchedule> joinSchedule = root.join("classSchedule");
-					list.add(cb.equal(joinSchedule.get("term"), conditions.get("currentTermCode")));
-				}
+			}
+			if (conditions.containsKey("currentTermCode")){
+				Join<ScheduleCycle, ClassSchedule> joinSchedule = root.join("classSchedule");
+				list.add(cb.equal(joinSchedule.get("term"), conditions.get("currentTermCode")));
 			}
 		}
 		

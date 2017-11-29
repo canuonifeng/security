@@ -1,6 +1,7 @@
 package com.edu.biz.teaching.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,18 +18,23 @@ import com.edu.biz.teaching.dao.ClassScheduleDao;
 import com.edu.biz.teaching.dao.ScheduleCycleDao;
 import com.edu.biz.teaching.dao.ScheduleTeacherDao;
 import com.edu.biz.teaching.entity.ClassSchedule;
+import com.edu.biz.teaching.entity.GradedCourseSchooltime;
 import com.edu.biz.teaching.entity.GradedSchooltime;
 import com.edu.biz.teaching.entity.GradedTeaching;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.ScheduleTeacher;
+import com.edu.biz.teaching.entity.SelectCourseClassSchooltime;
 import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
 import com.edu.biz.teaching.service.CourseArrangeService;
 import com.edu.biz.teaching.service.GradedTeachingService;
+import com.edu.biz.teaching.service.SelectCourseService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.ClassScheduleSpecification;
 import com.edu.biz.teaching.specification.ScheduleCycleSpecification;
 import com.edu.biz.teaching.specification.ScheduleTeacherSpecification;
+import com.edu.biz.teachingres.entity.BuildingRoom;
+import com.edu.biz.teachingres.service.BuildingService;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
 import com.edu.core.util.BeanUtils;
@@ -52,6 +58,10 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 	private TermService termService;
 	@Autowired
 	private GradedTeachingService gradedTeachingService;
+	@Autowired
+	private SelectCourseService selectCourseService;
+	@Autowired
+	private BuildingService buildingService;
 
 	@Override
 	public ClassSchedule createClassSchedule(ClassSchedule classSchedule) {
@@ -95,6 +105,58 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return scheduleCycleDao.save(scheduleCycle);
 	}
 
+	@Override
+	public List<BuildingRoom> findBuildingRooms(Long cycleId) {
+		ScheduleCycle scheduleCycle = getScheduleCycle(cycleId);
+		return dealCycleBuildingRoom(scheduleCycle);
+	}
+
+	private List<BuildingRoom> dealCycleBuildingRoom(ScheduleCycle scheduleCycle) {
+		Term term = termService.getTermByCurrent(1);
+		List<Long> notBuildingroomIds = new ArrayList<Long>();
+		Map<String, Object> map = new HashMap<>();
+		// 获取排课同位置教室
+		map.put("currentTermCode", term.getCode());
+		map.put("period", scheduleCycle.getPeriod());
+		List<ScheduleCycle> scheduleCycles = findScheduleCycles(map);
+		for (ScheduleCycle cycle : scheduleCycles) {
+			if (cycle.getId().equals(scheduleCycle.getId())) {
+				continue;
+			}
+			if (cycle.getBuildingRoom() != null) {
+				notBuildingroomIds.add(cycle.getBuildingRoom().getId());
+			}
+		}
+
+		String sourceTime[] = scheduleCycle.getPeriod().split("-");
+		int timeSlot = Integer.parseInt(sourceTime[0]);
+		int period = Integer.parseInt(sourceTime[1]);
+		map.clear();
+		map.put("timeSlot", timeSlot);
+		map.put("period", period);
+		map.put("week", scheduleCycle.getWeek());
+		map.put("currentTermCode", term.getCode());
+
+		// 获取分层同位置教室
+		List<GradedCourseSchooltime> gradedCourseSchooltimes = gradedTeachingService.findSchooltimes(map);
+		for (GradedCourseSchooltime gradedCourseSchooltime : gradedCourseSchooltimes) {
+			if (gradedCourseSchooltime.getBuildingRoom() != null) {
+				notBuildingroomIds.add(gradedCourseSchooltime.getBuildingRoom().getId());
+			}
+		}
+
+		// 获取选课同位置教室
+		List<SelectCourseClassSchooltime> selectCourseSchooltimes = selectCourseService.findClassSchooltimes(map);
+		for (SelectCourseClassSchooltime selectCourseSchooltime : selectCourseSchooltimes) {
+			if (selectCourseSchooltime.getBuildingRoom() != null) {
+				notBuildingroomIds.add(selectCourseSchooltime.getBuildingRoom().getId());
+			}
+		}
+		map.clear();
+		map.put("notBuildingRoomIds", notBuildingroomIds);
+		return buildingService.findAllrooms(map);
+	}
+
 	public Map<Integer, Map<String, Object>> getCourseArrange(String term, Long classroomId) {
 		Setting setting = settingService.getSettingByCode("course_arrange_limit");
 
@@ -118,7 +180,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		List<ClassSchedule> classSchedules = findClassSchedules(term, classroomId);
 
 		HashMap<Integer, Map<String, Object>> result = initScheduleData(limit);
-		//排课数据添加
+		// 排课数据添加
 		for (ClassSchedule classSchedule : classSchedules) {
 			for (ScheduleCycle scheduleCycle : classSchedule.getScheduleCycles()) {
 				ScheduleCycleVo scheduleCycleVo = new ScheduleCycleVo();
@@ -131,7 +193,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 				result.get(scheduleCycle.getWeek()).put(scheduleCycle.getPeriod(), scheduleCycleVo);
 			}
 		}
-		//分层数据添加
+		// 分层数据添加
 		Map<String, Object> map = new HashMap<>();
 		Term currentTerm = termService.getTermByCurrent(1);
 		map.put("classroomId", classroomId);
@@ -142,7 +204,9 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 			map.put("gradedId", gradedTeaching.getId());
 			List<GradedSchooltime> gradedSchooltimes = gradedTeachingService.findTimes(map);
 			for (GradedSchooltime gradedSchooltime : gradedSchooltimes) {
-				result.get(gradedSchooltime.getWeek()).put(gradedSchooltime.getTimeSlot()+"-"+gradedSchooltime.getPeriod(), gradedTeaching.getCourse());
+				result.get(gradedSchooltime.getWeek()).put(
+						gradedSchooltime.getTimeSlot() + "-" + gradedSchooltime.getPeriod(),
+						gradedTeaching.getCourse());
 			}
 		}
 		return result;

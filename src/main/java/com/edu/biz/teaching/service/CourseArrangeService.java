@@ -6,7 +6,7 @@ import java.util.Map;
 import com.edu.biz.teaching.entity.ClassSchedule;
 import com.edu.biz.teaching.entity.ScheduleCycle;
 import com.edu.biz.teaching.entity.ScheduleTeacher;
-import com.edu.biz.teaching.entity.pojo.ScheduleCycleVo;
+import com.edu.biz.teachingres.entity.BuildingRoom;
 
 public interface CourseArrangeService {
 	
@@ -45,4 +45,6 @@ public interface CourseArrangeService {
 	public ScheduleCycle getScheduleCycle(Long buildingRoomId, String period, int week);
 
 	public ScheduleTeacher getMasterScheduleTeacher(Long scheduleId);
+
+	public List<BuildingRoom> findBuildingRooms(Long cycleId);
 }
