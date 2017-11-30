@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.edu.biz.base.BaseService;
 import com.edu.biz.exam.dao.ExamArrangeDao;
+import com.edu.biz.exam.dao.specification.ExamArrangeSpecification;
 import com.edu.biz.exam.entity.ExamAboutFacultyAndGradeAndTestWay;
 import com.edu.biz.exam.entity.ExamArrange;
 import com.edu.biz.exam.service.ExamArrangeService;
@@ -41,6 +42,10 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 	public void createExamArrange(ExamArrange examArrange) {
 		examArrangeDao.save(examArrange);
 	}
+
+	public List<ExamArrange> findExamArranges(Map<String, Object> conditions) {
+		return examArrangeDao.findAll(new ExamArrangeSpecification(conditions));
+	}
 	
 	@Override
 	public List<ExamAboutFacultyAndGradeAndTestWay> getExamList(Map<String, Object> conditions) {
@@ -56,7 +61,7 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 			ExamAboutFacultyAndGradeAndTestWay examList = new ExamAboutFacultyAndGradeAndTestWay();
 			examList.setFaculty(faculty);
 			examList.setGrade(conditions.get("grade").toString());
-			examList.setClassNumber(Integer.valueOf(classroomCount.toString()));
+			examList.setClassroomNumber(Integer.valueOf(classroomCount.toString()));
 			examList.setExamNumber(courseCount);
 			list.add(examList);
 		}
