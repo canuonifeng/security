@@ -42,8 +42,9 @@ public class ExamCourseSpecification implements Specification<Course> {
 				subQuery.where(
 						cb.equal(programCourseRoot.get("testWay"), this.conditions.get("testWay")), 
 						cb.equal(programCourseRoot.get("program").get("grade"), this.conditions.get("grade")), 
-						cb.equal(programCourseRoot.get("termCode"), this.conditions.get("currentTerm")), 
-						cb.equal(programCourseRoot.get("course").get("faculty").get("id"), this.conditions.get("facultyId")));
+						cb.equal(programCourseRoot.get("program").get("major").get("faculty").get("id"), this.conditions.get("facultyId")),
+						cb.equal(programCourseRoot.get("termCode"), this.conditions.get("termCode")), 
+						cb.equal(programCourseRoot.get("course").get("id"), root.get("id")));
 				list.add(cb.exists(subQuery));
 			}
 		}
