@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.teaching.entity.GradedSubject;
 import com.edu.biz.teaching.entity.GradedSubjectResult;
 import com.edu.biz.teaching.entity.SubjectStatus;
@@ -30,6 +32,8 @@ import io.swagger.annotations.ApiResponses;
 public class GradedSubjectController extends BaseController<GradedSubject> {
 	@Autowired
 	private GradedSubjectService gradedSubjectService;
+	@Autowired
+	private StudentService studentService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('gradedSubject', 'add')")
@@ -74,6 +78,8 @@ public class GradedSubjectController extends BaseController<GradedSubject> {
 		map.put("gradedSubjectId", gradedSubjectResult.getGradedSubject().getId());
 		GradedSubjectResult result = gradedSubjectService.getGradedSubjectResult(map);
 		if (result == null) {
+			Student student = studentService.getStudent(gradedSubjectResult.getStudent().getId());
+			gradedSubjectResult.setStudent(student);
 			return gradedSubjectService.createResult(gradedSubjectResult);
 		}
 		gradedSubjectResult.setId(result.getId());
