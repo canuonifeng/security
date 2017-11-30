@@ -61,7 +61,7 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 			ExamAboutFacultyAndGradeAndTestWay examList = new ExamAboutFacultyAndGradeAndTestWay();
 			examList.setFaculty(faculty);
 			examList.setGrade(conditions.get("grade").toString());
-			examList.setClassNumber(Integer.valueOf(classroomCount.toString()));
+			examList.setClassroomNumber(Integer.valueOf(classroomCount.toString()));
 			examList.setExamNumber(courseCount);
 			list.add(examList);
 		}
