@@ -18,7 +18,6 @@ import com.edu.biz.exam.entity.ExamArrange;
 import com.edu.biz.exam.service.ExamArrangeService;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
-import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.ProgramService;
