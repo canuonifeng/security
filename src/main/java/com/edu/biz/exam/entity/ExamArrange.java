@@ -1,5 +1,7 @@
 package com.edu.biz.exam.entity;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -18,7 +20,8 @@ public class ExamArrange extends BaseEntity {
 	@ApiModelProperty(value = "课程")
 	private Course course;
 	
-	private String ExamTime;
+	private Timestamp examStartTime;
+	private Timestamp examEndTime;
 	
 	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "faculty_id")
@@ -35,14 +38,6 @@ public class ExamArrange extends BaseEntity {
 
 	public void setCourse(Course course) {
 		this.course = course;
-	}
-
-	public String getExamTime() {
-		return ExamTime;
-	}
-
-	public void setExamTime(String examTime) {
-		ExamTime = examTime;
 	}
 
 	public Faculty getFaculty() {
@@ -67,5 +62,21 @@ public class ExamArrange extends BaseEntity {
 
 	public void setTermCode(String termCode) {
 		this.termCode = termCode;
+	}
+
+	public Timestamp getExamStartTime() {
+		return examStartTime;
+	}
+
+	public void setExamStartTime(Timestamp examStartTime) {
+		this.examStartTime = examStartTime;
+	}
+
+	public Timestamp getExamEndTime() {
+		return examEndTime;
+	}
+
+	public void setExamEndTime(Timestamp examEndTime) {
+		this.examEndTime = examEndTime;
 	}
 }
