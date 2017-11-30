@@ -30,6 +30,9 @@ public class GradedSubjectSpecification implements Specification<GradedSubject> 
 			if (conditions.containsKey("facultyId")) {
 				list.add(cb.equal(root.get("faculty").get("id"), this.conditions.get("facultyId")));
 			}
+			if (conditions.containsKey("status")) {
+				list.add(cb.equal(root.get("status").as(String.class), this.conditions.get("status")));
+			}
 		}
 
 		Predicate[] p = new Predicate[list.size()];
