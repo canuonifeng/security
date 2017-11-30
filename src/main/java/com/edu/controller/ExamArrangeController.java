@@ -15,6 +15,8 @@ import com.edu.biz.exam.entity.ExamAboutFacultyAndGradeAndTestWay;
 import com.edu.biz.exam.entity.ExamArrange;
 import com.edu.biz.exam.service.ExamArrangeService;
 import com.edu.biz.org.entity.Faculty;
+import com.edu.biz.teaching.entity.Term;
+import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.Course;
 
 import io.swagger.annotations.Api;
@@ -25,6 +27,8 @@ import io.swagger.annotations.Api;
 public class ExamArrangeController extends BaseController<Faculty> {
 	@Autowired
 	private ExamArrangeService examArrangeService;
+	@Autowired
+	private TermService termService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('examArrange', 'get')")
@@ -35,14 +39,16 @@ public class ExamArrangeController extends BaseController<Faculty> {
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('examArrange', 'add')")
 	public void add(@RequestBody List<ExamArrange> examArranges) {
-		for (ExamArrange examArrang:examArranges) {
-			examArrangeService.createExamArrange(examArrang);
+		for (ExamArrange examArrange:examArranges) {
+			examArrangeService.createExamArrange(examArrange);
 		}
 	}
 	
 	@RequestMapping(path = "/courses", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('examArrange', 'get')")
-	public List<Course> get(@RequestParam Map<String, Object> conditions) {
+	public List<Course> findCurrentTermExamArrangeCourses(@RequestParam Map<String, Object> conditions) {
+		Term term = termService.getTermByCurrent(1);
+		conditions.put("termCode", term.getCode());
 		return examArrangeService.findExamArrangeCourses(conditions);
 	}
 }
