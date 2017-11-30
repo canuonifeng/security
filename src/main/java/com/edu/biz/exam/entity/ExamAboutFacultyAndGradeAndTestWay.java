@@ -8,7 +8,7 @@ public class ExamAboutFacultyAndGradeAndTestWay {
 	
 	private String grade;
 	
-	private int classNumber;
+	private int classroomNumber;
 	
 	private int examNumber;
 
@@ -28,12 +28,12 @@ public class ExamAboutFacultyAndGradeAndTestWay {
 		this.grade = grade;
 	}
 
-	public int getClassNumber() {
-		return classNumber;
+	public int getClassroomNumber() {
+		return classroomNumber;
 	}
 
-	public void setClassNumber(int classNumber) {
-		this.classNumber = classNumber;
+	public void setClassroomNumber(int classroomNumber) {
+		this.classroomNumber = classroomNumber;
 	}
 
 	public int getExamNumber() {
