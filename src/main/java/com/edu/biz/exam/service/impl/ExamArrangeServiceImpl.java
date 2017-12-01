@@ -24,6 +24,8 @@ import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teaching.specification.ExamCourseSpecification;
 import com.edu.biz.teachingres.dao.CourseDao;
 import com.edu.biz.teachingres.entity.Course;
+import com.edu.core.exception.NotFoundException;
+import com.edu.core.util.BeanUtils;
 
 @Service
 public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeService {
@@ -85,5 +87,21 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 		conditions.put("grade", classroom.getGrade());
 		conditions.put("testWay", "written");
 		return findExamArranges(conditions);
+	}
+	
+	@Override
+	public ExamArrange getExamArrange(Map<String, Object> map) {
+		return examArrangeDao.findOne(new ExamArrangeSpecification(map));
+	}
+	
+	@Override
+	public ExamArrange updateExamArrange(ExamArrange examArrange) {
+		ExamArrange savedexamArrange = examArrangeDao.findOne(examArrange.getId());
+		if (null == savedexamArrange) {
+			throw new NotFoundException("该课程排考不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(examArrange, savedexamArrange, "examStartTime", "examEndTime");
+		
+		return examArrangeDao.save(savedexamArrange);
 	}
 }

@@ -18,4 +18,8 @@ public interface ExamArrangeService {
 	public List<Course> findExamArrangeCourses(Map<String, Object> conditions);
 	
 	public List<ExamArrange> findClassroomExamArranges(Map<String, Object> conditions);
+
+	public ExamArrange getExamArrange(Map<String, Object> map);
+
+	public ExamArrange updateExamArrange(ExamArrange examArrange);
 }
