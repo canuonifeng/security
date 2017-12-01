@@ -36,6 +36,9 @@ public class ExamArrangeSpecification implements Specification<ExamArrange> {
 			if (conditions.containsKey("termCode")) {
 				list.add(cb.equal(root.get("termCode"), this.conditions.get("termCode")));
 			}
+			if (conditions.containsKey("courseId")) {
+				list.add(cb.equal(root.get("course").get("id"), this.conditions.get("courseId")));
+			}
 			if (conditions.containsKey("programId")) {
 				Subquery<ProgramCourse> subQuery = query.subquery(ProgramCourse.class);
 				Root<ProgramCourse> programCourseRoot = subQuery.from(ProgramCourse.class);
