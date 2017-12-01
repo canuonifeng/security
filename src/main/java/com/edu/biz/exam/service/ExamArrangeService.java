@@ -16,4 +16,6 @@ public interface ExamArrangeService {
 	public List<ExamAboutFacultyAndGradeAndTestWay> getExamList(Map<String, Object> conditions);
 
 	public List<Course> findExamArrangeCourses(Map<String, Object> conditions);
+	
+	public List<ExamArrange> findClassroomExamArranges(Map<String, Object> conditions);
 }
