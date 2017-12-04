@@ -16,6 +16,7 @@ import com.edu.biz.exam.entity.ExamArrange;
 import com.edu.biz.exam.service.ExamArrangeService;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
+import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.service.ClassroomService;
 import com.edu.biz.teaching.entity.Term;
 import com.edu.biz.teaching.service.ProgramService;
@@ -35,7 +36,7 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 	@Autowired
 	private ProgramService programService;
 	@Autowired
-	private TermService TermService;
+	private TermService termService;
 	@Autowired
 	ExamArrangeDao examArrangeDao;
 	@Autowired
@@ -58,7 +59,7 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 			classroomMap.put("grade", conditions.get("grade"));
 			classroomMap.put("facultyId", faculty.getId());
 			Long classroomCount = classroomService.countClassroom(classroomMap);
-			Term currenTerm = TermService.getTermByCurrent(1);
+			Term currenTerm = termService.getTermByCurrent(1);
 			int courseCount = programService.countWrittenProgramCourses(conditions.get("grade").toString(), faculty.getId(), "written", currenTerm.getCode());
 			ExamAboutFacultyAndGradeAndTestWay examList = new ExamAboutFacultyAndGradeAndTestWay();
 			examList.setFaculty(faculty);
@@ -74,6 +75,18 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 	@Override
 	public List<Course> findExamArrangeCourses(Map<String, Object> conditions) {
 		return courseDao.findAll(new ExamCourseSpecification(conditions));
+	}
+	
+	@Override
+	public List<ExamArrange> findClassroomExamArranges(Map<String, Object> conditions) {
+		Classroom classroom = classroomService.getClassroom(Long.valueOf(conditions.get("classroomId").toString()));
+		Term term = termService.getTermByCurrent(1);
+		conditions.put("termCode", term.getCode());
+		conditions.put("programId", classroom.getProgram().getId());
+		conditions.put("facultyId", classroom.getMajor().getFaculty().getId());
+		conditions.put("grade", classroom.getGrade());
+		conditions.put("testWay", "written");
+		return findExamArranges(conditions);
 	}
 	
 	@Override
