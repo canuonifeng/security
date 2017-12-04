@@ -73,6 +73,11 @@ public class ClassroomSpecification implements Specification<Classroom> {
 				list.add(cb.equal(join.get("nature").as(String.class), conditions.get("nature")));
 				list.add(cb.equal(join.get("termCode"), conditions.get("currentTermCode")));
 			}
+			if (conditions.containsKey("finalGradeCourseId")) {
+				Join<Classroom, Program> joinProgram = root.join("program");
+				Join<Program, ProgramCourse> join = joinProgram.join("programCourses");
+				list.add(cb.equal(join.get("course").get("id").as(Long.class), conditions.get("finalGradeCourseId")));
+			}
 			if (conditions.containsKey("classroomIds")) {
 				List<Long> ids = (List<Long>) this.conditions.get("classroomIds");
 				if(ids.size()>0) {
