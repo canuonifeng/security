@@ -1,5 +1,6 @@
 package com.edu.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +85,11 @@ public class TermController extends BaseController<Term> {
 	public Page<Term> pager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "longCode" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return termService.searchTerms(conditions, pageable);
+	}
+	
+	@RequestMapping(path="/all", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('term', 'get')")
+	public List<Term> findAllTerms(@RequestParam Map<String, Object> conditions) {
+		return termService.findTerms(conditions);
 	}
 }
