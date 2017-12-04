@@ -23,7 +23,7 @@ import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/api/finalgrade")
-@Api("课程")
+@Api("课程成绩")
 public class FinalGradeController extends BaseController<Course> {
 	@Autowired
 	private FinalGradeService finalGradeService;
