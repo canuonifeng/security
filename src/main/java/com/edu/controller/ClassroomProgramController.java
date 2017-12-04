@@ -92,9 +92,15 @@ public class ClassroomProgramController extends BaseController<Classroom> {
 		Map<String, Object> map = new HashMap<>();
 		map.put("termCode", term.getCode());
 		map.put("courseId", programCourseVo.getCourse().getId());
-		GradedTeaching gradedTeaching = gradedTeachingService.getGradedTeaching(map);
-		if(gradedTeaching != null) {
-			for (Classroom classroom : gradedTeaching.getClassrooms()) {
+		List<GradedTeaching> gradedTeachings = gradedTeachingService.findGradedTeachings(map);
+		if(gradedTeachings.size() != 0) {
+			List<Classroom> classrooms = new ArrayList<>();
+			for (GradedTeaching gradedTeaching : gradedTeachings) {
+				if(gradedTeaching.getClassrooms().size() != 0){
+					classrooms.addAll(gradedTeaching.getClassrooms());
+				}
+			}
+			for (Classroom classroom : classrooms) {
 				if (classroomId.equals(classroom.getId())) {
 					programCourseVo.setIsGradedCourse(true);
 					break;
