@@ -10,17 +10,24 @@ import org.springframework.stereotype.Service;
 import com.edu.biz.base.BaseService;
 import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.service.FacultyService;
+import com.edu.biz.schoolroll.entity.Student;
+import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.teaching.dao.FinalGradePartCourseDao;
 import com.edu.biz.teaching.dao.FinalGradePartDao;
+import com.edu.biz.teaching.dao.FinalGradePartStudentDao;
 import com.edu.biz.teaching.entity.FinalGradePart;
 import com.edu.biz.teaching.entity.FinalGradePartCourse;
+import com.edu.biz.teaching.entity.FinalGradePartStudent;
 import com.edu.biz.teaching.entity.pojo.FinalGradeCourseForm;
 import com.edu.biz.teaching.service.FinalGradeService;
 import com.edu.biz.teaching.specification.FinalGradePartCourseSpecification;
 import com.edu.biz.teaching.specification.FinalGradePartSpecification;
+import com.edu.biz.teaching.specification.FinalGradePartStudentSpecification;
 import com.edu.biz.teaching.specification.FinalGradeSpecification;
 import com.edu.biz.teachingres.dao.CourseDao;
 import com.edu.biz.teachingres.entity.Course;
+import com.edu.core.exception.NotFoundException;
+import com.edu.core.util.BeanUtils;
 
 @Service
 public class FinalGradeServiceImpl extends BaseService implements FinalGradeService {
@@ -29,9 +36,13 @@ public class FinalGradeServiceImpl extends BaseService implements FinalGradeServ
 	@Autowired
 	private FinalGradePartCourseDao finalGradePartCourseDao;
 	@Autowired
+	private FinalGradePartStudentDao finalGradePartStudentDao;
+	@Autowired
 	private FinalGradePartDao finalGradePartDao;
 	@Autowired
 	private FacultyService facultyService;
+	@Autowired
+	private StudentService studentService;
 
 	@Override
 	public List<Course> findFinalGradeCourses(Map<String, Object> conditions) {
@@ -86,5 +97,40 @@ public class FinalGradeServiceImpl extends BaseService implements FinalGradeServ
 	@Override
 	public List<FinalGradePart> findFinalGradeParts(Map<String, Object> conditions) {
 		return finalGradePartDao.findAll(new FinalGradePartSpecification(conditions));
+	}
+	
+	@Override
+	public List<Student> findFinalGradeStudents(Map<String, Object> conditions) {
+		return studentService.findStudents(conditions);
+	}
+	
+	@Override
+	public List<FinalGradePartStudent> findFinalGradePartStudents(HashMap<String, Object> map) {
+		return finalGradePartStudentDao.findAll(new FinalGradePartStudentSpecification(map));
+	}
+	
+	@Override
+	public FinalGradePartStudent getFinalGradePartStudent(Map<String, Object> map) {
+		return finalGradePartStudentDao.findOne(new FinalGradePartStudentSpecification(map));
+	}
+	
+	@Override
+	public FinalGradePartCourse getFinalGradePartCourse(Long finalGradePartCourseId) {
+		return finalGradePartCourseDao.findOne(finalGradePartCourseId);
+	}
+	
+	@Override
+	public FinalGradePartStudent createFinalGradePartStudent(FinalGradePartStudent finalGradePartStudent) {
+		return finalGradePartStudentDao.save(finalGradePartStudent);
+	}
+	
+	@Override
+	public FinalGradePartStudent updateFinalGradePartStudent(FinalGradePartStudent finalGradePartStudent) {
+		FinalGradePartStudent savedFinalGradePartStudent = finalGradePartStudentDao.findOne(finalGradePartStudent.getId());
+		if (null == savedFinalGradePartStudent) {
+			throw new NotFoundException("学生课程成绩不存在");
+		}
+		BeanUtils.copyPropertiesWithCopyProperties(finalGradePartStudent, savedFinalGradePartStudent, "score");
+		return finalGradePartStudentDao.save(savedFinalGradePartStudent);
 	}
 }
