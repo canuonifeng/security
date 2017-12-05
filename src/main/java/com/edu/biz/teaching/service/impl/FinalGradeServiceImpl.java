@@ -55,6 +55,7 @@ public class FinalGradeServiceImpl extends BaseService implements FinalGradeServ
 			FinalGradePart finalGradePart = getFinalGradePart(Long.parseLong(key));
 			createFinalGradePartCourse.setCourse(course);
 			createFinalGradePartCourse.setFaculty(faculty);
+			createFinalGradePartCourse.setTermCode(finalGradeCourseForm.getTermCode());
 			createFinalGradePartCourse.setFinalGradePart(finalGradePart);
 			createFinalGradePartCourse
 					.setScore(Double.parseDouble(finalGradeCourseForm.getGradeCourseScore().get(key)));

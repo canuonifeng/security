@@ -47,6 +47,8 @@ public class FinalGradeController extends BaseController<Course> {
 			FinalGradeCourseVo finalGradeCourseVo = new FinalGradeCourseVo();
 			BeanUtils.copyPropertiesWithIgnoreProperties(course, finalGradeCourseVo);
 			finalGradeCourseVo.setClassroomCount(classrooms.size());
+			map.clear();
+			map.put("courseId", course.getId());
 			List<FinalGradePartCourse> finalGradePartCourses = finalGradeService.findFinalGradePartCourses(map);
 			finalGradeCourseVo.setFinalGradePartCourses(finalGradePartCourses);
 			finalGradeCourseVos.add(finalGradeCourseVo);
