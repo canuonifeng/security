@@ -44,6 +44,9 @@ public class FinalGradeController extends BaseController<Course> {
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('finalgrade', 'get')")
 	public List<FinalGradeCourseVo> get(@RequestParam Map<String, Object> conditions) {
+		if(!conditions.containsKey("facultyId") || !conditions.containsKey("facultyId")){
+			return new ArrayList<>();
+		}
 		List<Course> courses = finalGradeService.findFinalGradeCourses(conditions);
 		List<FinalGradeCourseVo> finalGradeCourseVos = new ArrayList<FinalGradeCourseVo>();
 		
@@ -68,23 +71,25 @@ public class FinalGradeController extends BaseController<Course> {
 	public Boolean edit(@RequestBody FinalGradeCourseForm finalGradeCourseForm) {
 		return finalGradeService.setFinalGradePartCourses(finalGradeCourseForm);
 	}
-	
+
 	@RequestMapping(path = "/part", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('finalgrade', 'get')")
 	public List<FinalGradePart> findFinalGradePart(@RequestParam Map<String, Object> conditions) {
 		return finalGradeService.findFinalGradeParts(conditions);
 	}
-	
+
 	@RequestMapping(path = "/partcourse", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('finalgrade', 'get')")
 	public List<FinalGradePartCourse> findFinalGradePartCourse(@RequestParam Map<String, Object> conditions) {
 		return finalGradeService.findFinalGradePartCourses(conditions);
 	}
-	
+
 	@RequestMapping(path = "/student", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('finalgrade', 'get')")
 	public List<FinalGradeStudentVo> findFinalGradePartS(@RequestParam Map<String, Object> conditions) {
-		List<Student> students = finalGradeService.findFinalGradeStudents(conditions);
+		Map<String, Object> query = new HashMap<>();
+		query.put("classroomId", conditions.get("classroomId"));
+		List<Student> students = finalGradeService.findFinalGradeStudents(query);
 		List<FinalGradeStudentVo> finalGradeStudentVos = new ArrayList<FinalGradeStudentVo>();
 		for (Student student : students) {
 			FinalGradeStudentVo finalGradeStudentVo = new FinalGradeStudentVo();
@@ -100,13 +105,14 @@ public class FinalGradeController extends BaseController<Course> {
 			finalGradeStudentVo.setFinalGradePartStudents(finalGradePartStudents);
 			finalGradeStudentVos.add(finalGradeStudentVo);
 		}
-		
+
 		return finalGradeStudentVos;
 	}
-	
+
 	@RequestMapping(path = "/studentscore", method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('finalgrade', 'add')")
-	public FinalGradePartStudent modifyStudentScore(@RequestBody FinalGradePartStudentScoreForm finalGradePartStudentScoreForm) {
+	public FinalGradePartStudent modifyStudentScore(
+			@RequestBody FinalGradePartStudentScoreForm finalGradePartStudentScoreForm) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("facultyId", finalGradePartStudentScoreForm.getFacultyId());
 		map.put("termCode", finalGradePartStudentScoreForm.getTermCode());
@@ -118,8 +124,10 @@ public class FinalGradeController extends BaseController<Course> {
 			FinalGradePartStudent createFinalGradePartStudent = new FinalGradePartStudent();
 			Student student = studentService.getStudent(finalGradePartStudentScoreForm.getStudentId());
 			createFinalGradePartStudent.setStudent(student);
-			FinalGradePartCourse finalGradePartCourse = finalGradeService.getFinalGradePartCourse(finalGradePartStudentScoreForm.getFinalGradePartCourseId());
+			FinalGradePartCourse finalGradePartCourse = finalGradeService
+					.getFinalGradePartCourse(finalGradePartStudentScoreForm.getFinalGradePartCourseId());
 			createFinalGradePartStudent.setFinalGradePartCourse(finalGradePartCourse);
+			createFinalGradePartStudent.setScore(finalGradePartStudentScoreForm.getScore());
 			return finalGradeService.createFinalGradePartStudent(createFinalGradePartStudent);
 		}
 		finalGradePartStudent.setScore(finalGradePartStudentScoreForm.getScore());
