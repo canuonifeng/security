@@ -6,13 +6,11 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.edu.biz.teaching.entity.FinalGradePartCourse;
 import com.edu.biz.teaching.entity.FinalGradePartStudent;
 
 public class FinalGradePartStudentSpecification implements Specification<FinalGradePartStudent> {
@@ -34,13 +32,12 @@ public class FinalGradePartStudentSpecification implements Specification<FinalGr
 				list.add(cb.equal(root.get("score"), conditions.get("score")));
 			}
 			if (conditions.containsKey("facultyId")) {
-				Join<FinalGradePartStudent, FinalGradePartCourse> join = root.join("finalGradePartCourse");
-				list.add(cb.equal(join.get("faculty").get("id"), this.conditions.get("facultyId")));
+				list.add(cb.equal(root.get("finalGradePartCourse").get("faculty").get("id").as(String.class), this.conditions.get("facultyId")));
 				if(conditions.containsKey("courseId")){
-					list.add(cb.equal(join.get("course").get("id"), this.conditions.get("courseId")));
+					list.add(cb.equal(root.get("finalGradePartCourse").get("course").get("id").as(String.class), this.conditions.get("courseId")));
 				}
 				if(conditions.containsKey("termCode")){
-					list.add(cb.equal(join.get("termCode"), this.conditions.get("termCode")));
+					list.add(cb.equal(root.get("finalGradePartCourse").get("termCode"), this.conditions.get("termCode")));
 				}
 			}
 			if(conditions.containsKey("finalGradePartCourseId")){

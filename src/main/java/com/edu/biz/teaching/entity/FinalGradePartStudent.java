@@ -4,16 +4,17 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.edu.biz.base.BaseEntity;
-import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.schoolroll.entity.Student;
 
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
+@Table(name="final_grade_part_student")
 public class FinalGradePartStudent extends BaseEntity {
-	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = FinalGradePartCourse.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "final_grade_part_course_id")
 	private FinalGradePartCourse finalGradePartCourse;
 	
