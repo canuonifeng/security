@@ -69,8 +69,14 @@ public class FinalGradeController extends BaseController<Course> {
 	
 	@RequestMapping(path = "/part", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('finalgrade', 'get')")
-	public List<FinalGradePart> getFinalGradePart(@RequestParam Map<String, Object> conditions) {
+	public List<FinalGradePart> findFinalGradePart(@RequestParam Map<String, Object> conditions) {
 		return finalGradeService.findFinalGradeParts(conditions);
+	}
+	
+	@RequestMapping(path = "/partcourse", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission('finalgrade', 'get')")
+	public List<FinalGradePartCourse> findFinalGradePartCourse(@RequestParam Map<String, Object> conditions) {
+		return finalGradeService.findFinalGradePartCourses(conditions);
 	}
 	
 	@RequestMapping(path = "/student", method = RequestMethod.GET)

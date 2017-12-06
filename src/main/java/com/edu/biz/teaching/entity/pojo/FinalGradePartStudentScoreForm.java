@@ -1,9 +1,6 @@
 package com.edu.biz.teaching.entity.pojo;
 
-import java.util.Map;
-
 public class FinalGradePartStudentScoreForm {
-	private Map<String, String> gradeCourseScore;
 	private Long courseId;
 	private Long facultyId;
 	private double score;
@@ -33,14 +30,6 @@ public class FinalGradePartStudentScoreForm {
 
 	public void setFacultyId(Long facultyId) {
 		this.facultyId = facultyId;
-	}
-
-	public Map<String, String> getGradeCourseScore() {
-		return gradeCourseScore;
-	}
-
-	public void setGradeCourseScore(Map<String, String> gradeCourseScore) {
-		this.gradeCourseScore = gradeCourseScore;
 	}
 
 	public Long getStudentId() {
