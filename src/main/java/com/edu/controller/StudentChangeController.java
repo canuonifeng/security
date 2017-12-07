@@ -23,7 +23,9 @@ import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.schoolroll.service.StudentChangeService;
 import com.edu.biz.schoolroll.service.StudentService;
 import com.edu.biz.security.entity.User;
+import com.edu.biz.teachingres.entity.TeachingresJsonViews;
 import com.edu.core.exception.NotFoundException;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
 
@@ -78,6 +80,7 @@ public class StudentChangeController extends BaseController<StudentChange> {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('change', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Page<StudentChange> changePager(@RequestParam Map<String, Object> conditions,
 			@PageableDefault(value = 10, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
 		return studentChangeService.searchStudentChanges(conditions, pageable);	
