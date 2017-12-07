@@ -195,9 +195,8 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		}
 		// 分层数据添加
 		Map<String, Object> map = new HashMap<>();
-		Term currentTerm = termService.getTermByCurrent(1);
 		map.put("classroomId", classroomId);
-		map.put("termCode", currentTerm.getCode());
+		map.put("termCode", term);
 		List<GradedTeaching> gradedTeachings = gradedTeachingService.findGradedTeachings(map);
 		for (GradedTeaching gradedTeaching : gradedTeachings) {
 			map.clear();
