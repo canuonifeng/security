@@ -175,7 +175,7 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 		}
 		return buildingRooms;
 	}
-	
+
 	private Map<String, List<BuildingRoom>> dealWeekBuildingRoom(Map<String, List<BuildingRoom>> initBuildingRooms,
 			Long id) {
 		Map<String, List<Long>> notBuildingRoomIds = new HashMap<>();
@@ -210,7 +210,8 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 				conditions.put("period", period);
 				conditions.put("week", key);
 				conditions.put("currentTermCode", term.getCode());
-				List<GradedCourseSchooltime> gradedCourseSchooltimes = gradedTeachingService.findSchooltimes(conditions);
+				List<GradedCourseSchooltime> gradedCourseSchooltimes = gradedTeachingService
+						.findSchooltimes(conditions);
 				for (GradedCourseSchooltime gradedCourseSchooltime : gradedCourseSchooltimes) {
 					if (gradedCourseSchooltime.getBuildingRoom() != null) {
 						if (notBuildingRoomIds.containsKey(key)) {
@@ -223,8 +224,8 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 					}
 				}
 			}
-			
-			//获取选课星期的教室id集合(未判断周是否重合)
+
+			// 获取选课星期的教室id集合(未判断周是否重合)
 			for (int i = 0; i < weekPeriods.get(key).size(); i++) {
 				String sourceTime[] = weekPeriods.get(key).get(i).split("-");
 				int timeSlot = Integer.parseInt(sourceTime[0]);
@@ -258,7 +259,6 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 		return initBuildingRooms;
 	}
 
-
 	private Map<String, List<String>> getWeekPeriods(Long id) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("selectCourseId", id);
@@ -276,7 +276,7 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 		}
 		return periods;
 	}
-	
+
 	@Override
 	@Transactional
 	public void updateSchooltimes(Long id, List<SelectCourseSchooltime> list) {
@@ -330,6 +330,7 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 	}
 
 	@Transactional
+	@Override
 	public void updateSelectCourseClass(Long id, List<SelectCourseClassAndClassSchooltime> list) {
 		SelectCourse selectCourse = selectCourseDao.findOne(id);
 		if (null == selectCourse) {

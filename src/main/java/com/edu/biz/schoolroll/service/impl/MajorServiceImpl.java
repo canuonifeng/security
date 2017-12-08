@@ -23,11 +23,11 @@ import com.edu.core.exception.ServiceException;
 public class MajorServiceImpl extends BaseService implements MajorService {
 	@Autowired
 	private MajorDao majorDao;
-	
+
 	@Override
 	public Major createMajor(Major major) {
-		if(!this.checkCode(major.getCode(), null)){
-			throw new ServiceException("406","专业代码已被占用");
+		if (!this.checkCode(major.getCode(), null)) {
+			throw new ServiceException("406", "专业代码已被占用");
 		}
 		return majorDao.save(major);
 	}
@@ -38,12 +38,12 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 		if (null == savedMajor) {
 			throw new NotFoundException("专业不存在");
 		}
-		if(!this.checkCode(major.getCode(), major.getId())) {
-			throw new ServiceException("406","专业代码已被占用");
+		if (!this.checkCode(major.getCode(), major.getId())) {
+			throw new ServiceException("406", "专业代码已被占用");
 		}
 		return majorDao.save(major);
 	}
-	
+
 	@Override
 	public Major changeMajorStatus(Long id, MajorStatus status) {
 		Major savedMajor = majorDao.findOne(id);
@@ -64,7 +64,7 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 	public Major getMajor(Long id) {
 		return majorDao.findOne(id);
 	}
-	
+
 	@Override
 	public List<Major> findMajors(Map<String, Object> conditions) {
 		return majorDao.findAll(new MajorSpecification(conditions), new Sort(Direction.DESC, "createdTime"));
@@ -74,13 +74,14 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 	public Major getMajorByCode(String code) {
 		return majorDao.getByCode(code);
 	}
-	
+
+	@Override
 	public Boolean checkCode(String code, Long majorId) {
 		Major major = majorDao.getByCode(code);
-		if(null == major) {
+		if (null == major) {
 			return true;
 		}
-		if(major.getId().equals(majorId)) {
+		if (major.getId().equals(majorId)) {
 			return true;
 		}
 		return false;
@@ -90,7 +91,7 @@ public class MajorServiceImpl extends BaseService implements MajorService {
 	public Page<Major> searchMajor(Map<String, Object> conditions, Pageable pageable) {
 		return majorDao.findAll(new MajorSpecification(conditions), pageable);
 	}
-	
+
 	@Override
 	public Long countMajor(Map<String, Object> conditions) {
 		return majorDao.count(new MajorSpecification(conditions));

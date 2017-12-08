@@ -48,7 +48,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Autowired
 	private OrgService orgService;
-	
+
 	@Autowired
 	private FacultyService facultyService;
 
@@ -69,8 +69,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		this.filterOrg(user);
 		this.filterFaculty(user);
 		this.filterRole(user);
-		if(!this.checkUserName(user.getUsername(), null)){
-			throw new ServiceException("406","用户名已被占用");
+		if (!this.checkUserName(user.getUsername(), null)) {
+			throw new ServiceException("406", "用户名已被占用");
 		}
 		String salt = getRandomString(16);
 		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
@@ -90,11 +90,11 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (null != user.getFaculty() && null == user.getFaculty().getId()) {
 			user.setFaculty(null);
 		}
-		
+
 		if (null != user.getFaculty() && null != user.getFaculty().getId()) {
 			Faculty faculty = facultyService.getFaculty(user.getFaculty().getId());
 			if (null == faculty) {
-				throw new NotFoundException("院系"+user.getFaculty().getId()+"不存在") ;
+				throw new NotFoundException("院系" + user.getFaculty().getId() + "不存在");
 			}
 		}
 	}
@@ -107,25 +107,26 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (null != user.getOrg() && null != user.getOrg().getId()) {
 			Organization org = orgService.getOrg(user.getOrg().getId());
 			if (null == org) {
-				throw new NotFoundException("组织机构#"+user.getOrg().getId()+"不存在") ;
+				throw new NotFoundException("组织机构#" + user.getOrg().getId() + "不存在");
 			}
 			user.setOrg(org);
 		}
 	}
-	
+
 	private void filterRole(User user) {
 		if (null != user.getRoles()) {
 			for (Role validateRole : user.getRoles()) {
 				if (null != validateRole.getId()) {
 					Role role = roleService.getRole(validateRole.getId());
 					if (null == role) {
-						throw new NotFoundException("角色#"+validateRole.getId()+"不存在") ;
+						throw new NotFoundException("角色#" + validateRole.getId() + "不存在");
 					}
 				}
 			}
 		}
 	}
 
+	@Override
 	public User getUserById(Long id) {
 		return userDao.findOne(id);
 	}
@@ -167,21 +168,22 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		this.filterOrg(user);
 		this.filterFaculty(user);
 		this.filterRole(user);
-		User savedUser = this.getUserById(user.getId());//userDao.findOne(user.getId());
-		
+		User savedUser = this.getUserById(user.getId());// userDao.findOne(user.getId());
+
 		if (null == savedUser) {
 			throw new NotFoundException("用户不存在");
 		}
 		if (!this.checkUserName(user.getUsername(), user.getId())) {
 			throw new ServiceException("406", "用户名已被占用");
 		}
-		// BeanUtils.copyPropertiesWithCopyProperties(user, savedUser, "username",
+		// BeanUtils.copyPropertiesWithCopyProperties(user, savedUser,
+		// "username",
 		// "email", "nickname","name","hpone","gender","");
 		BeanUtils.copyPropertiesWithIgnoreProperties(user, savedUser, "id", "password", "salt", "createdTime",
 				"updatedTime");
 		return userDao.save(savedUser);
 	}
-	
+
 	@Override
 	@Validated
 	public User changeUserStatus(Long id, UserStatus status) {
@@ -208,7 +210,7 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		if (null == oldPassword || null == newPassword) {
 			throw new InvalidParameterException("密码不能为空");
 		}
-		
+
 		User user = userDao.findOne(id);
 		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 		String password = encoder.encodePassword(oldPassword, user.getSalt());
@@ -232,9 +234,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		}
 		return false;
 	}
-	
+
 	@Override
-	public Boolean checkEmail(String email,Long userId) {
+	public Boolean checkEmail(String email, Long userId) {
 		User user = userDao.getByEmail(email);
 		if (null == user) {
 			return true;
