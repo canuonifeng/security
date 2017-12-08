@@ -1,9 +1,9 @@
 package test.edu.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -69,7 +69,7 @@ public class OrgControllerTest  extends BaseControllerTest{
 		faculty.setCode("FLY");
 		faculty.setName("L.L");
 		
-		Set<Organization> children =  new HashSet<Organization>(); 
+		List<Organization> children =  new ArrayList<>();
 		children.add(child);
 		org.setCode("XIAN_YU");
 		org.setFaculty(faculty);

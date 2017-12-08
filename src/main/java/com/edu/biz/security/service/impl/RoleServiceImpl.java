@@ -29,27 +29,31 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Autowired
 	private RolePermissionDao rolePermissionDao;
 
+	@Override
 	public Role createRole(Role role) {
 		return this.roleDao.save(role);
 	}
-	
+
 	@Transactional
+	@Override
 	public Role updateRole(Role role) {
 		this.rolePermissionDao.deleteByRoleId(role.getId());
 		return this.roleDao.save(role);
 	}
-	
+
+	@Override
 	public Boolean checkCode(String code, Long roleId) {
 		Role role = roleDao.getByCode(code);
-		if(null == role) {
+		if (null == role) {
 			return true;
 		}
-		if(role.getId().equals(roleId)) {
+		if (role.getId().equals(roleId)) {
 			return true;
 		}
 		return false;
 	}
 
+	@Override
 	public boolean deleteRole(Long id) {
 		roleDao.delete(id);
 		return null == roleDao.findOne(id);
@@ -77,12 +81,12 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		}
 		return permissionCodes;
 	}
-	
+
 	@Override
 	public List<Role> findRoles(Map<String, Object> conditions) {
 		return roleDao.findAll(new RoleSpecification(conditions), new Sort(Direction.DESC, "createdTime"));
 	}
-	
+
 	@Override
 	public List<RolePermission> findRolePermissionByRoleId(Long roleId) {
 		return rolePermissionDao.findByRoleId(roleId);

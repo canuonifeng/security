@@ -23,6 +23,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private boolean postOnly = true;
 
+	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		if (postOnly && !request.getMethod().equals("POST")) {
