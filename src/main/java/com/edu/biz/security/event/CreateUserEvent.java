@@ -8,8 +8,8 @@ public class CreateUserEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = -8961286941724042456L;
 	
-	public CreateUserEvent(User User) {
-		super(User);
+	public CreateUserEvent(User user) {
+		super(user);
 	}
 
 }

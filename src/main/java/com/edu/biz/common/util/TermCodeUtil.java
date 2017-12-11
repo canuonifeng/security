@@ -72,6 +72,7 @@ public class TermCodeUtil {
 		case "night":
 			periodPrefix = "3";
 			break;
+		default : break;
 		}
 
 		return periodPrefix;
@@ -94,6 +95,7 @@ public class TermCodeUtil {
 		case "3":
 			lessonPrefix = "晚上";
 			break;
+		default: break;
 		}
 
 		return lessonPrefix;

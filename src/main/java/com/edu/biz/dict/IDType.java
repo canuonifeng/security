@@ -1,7 +1,7 @@
 package com.edu.biz.dict;
 
 public enum IDType {
-
+	//身份类型
 	idcard("身份证"),passport("护照");
 	private String name;
     private IDType(String name){

@@ -1,6 +1,7 @@
 package com.edu.biz.teachingres.entity;
 
 public enum CourseStatus {
+	//课程状态
 	enable("正常"), disable("禁用"),delete("删除");
 	
 	private String name;

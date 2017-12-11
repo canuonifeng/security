@@ -95,7 +95,7 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 	}
 
 	@Override
-	public Student AssignStudentNum(Student student) {
+	public Student assignStudentNum(Student student) {
 		Student saveStudent = studentDao.findOne(student.getId());
 		if (null == saveStudent) {
 			throw new NotFoundException("该学生不存在");
