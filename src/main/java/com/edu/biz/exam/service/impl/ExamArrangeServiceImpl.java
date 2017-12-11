@@ -41,26 +41,29 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 	ExamArrangeDao examArrangeDao;
 	@Autowired
 	CourseDao courseDao;
-	
+
+	@Override
 	public void createExamArrange(ExamArrange examArrange) {
 		examArrangeDao.save(examArrange);
 	}
 
+	@Override
 	public List<ExamArrange> findExamArranges(Map<String, Object> conditions) {
 		return examArrangeDao.findAll(new ExamArrangeSpecification(conditions));
 	}
-	
+
 	@Override
 	public List<ExamAboutFacultyAndGradeAndTestWay> getExamList(Map<String, Object> conditions) {
 		List<ExamAboutFacultyAndGradeAndTestWay> list = new ArrayList<>();
 		List<Faculty> facultys = facultyService.findFacultys(conditions);
-		for (Faculty faculty:facultys) {
+		for (Faculty faculty : facultys) {
 			Map<String, Object> classroomMap = new HashMap<>();
 			classroomMap.put("grade", conditions.get("grade"));
 			classroomMap.put("facultyId", faculty.getId());
 			Long classroomCount = classroomService.countClassroom(classroomMap);
 			Term currenTerm = termService.getTermByCurrent(1);
-			int courseCount = programService.countWrittenProgramCourses(conditions.get("grade").toString(), faculty.getId(), "written", currenTerm.getCode());
+			int courseCount = programService.countWrittenProgramCourses(conditions.get("grade").toString(),
+					faculty.getId(), "written", currenTerm.getCode());
 			ExamAboutFacultyAndGradeAndTestWay examList = new ExamAboutFacultyAndGradeAndTestWay();
 			examList.setFaculty(faculty);
 			examList.setGrade(conditions.get("grade").toString());
@@ -68,15 +71,15 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 			examList.setExamNumber(courseCount);
 			list.add(examList);
 		}
-		
+
 		return list;
 	}
-	
+
 	@Override
 	public List<Course> findExamArrangeCourses(Map<String, Object> conditions) {
 		return courseDao.findAll(new ExamCourseSpecification(conditions));
 	}
-	
+
 	@Override
 	public List<ExamArrange> findClassroomExamArranges(Map<String, Object> conditions) {
 		Classroom classroom = classroomService.getClassroom(Long.valueOf(conditions.get("classroomId").toString()));
@@ -88,12 +91,12 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 		conditions.put("testWay", "written");
 		return findExamArranges(conditions);
 	}
-	
+
 	@Override
 	public ExamArrange getExamArrange(Map<String, Object> map) {
 		return examArrangeDao.findOne(new ExamArrangeSpecification(map));
 	}
-	
+
 	@Override
 	public ExamArrange updateExamArrange(ExamArrange examArrange) {
 		ExamArrange savedexamArrange = examArrangeDao.findOne(examArrange.getId());
@@ -101,7 +104,7 @@ public class ExamArrangeServiceImpl extends BaseService implements ExamArrangeSe
 			throw new NotFoundException("该课程排考不存在");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(examArrange, savedexamArrange, "examStartTime", "examEndTime");
-		
+
 		return examArrangeDao.save(savedexamArrange);
 	}
 }

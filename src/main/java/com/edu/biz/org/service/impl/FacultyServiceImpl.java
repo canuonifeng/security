@@ -25,11 +25,11 @@ public class FacultyServiceImpl extends BaseService implements FacultyService {
 
 	@Autowired
 	private FacultyDao facultyDao;
-	
+
 	@Override
 	public Faculty createFaculty(Faculty faculty) {
-		if(!this.checkCode(faculty.getCode(), null)){
-			throw new ServiceException("406","院系编码已被占用");
+		if (!this.checkCode(faculty.getCode(), null)) {
+			throw new ServiceException("406", "院系编码已被占用");
 		}
 		return facultyDao.save(faculty);
 	}
@@ -40,13 +40,13 @@ public class FacultyServiceImpl extends BaseService implements FacultyService {
 		if (null == savedFaculty) {
 			throw new NotFoundException("院系不存在");
 		}
-		if(!this.checkCode(faculty.getCode(), faculty.getId())) {
-			throw new ServiceException("406","院系编码已被占用");
+		if (!this.checkCode(faculty.getCode(), faculty.getId())) {
+			throw new ServiceException("406", "院系编码已被占用");
 		}
 		BeanUtils.copyPropertiesWithCopyProperties(faculty, savedFaculty, "name", "code");
 		return facultyDao.save(savedFaculty);
 	}
-	
+
 	@Override
 	public Faculty changeFacultyStatus(Long id, FacultyStatus status) {
 		Faculty savedFaculty = facultyDao.findOne(id);
@@ -72,18 +72,19 @@ public class FacultyServiceImpl extends BaseService implements FacultyService {
 	public Faculty getFacultyByCode(String code) {
 		return facultyDao.getByCode(code);
 	}
-	
+
+	@Override
 	public Boolean checkCode(String code, Long facultyId) {
 		Faculty faculty = facultyDao.getByCode(code);
-		if(null == faculty) {
+		if (null == faculty) {
 			return true;
 		}
-		if(faculty.getId().equals(facultyId)) {
+		if (faculty.getId().equals(facultyId)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public List<Faculty> findFacultys(Map<String, Object> conditions) {
 		return facultyDao.findAll(new FacultySpecification(conditions), new Sort(Direction.DESC, "createdTime"));

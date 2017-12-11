@@ -23,11 +23,11 @@ import com.edu.core.util.BeanUtils;
 public class TermServiceImpl extends BaseService implements TermService {
 	@Autowired
 	private TermDao termDao;
-	
+
 	@Override
 	public Term createTerm(Term term) {
-		if(!this.checkCode(term.getCode(), null)){
-			throw new ServiceException("406","学期代码已被占用");
+		if (!this.checkCode(term.getCode(), null)) {
+			throw new ServiceException("406", "学期代码已被占用");
 		}
 		return termDao.save(term);
 	}
@@ -38,25 +38,27 @@ public class TermServiceImpl extends BaseService implements TermService {
 		if (null == saveTerm) {
 			throw new NotFoundException("该学期不存在");
 		}
-		if(!this.checkCode(term.getCode(), term.getId())){
-			throw new ServiceException("406","学期代码已被占用");
+		if (!this.checkCode(term.getCode(), term.getId())) {
+			throw new ServiceException("406", "学期代码已被占用");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(term, saveTerm, "title", "code", "long_code", "start_date", "end_date");
+		BeanUtils.copyPropertiesWithCopyProperties(term, saveTerm, "title", "code", "long_code", "start_date",
+				"end_date");
 
 		return termDao.save(term);
 	}
-	
+
+	@Override
 	public Boolean checkCode(String code, Long termId) {
 		Term term = termDao.getByCode(code);
-		if(null == term) {
+		if (null == term) {
 			return true;
 		}
-		if(term.getId().equals(termId)) {
+		if (term.getId().equals(termId)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public Term changeTermCurrent(Long id, int current) {
 		Term saveTerm = termDao.findOne(id);
@@ -65,7 +67,7 @@ public class TermServiceImpl extends BaseService implements TermService {
 		}
 		if (current == 1) {
 			List<Term> terms = termDao.findByCurrent(current);
-			for(Term term : terms) {
+			for (Term term : terms) {
 				term.setCurrent(0);
 				termDao.save(term);
 			}
@@ -84,13 +86,12 @@ public class TermServiceImpl extends BaseService implements TermService {
 	public Term getTerm(Long id) {
 		return termDao.findOne(id);
 	}
-	
+
 	@Override
-	public Term getTermByCurrent(int current)
-	{
+	public Term getTermByCurrent(int current) {
 		return termDao.getByCurrent(current);
 	}
-	
+
 	@Override
 	public Term getTermByCode(String code) {
 		return termDao.getByCode(code);
@@ -100,9 +101,9 @@ public class TermServiceImpl extends BaseService implements TermService {
 	public Page<Term> searchTerms(Map<String, Object> conditions, Pageable pageable) {
 		return termDao.findAll(new TermSpecification(conditions), pageable);
 	}
-	
+
 	@Override
 	public List<Term> findTerms(Map<String, Object> conditions) {
-		return termDao.findAll(new TermSpecification(conditions), new Sort(Direction.ASC,"code"));
+		return termDao.findAll(new TermSpecification(conditions), new Sort(Direction.ASC, "code"));
 	}
 }

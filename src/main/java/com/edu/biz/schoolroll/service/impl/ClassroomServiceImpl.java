@@ -24,7 +24,7 @@ import com.edu.core.util.BeanUtils;
 public class ClassroomServiceImpl extends BaseService implements ClassroomService {
 	@Autowired
 	private ClassroomDao classroomDao;
-	
+
 	@Override
 	public Classroom createClassroom(Classroom classroom) {
 		return classroomDao.save(classroom);
@@ -45,7 +45,7 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 	public Page<Classroom> searchClassroom(Map<String, Object> conditions, Pageable pageable) {
 		return classroomDao.findAll(new ClassroomSpecification(conditions), pageable);
 	}
-	
+
 	@Override
 	public List<Classroom> findClassrooms(Map<String, Object> conditions) {
 		return classroomDao.findAll(new ClassroomSpecification(conditions));
@@ -57,58 +57,62 @@ public class ClassroomServiceImpl extends BaseService implements ClassroomServic
 		if (null == savedClassroom) {
 			throw new NotFoundException("班级不存在");
 		}
-		if(!this.checkCode(classroom.getCode(), classroom.getId())) {
-			throw new ServiceException("406","班级编码已被占用");
+		if (!this.checkCode(classroom.getCode(), classroom.getId())) {
+			throw new ServiceException("406", "班级编码已被占用");
 		}
-		BeanUtils.copyPropertiesWithCopyProperties(classroom, savedClassroom, "name", "code", "isAssignNum", "program", "lastAssignNum", "teacher", "buildingRoom");
+		BeanUtils.copyPropertiesWithCopyProperties(classroom, savedClassroom, "name", "code", "isAssignNum", "program",
+				"lastAssignNum", "teacher", "buildingRoom");
 		return classroomDao.save(savedClassroom);
 	}
 
+	@Override
 	public Boolean checkCode(String code, Long calssroomId) {
 		Classroom classroom = classroomDao.getByCode(code);
-		if(null == classroom) {
+		if (null == classroom) {
 			return true;
 		}
-		if(classroom.getId().equals(calssroomId)) {
+		if (classroom.getId().equals(calssroomId)) {
 			return true;
 		}
 		return false;
 	}
+
 	@Override
 	public Classroom getClassroomByCode(String code) {
 		return classroomDao.getByCode(code);
 	}
+
 	@Override
 	public Long countClassroom(Map<String, Object> conditions) {
 		return classroomDao.count(new ClassroomSpecification(conditions));
 	}
-	
+
 	@Override
 	public Boolean joinProgram(Long programId, Map<Integer, String> classroomIds) {
 		Map<String, Object> conditions = new HashMap<String, Object>();
 		conditions.put("programId", programId);
 		List<Classroom> savedclassrooms = findClassrooms(conditions);
 		setProgram(savedclassrooms, null);
-		
+
 		List<Long> roomIds = new ArrayList<>();
 		for (Integer key : classroomIds.keySet()) {
 			roomIds.add(Long.parseLong(classroomIds.get(key)));
 		}
-		
+
 		conditions.clear();
 		List<Classroom> classrooms = new ArrayList<>();
-		if(!roomIds.isEmpty()) {
+		if (!roomIds.isEmpty()) {
 			conditions.put("classroomIds", roomIds);
 			classrooms = findClassrooms(conditions);
 		}
-		
+
 		setProgram(classrooms, programId);
 		return true;
 	}
 
 	private void setProgram(List<Classroom> classrooms, Long programId) {
 		for (Classroom classroom : classrooms) {
-			if(programId == null) {
+			if (programId == null) {
 				classroom.setProgram(null);
 			} else {
 				Program program = new Program();

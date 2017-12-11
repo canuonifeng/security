@@ -1,6 +1,6 @@
 package com.edu.biz.org.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ public class Organization extends BaseEntity {
 	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	@JsonView({ CascadeChildren.class, CascadeChildrenAndParent.class })
-	private Set<Organization> children;
+	private List<Organization> children;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
@@ -37,14 +37,14 @@ public class Organization extends BaseEntity {
 	@JsonView({ JsonViews.Cascade.class })
 	private Faculty faculty;
 
-	public Set<Organization> getChildren() {
+	public List<Organization> getChildren() {
 		if (null != this.children && this.children.size() == 0) {
 			return null;
 		}
 		return children;
 	}
 
-	public void setChildren(Set<Organization> children) {
+	public void setChildren(List<Organization> children) {
 		this.children = children;
 	}
 

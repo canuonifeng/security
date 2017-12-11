@@ -103,6 +103,7 @@ public class User extends BaseEntity implements UserDetails {
 	@NotFound(action = NotFoundAction.IGNORE)
 	private Organization org;
 
+	@Override
 	public String getUsername() {
 		return username;
 	}
@@ -123,6 +124,7 @@ public class User extends BaseEntity implements UserDetails {
 		this.username = username;
 	}
 
+	@Override
 	public String getPassword() {
 		return password;
 	}

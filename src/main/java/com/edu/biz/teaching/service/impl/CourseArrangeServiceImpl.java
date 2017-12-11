@@ -78,6 +78,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return classScheduleDao.save(savedClassSchedule);
 	}
 
+	@Override
 	public ClassSchedule getClassSchedule(String term, Long couresId, Long classroomId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("term", term);
@@ -86,6 +87,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return classScheduleDao.findOne(new ClassScheduleSpecification(conditions));
 	}
 
+	@Override
 	public ClassSchedule getClassSchedule(String term, Long couresId) {
 		Map<String, Object> conditions = new HashMap<>();
 		conditions.put("term", term);
@@ -157,6 +159,7 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		return buildingService.findAllrooms(map);
 	}
 
+	@Override
 	public Map<Integer, Map<String, Object>> getCourseArrange(String term, Long classroomId) {
 		Setting setting = settingService.getSettingByCode("course_arrange_limit");
 
@@ -195,9 +198,8 @@ public class CourseArrangeServiceImpl extends BaseService implements CourseArran
 		}
 		// 分层数据添加
 		Map<String, Object> map = new HashMap<>();
-		Term currentTerm = termService.getTermByCurrent(1);
 		map.put("classroomId", classroomId);
-		map.put("termCode", currentTerm.getCode());
+		map.put("termCode", term);
 		List<GradedTeaching> gradedTeachings = gradedTeachingService.findGradedTeachings(map);
 		for (GradedTeaching gradedTeaching : gradedTeachings) {
 			map.clear();
