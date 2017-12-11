@@ -9,6 +9,7 @@ import com.edu.biz.schoolroll.dao.ClassroomDao;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.StudentChange;
+import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.schoolroll.strategy.StudentChangeStrategy;
 
 @Component
@@ -27,7 +28,9 @@ public class ChangeClassroom implements StudentChangeStrategy {
 		} else {
 			student.setNo(null);
 		}
+		student.setStatus(StudentStatus.enable);
 		student.setClassroom(change.getNewClassroom());
+		student.setMajor(change.getNewClassroom().getMajor());
 		return student;
 	}
 }
