@@ -1,6 +1,7 @@
 package com.edu.biz.schoolroll.entity;
 
 public enum ChangeStatus {
+	//异动状态
 	facultyApproving("待系部审核"), schoolApproving("待校部审核"),approved("审核通过"),unApproved("审核失败");
 	
 	private String name;

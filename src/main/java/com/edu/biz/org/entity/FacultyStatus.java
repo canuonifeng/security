@@ -1,6 +1,7 @@
 package com.edu.biz.org.entity;
 
 public enum FacultyStatus {
+	//院系状态
 	enable("正常"), disable("禁用");
 	
 	private String name;

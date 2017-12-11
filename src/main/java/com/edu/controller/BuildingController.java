@@ -28,6 +28,7 @@ import com.edu.biz.teachingres.service.BuildingService;
 import com.edu.core.util.BeanUtils;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api/building")
@@ -54,6 +55,12 @@ public class BuildingController extends BaseController<Object> {
 	public Building editBuilding(@PathVariable Long id, @RequestBody Building building) {
 		building.setId(id);
 		return buildingService.updateBuilding(building);
+	}
+	
+	@RequestMapping(path = "/checkcode",method = RequestMethod. GET)
+	@ApiOperation(value = "检查建筑编号是否重复", notes = "根据建筑编号检查是否重复")
+	public Boolean checkCode(String code,  Long buildingId){
+		 return buildingService.checkCode(code, buildingId);
 	}
 	
 	@RequestMapping(path = "/{buildingId}/room/{roomId}", method = RequestMethod.PUT)

@@ -1,6 +1,7 @@
 package com.edu.biz.dict;
 
 public enum Nation {
+	//民族
 	HAN( "汉族"),
 	ZHUANG("壮族"),
 	MANCHU( "满族"),

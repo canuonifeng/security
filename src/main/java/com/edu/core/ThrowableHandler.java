@@ -35,7 +35,7 @@ public class ThrowableHandler{
 	
 	@ExceptionHandler(value = AccessDeniedException.class)
 	@ResponseBody
-	public ResponseWrapper AccessDeniedExceptionHandler(HttpServletRequest req, AccessDeniedException e){
+	public ResponseWrapper accessDeniedExceptionHandler(HttpServletRequest req, AccessDeniedException e){
 		ResponseWrapper err = new ResponseWrapper(e.getMessage());
 		err.setMessage("不允许访问");
 		err.setStatus(String.valueOf(HttpServletResponse.SC_FORBIDDEN));

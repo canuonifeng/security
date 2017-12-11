@@ -1,6 +1,7 @@
 package com.edu.biz.teachingres.entity;
 
 public enum TeacherTitle {
+	//教师职级
 	primary("初级教师"), intermediate("中级教师"),senior("高级教师");
 	
 	private String name;

@@ -56,6 +56,18 @@ public class BuildingServiceImpl extends BaseService implements BuildingService 
 	public Building getBuilding(Long id) {
 		return buildingDao.findOne(id);
 	}
+	
+	@Override
+	public Boolean checkCode(String code, Long id) {
+		Building building = buildingDao.getByCode(code);
+		if (null == building) {
+			return true;
+		}
+		if (building.getId().equals(id)) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public Page<Building> searchBuildings(Map<String, Object> conditions, Pageable pageable) {

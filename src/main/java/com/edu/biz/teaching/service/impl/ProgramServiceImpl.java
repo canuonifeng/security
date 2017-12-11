@@ -238,7 +238,7 @@ public class ProgramServiceImpl extends BaseService implements ProgramService {
 		String[] codeArray = code.split("-");
 		String longCode = "20"+codeArray[0]+"-"+"20"+codeArray[1]+"-"+codeArray[2];
 		String title = "";
-		if(codeArray[2].equals("1")) {
+		if("1".equals(codeArray[2])) {
 			title = "20"+codeArray[0]+"-"+"20"+codeArray[1]+"学年第一学期";
 		} else {
 			title = "20"+codeArray[0]+"-"+"20"+codeArray[1]+"学年第二学期";

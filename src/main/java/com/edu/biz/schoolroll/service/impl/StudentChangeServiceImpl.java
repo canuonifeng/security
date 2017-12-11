@@ -17,6 +17,7 @@ import com.edu.biz.schoolroll.entity.ChangeStatus;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.StudentChange;
 import com.edu.biz.schoolroll.entity.StudentChangeLog;
+import com.edu.biz.schoolroll.entity.StudentStatus;
 import com.edu.biz.schoolroll.service.StudentChangeService;
 import com.edu.biz.schoolroll.specification.StudentChangeSpecification;
 import com.edu.biz.schoolroll.strategy.StudentChangeStrategy;
@@ -83,10 +84,13 @@ public class StudentChangeServiceImpl extends BaseService implements StudentChan
 		change.setAuditUser(log.getOpUser());
 		updateStudentChange(change);
 		//更新学籍表学员信息
+		Student student = change.getStudent();
 		if (log.getNewStatus().equals(ChangeStatus.approved)) {
-			Student student = change.getStudent();
 			Student updateStudent = strategyMap.get(log.getChange().getChangeType().toString()).changeStudentField(change, student);
 			studentDao.save(updateStudent);
+		} else {
+			student.setStatus(StudentStatus.enable);
+			studentDao.save(student);
 		}
 	}
 }

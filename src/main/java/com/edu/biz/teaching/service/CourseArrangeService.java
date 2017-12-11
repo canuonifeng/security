@@ -40,7 +40,7 @@ public interface CourseArrangeService {
 
 	public List<ScheduleTeacher> findScheduleTeachers(Map<String, Object> conditions);
 
-	public Boolean deleteScheduleTeacherByScheduleId(Long ScheduleId);
+	public Boolean deleteScheduleTeacherByScheduleId(Long scheduleId);
 
 	public ScheduleCycle getScheduleCycle(Long buildingRoomId, String period, int week);
 

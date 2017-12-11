@@ -4,5 +4,5 @@ import com.edu.biz.base.BaseDao;
 import com.edu.biz.teachingres.entity.Building;
 
 public interface BuildingDao extends BaseDao<Building> {
-
+	public Building getByCode(String code);
 }

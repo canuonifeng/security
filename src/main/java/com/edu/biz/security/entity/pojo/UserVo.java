@@ -5,13 +5,13 @@ import java.util.Set;
 import com.edu.biz.security.entity.User;
 
 public class UserVo extends User {
-	private Set<String> Permissions;
+	private Set<String> permissions;
 
 	public Set<String> getPermissions() {
-		return Permissions;
+		return permissions;
 	}
 
 	public void setPermissions(Set<String> permissions) {
-		Permissions = permissions;
+		permissions = permissions;
 	}
 }

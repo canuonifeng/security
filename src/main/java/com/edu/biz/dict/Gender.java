@@ -1,7 +1,7 @@
 package com.edu.biz.dict;
 
 public enum Gender {
-
+	//性别
 	male("男"),female("女"),secret("保密");
 	
 	private String name;

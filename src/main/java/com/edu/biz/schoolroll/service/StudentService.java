@@ -31,5 +31,5 @@ public interface StudentService {
 	
 	public Student findByClassroomIdOrderByNoDesc(Long classroomId);
 	
-	public Student AssignStudentNum(Student student);
+	public Student assignStudentNum(Student student);
 }
