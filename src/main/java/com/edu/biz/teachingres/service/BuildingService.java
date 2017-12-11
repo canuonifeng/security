@@ -20,6 +20,8 @@ public interface BuildingService {
 	
 	public Building getBuilding(Long id);
 	
+	public Boolean checkCode(String code, Long buildingId);
+	
 	public Page<Building> searchBuildings(Map<String, Object> conditions, Pageable pageable);
 	
 	//buildingRoom
