@@ -110,13 +110,15 @@ public class StudentController extends BaseController<Student> {
 	@RequestMapping(path = "/{classroomId}/assginnum", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission('student', 'put')")
 	@JsonView({ TeachingJsonViews.CascadeStudent.class })
-	public Boolean assginNum(@PathVariable Long classroomId, @RequestBody Map<Integer, String> studentIds) {
+	public Boolean assginNum(@PathVariable Long classroomId) {
 		Classroom classroom = classroomService.getClassroom(classroomId);
 		int num = 0;
 		DecimalFormat dfInt = new DecimalFormat("00");
-		for (Integer i = 0; i < studentIds.size(); i++) {
+		Map<String, Object> conditions = new HashMap<>();
+		conditions.put("classroomId", classroom.getId());
+		List<Student> students = studentService.findStudents(conditions);
+		for (Student student : students) {
 			String studentNo = classroom.getCode() + dfInt.format(num + 1);
-			Student student = studentService.getStudent(Long.parseLong(studentIds.get(i)));
 			student.setNo(studentNo);
 			studentService.updateStudent(student);
 			num++;

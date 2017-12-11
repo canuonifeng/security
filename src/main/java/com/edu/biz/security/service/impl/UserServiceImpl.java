@@ -60,6 +60,9 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Override
 	public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
 		User user = userDao.getByUsername(name);
+		if (user.getStatus() != UserStatus.enable) {
+			throw new ServiceException("403", "该用户不能登录");
+		}
 		return user;
 	}
 
