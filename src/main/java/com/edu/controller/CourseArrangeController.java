@@ -174,6 +174,15 @@ public class CourseArrangeController extends BaseController<Course> {
 			if (programCourseVo.getRemainderCourseNum().equals(0)) {
 				continue;
 			}
+			// 判断该课程在班级教学计划中是否设置
+			ClassSchedule classSchedule = courseArrangeService.getClassSchedule(
+					TermCodeUtil.getTermCode(program.getGrade(),
+							Integer.parseInt(conditions.get("termNum").toString())),
+					programCourse.getCourse().getId(), Long.parseLong(conditions.get("classroomId").toString()));
+			if (classSchedule == null || classSchedule.getScheduleTeachers().size() == 0) {
+				continue;
+			}
+
 			programCourseVos.add(programCourseVo);
 		}
 		return programCourseVos;
@@ -239,7 +248,7 @@ public class CourseArrangeController extends BaseController<Course> {
 	public List<BuildingRoom> findBuildingRooms(@PathVariable Long cycleId) {
 		return courseArrangeService.findBuildingRooms(cycleId);
 	}
-	
+
 	private ClassSchedule createClassSchedule(Map<String, String> conditions, Long classroomId) {
 		Term term = termService.getTermByCode(conditions.get("code"));
 		Course course = courseService.getCourse(Long.parseLong(conditions.get("courseId")));
@@ -306,7 +315,7 @@ public class CourseArrangeController extends BaseController<Course> {
 		if (gradedCourses.size() != 0) {
 			throw new InvalidParameterException("老师在该时间段还有其他分层课程需要上");
 		}
-		
+
 		teacherHasOtherSelectCourse(scheduleTeacher.getTeacher().getId(), period, week);
 	}
 
@@ -334,14 +343,14 @@ public class CourseArrangeController extends BaseController<Course> {
 		Term term = termService.getTermByCurrent(1);
 		Map<String, Object> map = new HashMap<>();
 		String sourcePeriod[] = period.split("-");
-		
+
 		for (Classroom classroom : classrooms) {
-			//排课时间点是否冲突
+			// 排课时间点是否冲突
 			List<ScheduleCycle> scheduleCycles = classroomHasOtherCourseArrange(classroom.getId(), period, week);
 			if (scheduleCycles.size() != 0) {
-				throw new InvalidParameterException(classroom.getName()+"该位置已有课程被排");
+				throw new InvalidParameterException(classroom.getName() + "该位置已有课程被排");
 			}
-			//分层时间点是否冲突
+			// 分层时间点是否冲突
 			map.clear();
 			map.put("classroomId", classroom.getId());
 			map.put("termCode", term.getCode());
@@ -353,11 +362,11 @@ public class CourseArrangeController extends BaseController<Course> {
 				map.put("gradedId", gradedTeaching.getId());
 				List<GradedSchooltime> gradedSchooltimes = gradedTeachingService.findTimes(map);
 				if (gradedSchooltimes.size() != 0) {
-					throw new InvalidParameterException(classroom.getName()+"该位置已有分层课程被排");
+					throw new InvalidParameterException(classroom.getName() + "该位置已有分层课程被排");
 				}
 			}
 		}
-		
+
 	}
 
 	private List<ScheduleTeacher> createScheduleTeachers(Long scheduleId, Map<String, Object> conditions) {

@@ -104,6 +104,6 @@ public class StudentServiceTest extends BaseServiceTest {
 		Classroom classroom = classroomService.getClassroom(1L);
 		student.setClassroom(classroom);
 		student.setNo(classroom.getCode()+classroom.getLastAssignNum());
-		studentService.AssignStudentNum(student);
+		studentService.assignStudentNum(student);
 	}
 }
