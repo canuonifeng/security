@@ -172,6 +172,7 @@ public class UserController extends BaseController<User> {
 		Set<String> permissions = userService.findCurrentUserPermissionCodes();
 		logger.warning(""+permissions.toString());
 		userVo.setPermissions(permissions);
+		logger.warning(""+userVo.toString());
 		return userVo;
 	}
 }
