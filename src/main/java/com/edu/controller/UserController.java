@@ -3,6 +3,7 @@ package com.edu.controller;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -164,9 +165,12 @@ public class UserController extends BaseController<User> {
 	public UserVo getCurrentUser() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		UserVo userVo = new UserVo();
+		Logger logger = Logger.getLogger("LoggingDemo");
 		User getUser = userService.getUserById(user.getId());
+		logger.warning(""+getUser.toString());
 		BeanUtils.copyPropertiesWithIgnoreProperties(getUser, userVo);
 		Set<String> permissions = userService.findCurrentUserPermissionCodes();
+		logger.warning(""+permissions.toString());
 		userVo.setPermissions(permissions);
 		return userVo;
 	}
