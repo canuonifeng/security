@@ -29,4 +29,9 @@ public class Application extends AsyncConfigurerSupport {
 		executor.initialize();
 		return executor;
 	}
+
+	@Override
+	public void customize(ConfigurableEmbeddedServletContainer container) {
+		container.setPort(8081);
+	}
 }
