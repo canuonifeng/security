@@ -12,6 +12,6 @@ public class UserVo extends User {
 	}
 
 	public void setPermissions(Set<String> permissions) {
-		permissions = permissions;
+		this.permissions = permissions;
 	}
 }
