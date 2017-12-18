@@ -599,4 +599,24 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	public GradedTeaching getGradedTeaching(Map<String, Object> map) {
 		return gradedTeachingDao.findOne(new GradedSpecification(map));
 	}
+	
+	@Override
+	public String getCurrentStep(Long id) {
+		GradedTeaching gradedTeaching = gradedTeachingDao.findOne(id);
+		if (null == gradedTeaching) {
+			throw new NotFoundException("该分层教学不存在");
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("gradedId", id);
+		List<GradedSchooltime> times = findTimes(map);
+		if (times.size() == 0) {
+			return "time_set";
+		}
+		List<GradedRank> ranks = findRanks(map);
+		if (times.size() > 0 && ranks.size() == 0) {
+			return "rank_set";
+		}
+		
+		return "room_set";
+	}
 }

@@ -65,4 +65,6 @@ public interface GradedTeachingService {
 	public boolean deleteGradedTeaching(Long id);
 
 	public GradedTeaching getGradedTeaching(Map<String, Object> map);
+	
+	public String getCurrentStep(Long id);
 }
