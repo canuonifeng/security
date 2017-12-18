@@ -1,6 +1,6 @@
 package com.edu.biz.teaching.entity;
 
-public class CurrentPage {
+public class CurrentStep {
 	
 	private String currentPage;
 

@@ -525,7 +525,7 @@ public class GradedTeachingServiceImpl extends BaseService implements GradedTeac
 	}
 	
 	@Override
-	public String getCurrentPage(Long id) {
+	public String getCurrentStep(Long id) {
 		GradedTeaching gradedTeaching = gradedTeachingDao.findOne(id);
 		if (null == gradedTeaching) {
 			throw new NotFoundException("该分层教学不存在");

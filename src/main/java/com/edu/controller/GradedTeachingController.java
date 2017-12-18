@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.biz.schoolroll.entity.Classroom;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.service.StudentService;
-import com.edu.biz.teaching.entity.CurrentPage;
+import com.edu.biz.teaching.entity.CurrentStep;
 import com.edu.biz.teaching.entity.GradedCourse;
 import com.edu.biz.teaching.entity.GradedCourseAndCourseTime;
 import com.edu.biz.teaching.entity.GradedRank;
@@ -269,10 +269,10 @@ public class GradedTeachingController extends BaseController<GradedTeaching> {
 	}
 	
 	@RequestMapping(path = "/{id}/currentpage", method = RequestMethod.GET)
-	public CurrentPage getCurrentPage(@PathVariable Long id) {
-		String page = gradedTeachingService.getCurrentPage(id);
-		CurrentPage newPage = new CurrentPage();
-		newPage.setCurrentPage(page);
-		return newPage;
+	public CurrentStep getCurrentStep(@PathVariable Long id) {
+		String page = gradedTeachingService.getCurrentStep(id);
+		CurrentStep currentStep = new CurrentStep();
+		currentStep.setCurrentPage(page);
+		return currentStep;
 	}
 }

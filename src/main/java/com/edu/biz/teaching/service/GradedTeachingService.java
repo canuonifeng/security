@@ -64,5 +64,5 @@ public interface GradedTeachingService {
 
 	public GradedTeaching getGradedTeaching(Map<String, Object> map);
 	
-	public String getCurrentPage(Long id);
+	public String getCurrentStep(Long id);
 }
