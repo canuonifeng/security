@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.biz.schoolroll.entity.Classroom;
+import com.edu.biz.teaching.entity.CurrentStep;
 import com.edu.biz.teaching.entity.SelectCourse;
 import com.edu.biz.teaching.entity.SelectCourseClassAndClassSchooltime;
 import com.edu.biz.teaching.entity.SelectCourseSchooltime;
@@ -148,5 +149,13 @@ public class SelectCourseController extends BaseController<SelectCourse> {
 	@PreAuthorize("hasPermission('selectCourse', 'delete')")
 	public boolean deleteSelectCourse(@PathVariable Long id) {
 		return selectCourseService.deleteSelectCourse(id);
+	}
+	
+	@RequestMapping(path = "/{id}/currentpage", method = RequestMethod.GET)
+	public CurrentStep getCurrentStep(@PathVariable Long id) {
+		String page = selectCourseService.getCurrentStep(id);
+		CurrentStep currentStep = new CurrentStep();
+		currentStep.setCurrentPage(page);
+		return currentStep;
 	}
 }
