@@ -94,6 +94,7 @@ public class ClassroomController extends BaseController<Classroom> {
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('classroom', 'get')")
+	@JsonView({ TeachingresJsonViews.CascadeTeacher.class })
 	public Classroom get(@PathVariable Long id) {
 		Classroom classroom = classroomService.getClassroom(id);
 		ClassroomVo classroomVo = new ClassroomVo();
