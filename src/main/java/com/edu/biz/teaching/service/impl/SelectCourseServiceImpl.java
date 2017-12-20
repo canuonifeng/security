@@ -424,4 +424,20 @@ public class SelectCourseServiceImpl extends BaseService implements SelectCourse
 			}
 		}
 	}
+	
+	@Override
+	public String getCurrentStep(Long id) {
+		SelectCourse selectCourse = selectCourseDao.findOne(id);
+		if (null == selectCourse) {
+			throw new NotFoundException("该选课不存在");
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("selectCourseId", id);
+		List<SelectCourseSchooltime> times = findTimes(map);
+		if (times.size() == 0) {
+			return "time_set";
+		}
+		
+		return "room_set";
+	}
 }

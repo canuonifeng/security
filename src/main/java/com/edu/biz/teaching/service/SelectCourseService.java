@@ -45,4 +45,6 @@ public interface SelectCourseService {
 	public Boolean checkSelectCourseTime(SelectCourseTimeCheckForm selectCourseTimeCheckForm);
 
 	public Map<String, List<BuildingRoom>> findWeekBuildingRoom(Long id);
+	
+	public String getCurrentStep(Long id);
 }
