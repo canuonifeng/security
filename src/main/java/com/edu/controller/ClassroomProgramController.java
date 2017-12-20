@@ -25,6 +25,7 @@ import com.edu.biz.teaching.service.GradedTeachingService;
 import com.edu.biz.teaching.service.ProgramService;
 import com.edu.biz.teaching.service.TermService;
 import com.edu.biz.teachingres.entity.TeachingresJsonViews;
+import com.edu.core.exception.NotFoundException;
 import com.edu.core.util.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -89,6 +90,9 @@ public class ClassroomProgramController extends BaseController<Classroom> {
 			}
 		}
 		Term term = termService.getTermByCurrent(1);
+		if (term == null) {
+			throw new NotFoundException("当前学期不存在");
+		}
 		Map<String, Object> map = new HashMap<>();
 		map.put("termCode", term.getCode());
 		map.put("courseId", programCourseVo.getCourse().getId());
