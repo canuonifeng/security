@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edu.biz.org.entity.OrgJsonViews;
 import com.edu.biz.schoolroll.entity.Student;
 import com.edu.biz.schoolroll.entity.StudentChange;
 import com.edu.biz.schoolroll.entity.StudentChangeLog;
@@ -40,6 +41,7 @@ public class StudentChangeController extends BaseController<StudentChange> {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@PreAuthorize("hasPermission('change', 'add')")
+	@JsonView(OrgJsonViews.CascadeChildren.class)
 	public StudentChange addChange(@RequestBody StudentChange studentChange) {
 		Student student = studentService.getStudent(studentChange.getStudent().getId());
 		if(student == null) {
