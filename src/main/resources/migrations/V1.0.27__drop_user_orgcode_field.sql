@@ -1,1 +1,0 @@
-alter table user drop column org_code;

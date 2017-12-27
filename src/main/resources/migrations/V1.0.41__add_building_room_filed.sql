@@ -1,1 +1,0 @@
-ALTER TABLE `building_room` ADD `exam_seat_num` int(10) UNSIGNED COMMENT '考试座位数' AFTER `seat_num`;

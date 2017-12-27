@@ -1,1 +1,0 @@
-ALTER TABLE `user` ADD `status` ENUM('enable','disable','delete') NOT NULL DEFAULT 'enable' COMMENT '状态' AFTER `org_id`;

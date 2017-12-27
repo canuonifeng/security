@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.org.service.OrgService;
 
@@ -25,7 +24,6 @@ public class OrgServiceTest extends BaseServiceTest{
 		Assert.assertEquals(org.getCode(), savedOrg.getCode());
 		Assert.assertEquals(org.getName(), savedOrg.getName());
 		Assert.assertNotNull(savedOrg.getChildren());
-		Assert.assertNotNull(savedOrg.getFaculty());
 	}
 	
 	@Test
@@ -69,14 +67,10 @@ public class OrgServiceTest extends BaseServiceTest{
 		child.setCode("ER_ZI");
 		child.setName("咸鱼的儿子");
 		
-		Faculty faculty = new Faculty();
-		faculty.setCode("FLY");
-		faculty.setName("L.L");
 
 		List<Organization> children =  new ArrayList<>();
 		children.add(child);
 		org.setCode("XIAN_YU");
-		org.setFaculty(faculty);
 		org.setChildren(children);
 		org.setName("会喊666的咸鱼");
 		

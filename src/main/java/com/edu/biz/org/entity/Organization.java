@@ -12,7 +12,6 @@ import javax.persistence.OneToMany;
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.org.entity.OrgJsonViews.CascadeChildren;
 import com.edu.biz.org.entity.OrgJsonViews.CascadeChildrenAndParent;
-import com.edu.biz.viewgroup.JsonViews;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
@@ -31,11 +30,6 @@ public class Organization extends BaseEntity {
 	private String name;
 	private String code;
 	private String orgCode;
-
-	@ManyToOne
-	@JoinColumn(name = "faculty_id")
-	@JsonView({ JsonViews.Cascade.class })
-	private Faculty faculty;
 
 	public List<Organization> getChildren() {
 		if (null != this.children && this.children.size() == 0) {
@@ -62,14 +56,6 @@ public class Organization extends BaseEntity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Faculty getFaculty() {
-		return faculty;
-	}
-
-	public void setFaculty(Faculty faculty) {
-		this.faculty = faculty;
 	}
 
 	public Organization getParent() {

@@ -1,1 +1,0 @@
-ALTER TABLE `graded_teaching` ADD `term_code` varchar(32) NOT NULL COMMENT '所属学期' AFTER `course_id`;

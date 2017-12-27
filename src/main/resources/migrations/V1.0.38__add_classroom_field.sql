@@ -1,1 +1,0 @@
-ALTER TABLE `classroom` ADD `program_id`  int(10) UNSIGNED COMMENT '教学计划ID' AFTER `teacher_id`;

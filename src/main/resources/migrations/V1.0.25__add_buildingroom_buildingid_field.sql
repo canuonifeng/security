@@ -1,1 +1,0 @@
-ALTER TABLE `building_room` ADD `building_id` int(10) UNSIGNED NOT NULL COMMENT '教学楼' AFTER `id`;

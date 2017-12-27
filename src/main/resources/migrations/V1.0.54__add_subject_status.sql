@@ -1,1 +1,0 @@
-ALTER TABLE `graded_subject` ADD `status` varchar(32) NOT NULL DEFAULT 'enable' COMMENT '科目状态,禁用，启用' AFTER `grade`;

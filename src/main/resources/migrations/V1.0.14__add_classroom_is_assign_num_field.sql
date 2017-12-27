@@ -1,1 +1,0 @@
-ALTER TABLE `classroom` ADD `is_assign_num` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否分配学号' AFTER `grade`;

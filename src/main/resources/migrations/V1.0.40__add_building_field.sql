@@ -1,1 +1,0 @@
-ALTER TABLE `building` ADD `code`  varchar(32) COMMENT '建筑代码' AFTER `name`;

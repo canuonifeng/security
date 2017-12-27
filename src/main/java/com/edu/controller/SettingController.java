@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edu.biz.common.dao.service.SettingService;
-import com.edu.biz.common.entity.Setting;
+import com.edu.biz.setting.entity.Setting;
+import com.edu.biz.setting.service.SettingService;
 
 import io.swagger.annotations.Api;
 

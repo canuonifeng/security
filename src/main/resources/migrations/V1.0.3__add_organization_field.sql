@@ -1,1 +1,0 @@
-ALTER TABLE `organization` ADD `faculty_id` int(10) UNSIGNED COMMENT '所属院系' AFTER `parent_id`;

@@ -1,2 +1,0 @@
-ALTER TABLE `final_grade_part_course` ADD `final_grade_part_id` int(10) UNSIGNED COMMENT '成绩组成id' AFTER `faculty_id`;
-ALTER TABLE `final_grade_part_course` ADD `course_id` int(10) UNSIGNED COMMENT '课程id' AFTER `final_grade_part_id`;

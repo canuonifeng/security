@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.edu.biz.base.BaseService;
-import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
-import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.org.service.OrgService;
 import com.edu.biz.security.dao.UserDao;
 import com.edu.biz.security.dao.specification.UserSpecification;
@@ -49,9 +47,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Autowired
 	private OrgService orgService;
 
-	@Autowired
-	private FacultyService facultyService;
-
 	@Override
 	public Page<User> searchUsers(Map<String, Object> conditions, Pageable pageable) {
 		return userDao.findAll(new UserSpecification(conditions), pageable);
@@ -70,7 +65,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Validated({ Create.class })
 	public User createUser(User user) {
 		this.filterOrg(user);
-		this.filterFaculty(user);
 		this.filterRole(user);
 		if (!this.checkUserName(user.getUsername(), null)) {
 			throw new ServiceException("406", "用户名已被占用");
@@ -82,24 +76,10 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		user.setPassword(password);
 
 		this.filterOrg(user);
-		this.filterFaculty(user);
 
 		user = userDao.save(user);
 		applicationContext.publishEvent(new CreateUserEvent(user));
 		return user;
-	}
-
-	private void filterFaculty(User user) {
-		if (null != user.getFaculty() && null == user.getFaculty().getId()) {
-			user.setFaculty(null);
-		}
-
-		if (null != user.getFaculty() && null != user.getFaculty().getId()) {
-			Faculty faculty = facultyService.getFaculty(user.getFaculty().getId());
-			if (null == faculty) {
-				throw new NotFoundException("院系" + user.getFaculty().getId() + "不存在");
-			}
-		}
 	}
 
 	private void filterOrg(User user) {
@@ -169,7 +149,6 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 	@Validated
 	public User updateUser(User user) {
 		this.filterOrg(user);
-		this.filterFaculty(user);
 		this.filterRole(user);
 		User savedUser = this.getUserById(user.getId());// userDao.findOne(user.getId());
 

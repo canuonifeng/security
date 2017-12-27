@@ -1,2 +1,0 @@
-ALTER TABLE `major` ADD `status` ENUM('enable','disable') NOT NULL DEFAULT 'enable' COMMENT '状态' AFTER `name`;
-ALTER TABLE `faculty` ADD `status` ENUM('enable','disable') NOT NULL DEFAULT 'enable' COMMENT '状态' AFTER `name`;

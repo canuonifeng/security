@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.edu.biz.dict.Gender;
-import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.security.entity.User;
 import com.edu.biz.security.entity.UserStatus;
@@ -41,10 +40,7 @@ public class UserServiceTest extends BaseServiceTest {
 		user.setStatus(UserStatus.enable);
 		Organization org = new Organization();
 		org.setId(3L);
-		Faculty faculty = new Faculty();
-		faculty.setId(1L);
 		user.setOrg(org);
-		user.setFaculty(faculty);
 		User savedUser = userService.createUser(user);
 
 		Assert.assertNotNull(savedUser.getId());

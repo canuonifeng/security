@@ -1,1 +1,0 @@
-ALTER TABLE `student` CHANGE `from` `origin` ENUM('alone','unified','selftaught') NOT NULL DEFAULT 'unified' COMMENT '学生来源，单招、统考、自考';

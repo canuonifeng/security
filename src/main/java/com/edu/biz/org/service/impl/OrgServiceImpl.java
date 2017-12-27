@@ -13,9 +13,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.edu.biz.org.dao.OrgDao;
 import com.edu.biz.org.dao.specification.OrgSpecification;
-import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
-import com.edu.biz.org.service.FacultyService;
 import com.edu.biz.org.service.OrgService;
 import com.edu.core.exception.NotFoundException;
 import com.edu.core.exception.ServiceException;
@@ -27,13 +25,9 @@ public class OrgServiceImpl implements OrgService {
 	@Autowired
 	private OrgDao orgDao;
 	
-	@Autowired
-	private FacultyService facultyService;
-
 	@Override
 	public Organization createOrg(Organization org) {
 		this.filterParentOrg(org);
-		this.filterFaculty(org);
 		if (!this.checkCode(org.getCode(), null)) {
 			throw new ServiceException("406", "code已被占用");
 		}
@@ -46,7 +40,6 @@ public class OrgServiceImpl implements OrgService {
 	@Validated
 	public Organization updateOrg(Organization org) {
 		this.filterParentOrg(org);
-		this.filterFaculty(org);
 		Organization savedOrg = orgDao.findOne(org.getId());
 		if (null == savedOrg) {
 			throw new NotFoundException("组织不存在");
@@ -99,19 +92,6 @@ public class OrgServiceImpl implements OrgService {
 				throw new NotFoundException("上级组织机构#" + org.getParent().getId() + "不存在");
 			}
 			org.setParent(parent);
-		}
-	}
-	
-	private void filterFaculty(Organization org) {
-		if (null != org.getFaculty() && null == org.getFaculty().getId()) {
-			org.setFaculty(null);
-		}
-		
-		if (null != org.getFaculty() && null != org.getFaculty().getId()) {
-			Faculty faculty = facultyService.getFaculty(org.getFaculty().getId());
-			if (null == faculty) {
-				throw new NotFoundException("院系"+org.getFaculty().getId()+"不存在") ;
-			}
 		}
 	}
 

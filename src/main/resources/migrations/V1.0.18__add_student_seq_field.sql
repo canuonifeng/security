@@ -1,1 +1,0 @@
-ALTER TABLE `student` ADD `seq` int NOT NULL DEFAULT 1 COMMENT '序号' AFTER `remark`;

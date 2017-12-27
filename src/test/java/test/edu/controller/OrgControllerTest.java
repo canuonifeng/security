@@ -13,7 +13,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
 import com.edu.core.ResponseWrapper;
 
@@ -65,14 +64,9 @@ public class OrgControllerTest  extends BaseControllerTest{
 		child.setCode("ER_ZI");
 		child.setName("咸鱼的儿子");
 		
-		Faculty faculty = new Faculty();
-		faculty.setCode("FLY");
-		faculty.setName("L.L");
-		
 		List<Organization> children =  new ArrayList<>();
 		children.add(child);
 		org.setCode("XIAN_YU");
-		org.setFaculty(faculty);
 		org.setChildren(children);
 		org.setName("会喊666的咸鱼");
 		

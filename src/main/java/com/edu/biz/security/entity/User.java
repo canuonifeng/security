@@ -26,7 +26,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.edu.biz.base.BaseEntity;
 import com.edu.biz.dict.Gender;
-import com.edu.biz.org.entity.Faculty;
 import com.edu.biz.org.entity.Organization;
 import com.edu.biz.validgroup.Create;
 import com.edu.biz.viewgroup.JsonViews;
@@ -70,12 +69,6 @@ public class User extends BaseEntity implements UserDetails {
 
 	@ApiModelProperty(value = "昵称")
 	private String nickname;
-
-	@ManyToOne(targetEntity = Faculty.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "faculty_id")
-	@ApiModelProperty(value = "院系")
-	@JsonView({ JsonViews.Cascade.class })
-	private Faculty faculty;
 
 	@NotEmpty(message = "email不能为空")
 	@Email(message = "email格式不正确")
@@ -239,14 +232,6 @@ public class User extends BaseEntity implements UserDetails {
 
 	public void setLastLoginIp(String lastLoginIp) {
 		this.lastLoginIp = lastLoginIp;
-	}
-
-	public Faculty getFaculty() {
-		return faculty;
-	}
-
-	public void setFaculty(Faculty faculty) {
-		this.faculty = faculty;
 	}
 
 	public Organization getOrg() {

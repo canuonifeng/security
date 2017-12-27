@@ -1,1 +1,0 @@
-ALTER TABLE `student` CHANGE `year_month` `admission_time` varchar(12)  NOT NULL DEFAULT '' COMMENT '入学年月';
