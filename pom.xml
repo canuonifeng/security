@@ -7,7 +7,7 @@
 
 	<properties>
 		<mysql.version>5.1.21</mysql.version>
-		<start-class>com.edu.Application</start-class>
+		<start-class>com.codeages.Application</start-class>
 		<java.version>1.8</java.version>
 	</properties>
 
