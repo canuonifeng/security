@@ -38,10 +38,6 @@ public class OrgControllerTest  extends BaseControllerTest{
 			throw new RuntimeException();
 		}
 	}
-	@Test
-	public void testUpdateOrg() {
-		Organization org = this.getOrg();
-	}
 	
 	@Test
 	public void testGetOrg( ) {

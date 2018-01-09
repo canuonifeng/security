@@ -30,7 +30,6 @@ import com.codeages.biz.security.entity.User;
 import com.codeages.biz.security.entity.UserStatus;
 import com.codeages.biz.security.service.UserService;
 import com.codeages.core.ResponseWrapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -84,7 +83,6 @@ public class BaseControllerTest {
 		admin.setRoles(roles);
 //		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("username", "admin");
 		map.put("password", "test1");
