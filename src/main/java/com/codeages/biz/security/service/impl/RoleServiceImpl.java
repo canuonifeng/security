@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.codeages.biz.base.BaseService;
+import com.codeages.base.BaseService;
 import com.codeages.biz.security.dao.RoleDao;
 import com.codeages.biz.security.dao.RolePermissionDao;
 import com.codeages.biz.security.dao.specification.RoleSpecification;

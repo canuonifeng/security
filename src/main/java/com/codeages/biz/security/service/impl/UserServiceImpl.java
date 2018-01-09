@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import com.codeages.biz.base.BaseService;
+import com.codeages.base.BaseService;
 import com.codeages.biz.org.entity.Organization;
 import com.codeages.biz.org.service.OrgService;
 import com.codeages.biz.security.dao.UserDao;
@@ -34,7 +34,7 @@ import com.codeages.biz.validgroup.Create;
 import com.codeages.core.exception.InvalidParameterException;
 import com.codeages.core.exception.NotFoundException;
 import com.codeages.core.exception.ServiceException;
-import com.codeages.core.util.BeanUtils;
+import com.codeages.util.BeanUtils;
 
 @Service
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
@@ -78,7 +78,8 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 		this.filterOrg(user);
 
 		user = userDao.save(user);
-		applicationContext.publishEvent(new CreateUserEvent(user));
+		
+		publish(new CreateUserEvent(user));
 		return user;
 	}
 

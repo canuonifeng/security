@@ -17,7 +17,7 @@ import com.codeages.biz.org.entity.Organization;
 import com.codeages.biz.org.service.OrgService;
 import com.codeages.core.exception.NotFoundException;
 import com.codeages.core.exception.ServiceException;
-import com.codeages.core.util.BeanUtils;
+import com.codeages.util.BeanUtils;
 
 @Service
 public class OrgServiceImpl implements OrgService {

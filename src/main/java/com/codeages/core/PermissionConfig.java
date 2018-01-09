@@ -1,4 +1,4 @@
-package com.codeages.core.config;
+package com.codeages.core;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -19,13 +19,12 @@ import com.codeages.biz.security.service.UserService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class PermissionConfig extends GlobalMethodSecurityConfiguration {
 
-	private DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-
 	@Autowired
 	private UserService userService;
 
 	@Override
 	protected MethodSecurityExpressionHandler createExpressionHandler() {
+		DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
 		expressionHandler.setPermissionEvaluator(getPermissionEvaluator());
 		return expressionHandler;
 	}

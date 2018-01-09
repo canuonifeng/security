@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codeages.base.BaseController;
 import com.codeages.biz.org.entity.OrgJsonViews;
 import com.codeages.biz.security.entity.User;
 import com.codeages.biz.security.entity.UserStatus;
@@ -27,7 +28,7 @@ import com.codeages.biz.security.service.UserService;
 import com.codeages.biz.validgroup.Create;
 import com.codeages.biz.validgroup.Update;
 import com.codeages.biz.viewgroup.JsonViews;
-import com.codeages.core.util.BeanUtils;
+import com.codeages.util.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;

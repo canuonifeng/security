@@ -24,7 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.codeages.biz.base.BaseEntity;
+import com.codeages.base.BaseEntity;
 import com.codeages.biz.dict.Gender;
 import com.codeages.biz.org.entity.Organization;
 import com.codeages.biz.validgroup.Create;

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codeages.base.BaseController;
 import com.codeages.biz.org.entity.OrgJsonViews;
 import com.codeages.biz.org.entity.Organization;
 import com.codeages.biz.org.service.OrgService;

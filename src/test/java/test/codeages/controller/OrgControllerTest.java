@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.codeages.biz.org.entity.Organization;
-import com.codeages.core.ResponseWrapper;
+import com.codeages.core.http.ResponseWrapper;
 
 public class OrgControllerTest  extends BaseControllerTest{
 

@@ -1,4 +1,4 @@
-package com.codeages.core.authentication;
+package com.codeages.core;
 
 import java.io.IOException;
 import java.util.Date;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.codeages.biz.security.entity.User;
 import com.codeages.biz.security.service.UserService;
-import com.codeages.core.ResponseWrapper;
+import com.codeages.core.http.ResponseWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component

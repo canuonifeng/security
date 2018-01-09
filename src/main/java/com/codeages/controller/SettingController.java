@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codeages.base.BaseController;
 import com.codeages.biz.setting.entity.Setting;
 import com.codeages.biz.setting.service.SettingService;
 

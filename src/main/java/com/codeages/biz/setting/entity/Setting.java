@@ -3,7 +3,7 @@ package com.codeages.biz.setting.entity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.codeages.biz.base.BaseEntity;
+import com.codeages.base.BaseEntity;
 
 @Entity
 @Table(name = "sys_setting")

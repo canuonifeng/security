@@ -5,7 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.codeages.biz.base.BaseEntity;
+import com.codeages.base.BaseEntity;
 
 @Entity
 public class RolePermission extends BaseEntity {
