@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edusoho</groupId>
-	<artifactId>edu-admin2</artifactId>
+	<artifactId>security</artifactId>
 
 	<properties>
 		<start-class>com.codeages.Application</start-class>

@@ -9,16 +9,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.springframework.data.jpa.domain.Specification;
-
 import com.codeages.biz.org.entity.Organization;
+import com.codeages.framework.base.AbstractSpecification;
 
-public class OrgSpecification implements Specification<Organization> {
-
-	private Map<String, Object> conditions;
+public class OrgSpecification extends AbstractSpecification<Organization> {
 
 	public OrgSpecification(Map<String, Object> conditions) {
-		this.conditions = conditions;
+		super(conditions);
 	}
 
 	@Override

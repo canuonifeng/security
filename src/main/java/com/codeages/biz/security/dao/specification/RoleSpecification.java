@@ -10,15 +10,14 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.mapping.Set;
-import org.springframework.data.jpa.domain.Specification;
 
 import com.codeages.biz.security.entity.Role;
+import com.codeages.framework.base.AbstractSpecification;
 
-public class RoleSpecification implements Specification<Role> {
-	private Map<String, Object> conditions;
+public class RoleSpecification extends AbstractSpecification<Role> {
 
 	public RoleSpecification(Map<String, Object> conditions) {
-		this.conditions = conditions;
+		super(conditions);
 	}
 
 	@Override

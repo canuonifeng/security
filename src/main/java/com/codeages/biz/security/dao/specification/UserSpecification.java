@@ -9,16 +9,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.springframework.data.jpa.domain.Specification;
-
 import com.codeages.biz.security.entity.User;
+import com.codeages.framework.base.AbstractSpecification;
 
-public class UserSpecification implements Specification<User> {
-
-	private Map<String, Object> conditions;
+public class UserSpecification extends AbstractSpecification<User> {
 
 	public UserSpecification(Map<String, Object> conditions) {
-		this.conditions = conditions;
+		super(conditions);
 	}
 
 	@Override
