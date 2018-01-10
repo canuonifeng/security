@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,14 +29,16 @@ import com.codeages.biz.security.event.CreateUserEvent;
 import com.codeages.biz.security.service.RoleService;
 import com.codeages.biz.security.service.UserService;
 import com.codeages.biz.validgroup.Create;
+import com.codeages.framework.authentication.PermissionsProvider;
 import com.codeages.framework.base.BaseService;
 import com.codeages.framework.exception.InvalidParameterException;
 import com.codeages.framework.exception.NotFoundException;
 import com.codeages.framework.exception.ServiceException;
 import com.codeages.framework.util.BeanUtils;
+import com.codeages.framework.util.ThreadLocalContext;
 
 @Service
-public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {
+public class UserServiceImpl extends BaseService implements UserService, UserDetailsService, PermissionsProvider {
 	@Autowired
 	private UserDao userDao;
 
@@ -117,17 +118,15 @@ public class UserServiceImpl extends BaseService implements UserService, UserDet
 
 	@Override
 	public boolean isAdmin() {
-		return findCurrentUserRoleCodes().contains("ROLE_SUPER_ADMIN");
+		return findCurrentUserRoleCodes(ThreadLocalContext.getCurrentUser().getAuthorities()).contains("ROLE_SUPER_ADMIN");
 	}
 
 	@Override
-	public Set<String> findCurrentUserPermissionCodes() {
-		return roleService.findByPermissionCodes(findCurrentUserRoleCodes());
+	public Set<String> loadPermissions(Collection<? extends GrantedAuthority> authorities) {
+		return roleService.findByPermissionCodes(findCurrentUserRoleCodes(authorities));
 	}
 
-	private Set<String> findCurrentUserRoleCodes() {
-		Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication()
-				.getAuthorities();
+	private Set<String> findCurrentUserRoleCodes(Collection<? extends GrantedAuthority> authorities) {
 		Set<String> roleCodes = new HashSet<String>();
 		for (GrantedAuthority grantedAuthority : authorities) {
 			roleCodes.add(grantedAuthority.getAuthority());

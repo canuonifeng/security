@@ -29,6 +29,7 @@ import com.codeages.biz.validgroup.Update;
 import com.codeages.biz.viewgroup.JsonViews;
 import com.codeages.framework.base.BaseController;
 import com.codeages.framework.util.BeanUtils;
+import com.codeages.framework.util.ThreadLocalContext;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.swagger.annotations.Api;
@@ -42,12 +43,13 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/api/user")
+@PreAuthorize("isAuthenticated()")
 @Api("用户")
 public class UserController extends BaseController<User> {
 
 	@Autowired
 	private UserService userService;
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@PreAuthorize("hasPermission('user', 'get')")
 	@JsonView({ JsonViews.Cascade.class })
@@ -133,7 +135,6 @@ public class UserController extends BaseController<User> {
 	}
 
 	@RequestMapping(path = "/permissions", method = RequestMethod.GET)
-	@PreAuthorize("isAuthenticated()")
 	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
 	@ApiOperation(value = "获取当前用户权限", notes = "如果当前用户是超级管理员，则返回{isAdmin:true};若不是超级管理员，以数组的方式返回权限code列表")
 	public Map<String, Object> findCurrentUserPermissionCodes() {
@@ -142,13 +143,12 @@ public class UserController extends BaseController<User> {
 			map.put("isAdmin", true);
 		} else {
 			map.put("isAdmin", false);
-			map.put("permissionCodes", userService.findCurrentUserPermissionCodes());
+			map.put("permissionCodes", userService.loadPermissions(ThreadLocalContext.getCurrentUser().getAuthorities()));
 		}
 		return map;
 	}
 
 	@RequestMapping(path = "/password", method = RequestMethod.PUT)
-	@PreAuthorize("isAuthenticated()")
 	@ApiOperation(value = "设置当前用户新密码")
 	@ApiResponses({ @ApiResponse(code = 401, message = "没有登录"), @ApiResponse(code = 403, message = "没有权限"), })
 	public boolean setNewPassword(@RequestBody @ApiParam Map<String, String> params) {
@@ -167,7 +167,7 @@ public class UserController extends BaseController<User> {
 		UserVo userVo = new UserVo();
 		User getUser = userService.getUserById(user.getId());
 		BeanUtils.copyPropertiesWithIgnoreProperties(getUser, userVo);
-		Set<String> permissions = userService.findCurrentUserPermissionCodes();
+		Set<String> permissions = userService.loadPermissions(ThreadLocalContext.getCurrentUser().getAuthorities());
 		userVo.setPermissions(permissions);
 		return userVo;
 	}

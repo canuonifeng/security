@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import com.codeages.biz.dict.Gender;
 import com.codeages.biz.security.entity.User;
 import com.codeages.biz.security.entity.UserStatus;
-import com.codeages.framework.web.ResponseWrapper;
+import com.codeages.framework.response.ResponseWrapper;
 
 public class UserControllerTest extends BaseControllerTest {
 	

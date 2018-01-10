@@ -1,15 +1,15 @@
 package com.codeages.biz.security.service;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.codeages.biz.security.entity.User;
 import com.codeages.biz.security.entity.UserStatus;
+import com.codeages.framework.authentication.PermissionsProvider;
 
-public interface UserService {
+public interface UserService extends PermissionsProvider {
 
 	public Page<User> searchUsers(Map<String, Object> conditions, Pageable pageable);
 
@@ -28,8 +28,6 @@ public interface UserService {
 	public User getUserById(Long id);
 	
 	public boolean isAdmin();
-	
-	public Set<String> findCurrentUserPermissionCodes();
 	
 	public void setNewPassword(Long id, String oldPassword, String newPassword);
 }
