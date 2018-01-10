@@ -11,11 +11,13 @@ import com.codeages.biz.org.entity.Organization;
 import com.codeages.biz.security.entity.User;
 import com.codeages.biz.security.entity.UserStatus;
 import com.codeages.biz.security.service.UserService;
-import com.codeages.core.exception.NotFoundException;
-import com.codeages.core.exception.ServiceException;
+import com.codeages.framework.exception.NotFoundException;
+import com.codeages.framework.exception.ServiceException;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+
+import test.codeages.BaseServiceTest;
 
 @DatabaseSetup("userService.data.xml")
 public class UserServiceTest extends BaseServiceTest {

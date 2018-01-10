@@ -5,8 +5,8 @@ import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
-import com.codeages.base.BaseDao;
 import com.codeages.biz.security.entity.Role;
+import com.codeages.framework.base.BaseDao;
 
 @Repository
 public interface RoleDao extends BaseDao<Role> {

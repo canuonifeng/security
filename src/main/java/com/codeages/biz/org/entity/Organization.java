@@ -9,9 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.codeages.base.BaseEntity;
 import com.codeages.biz.org.entity.OrgJsonViews.CascadeChildren;
 import com.codeages.biz.org.entity.OrgJsonViews.CascadeChildrenAndParent;
+import com.codeages.framework.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity

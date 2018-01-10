@@ -29,7 +29,7 @@ import com.codeages.biz.security.entity.Role;
 import com.codeages.biz.security.entity.User;
 import com.codeages.biz.security.entity.UserStatus;
 import com.codeages.biz.security.service.UserService;
-import com.codeages.core.http.ResponseWrapper;
+import com.codeages.framework.web.ResponseWrapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)

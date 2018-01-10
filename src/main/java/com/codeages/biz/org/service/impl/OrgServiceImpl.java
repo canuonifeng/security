@@ -15,9 +15,9 @@ import com.codeages.biz.org.dao.OrgDao;
 import com.codeages.biz.org.dao.specification.OrgSpecification;
 import com.codeages.biz.org.entity.Organization;
 import com.codeages.biz.org.service.OrgService;
-import com.codeages.core.exception.NotFoundException;
-import com.codeages.core.exception.ServiceException;
-import com.codeages.util.BeanUtils;
+import com.codeages.framework.exception.NotFoundException;
+import com.codeages.framework.exception.ServiceException;
+import com.codeages.framework.util.BeanUtils;
 
 @Service
 public class OrgServiceImpl implements OrgService {

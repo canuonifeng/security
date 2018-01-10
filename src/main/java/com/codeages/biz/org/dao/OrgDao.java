@@ -1,8 +1,8 @@
 package com.codeages.biz.org.dao;
 
 
-import com.codeages.base.BaseDao;
 import com.codeages.biz.org.entity.Organization;
+import com.codeages.framework.base.BaseDao;
 
 public interface OrgDao extends BaseDao<Organization> {
 

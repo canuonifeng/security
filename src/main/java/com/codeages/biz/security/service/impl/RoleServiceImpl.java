@@ -13,13 +13,13 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.codeages.base.BaseService;
 import com.codeages.biz.security.dao.RoleDao;
 import com.codeages.biz.security.dao.RolePermissionDao;
 import com.codeages.biz.security.dao.specification.RoleSpecification;
 import com.codeages.biz.security.entity.Role;
 import com.codeages.biz.security.entity.RolePermission;
 import com.codeages.biz.security.service.RoleService;
+import com.codeages.framework.base.BaseService;
 
 @Service
 public class RoleServiceImpl extends BaseService implements RoleService {

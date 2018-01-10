@@ -19,7 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import com.codeages.base.BaseService;
 import com.codeages.biz.org.entity.Organization;
 import com.codeages.biz.org.service.OrgService;
 import com.codeages.biz.security.dao.UserDao;
@@ -31,10 +30,11 @@ import com.codeages.biz.security.event.CreateUserEvent;
 import com.codeages.biz.security.service.RoleService;
 import com.codeages.biz.security.service.UserService;
 import com.codeages.biz.validgroup.Create;
-import com.codeages.core.exception.InvalidParameterException;
-import com.codeages.core.exception.NotFoundException;
-import com.codeages.core.exception.ServiceException;
-import com.codeages.util.BeanUtils;
+import com.codeages.framework.base.BaseService;
+import com.codeages.framework.exception.InvalidParameterException;
+import com.codeages.framework.exception.NotFoundException;
+import com.codeages.framework.exception.ServiceException;
+import com.codeages.framework.util.BeanUtils;
 
 @Service
 public class UserServiceImpl extends BaseService implements UserService, UserDetailsService {

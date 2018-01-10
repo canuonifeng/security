@@ -3,11 +3,11 @@ package com.codeages.biz.setting.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.codeages.base.BaseService;
 import com.codeages.biz.setting.dao.SettingDao;
 import com.codeages.biz.setting.entity.Setting;
 import com.codeages.biz.setting.service.SettingService;
-import com.codeages.util.BeanUtils;
+import com.codeages.framework.base.BaseService;
+import com.codeages.framework.util.BeanUtils;
 
 @Service
 public class SettingServiceImpl extends BaseService implements SettingService {

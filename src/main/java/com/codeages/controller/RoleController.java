@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codeages.base.BaseController;
 import com.codeages.biz.security.entity.PermissionConfig;
 import com.codeages.biz.security.entity.Role;
 import com.codeages.biz.security.entity.RolePermission;
 import com.codeages.biz.security.service.RoleService;
 import com.codeages.biz.security.util.ReaderPermissionConfig;
+import com.codeages.framework.base.BaseController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
