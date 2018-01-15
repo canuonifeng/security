@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dataset>
-	<GRADED_COURSE graded_id="1" rank_id="1" teacher_id="1" student_number="50" />
-	<GRADED_COURSE_SCHOOLTIME id="1" schooltime_id="1" graded_course_id="1" building_room_id="1" />
-</dataset>

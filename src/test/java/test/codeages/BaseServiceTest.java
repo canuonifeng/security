@@ -10,7 +10,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.codeages.Application;
+import com.codeages.security.Application;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 
 @RunWith(SpringRunner.class)

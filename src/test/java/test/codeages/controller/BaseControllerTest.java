@@ -23,13 +23,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.codeages.Application;
-import com.codeages.biz.dict.Gender;
-import com.codeages.biz.security.entity.Role;
-import com.codeages.biz.security.entity.User;
-import com.codeages.biz.security.entity.UserStatus;
-import com.codeages.biz.security.service.UserService;
 import com.codeages.framework.response.ResponseWrapper;
+import com.codeages.security.Application;
+import com.codeages.security.biz.dict.Gender;
+import com.codeages.security.biz.security.entity.Role;
+import com.codeages.security.biz.security.entity.User;
+import com.codeages.security.biz.security.entity.UserStatus;
+import com.codeages.security.biz.security.service.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)

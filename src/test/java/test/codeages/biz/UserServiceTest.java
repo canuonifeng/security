@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import com.codeages.biz.dict.Gender;
-import com.codeages.biz.org.entity.Organization;
-import com.codeages.biz.security.entity.User;
-import com.codeages.biz.security.entity.UserStatus;
-import com.codeages.biz.security.service.UserService;
 import com.codeages.framework.exception.NotFoundException;
 import com.codeages.framework.exception.ServiceException;
+import com.codeages.security.biz.dict.Gender;
+import com.codeages.security.biz.org.entity.Organization;
+import com.codeages.security.biz.security.entity.User;
+import com.codeages.security.biz.security.entity.UserStatus;
+import com.codeages.security.biz.security.service.UserService;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;

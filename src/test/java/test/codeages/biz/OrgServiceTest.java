@@ -7,8 +7,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.codeages.biz.org.entity.Organization;
-import com.codeages.biz.org.service.OrgService;
+import com.codeages.security.biz.org.entity.Organization;
+import com.codeages.security.biz.org.service.OrgService;
 
 import test.codeages.BaseServiceTest;
 

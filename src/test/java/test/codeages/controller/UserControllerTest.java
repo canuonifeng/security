@@ -10,10 +10,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import com.codeages.biz.dict.Gender;
-import com.codeages.biz.security.entity.User;
-import com.codeages.biz.security.entity.UserStatus;
 import com.codeages.framework.response.ResponseWrapper;
+import com.codeages.security.biz.dict.Gender;
+import com.codeages.security.biz.security.entity.User;
+import com.codeages.security.biz.security.entity.UserStatus;
 
 public class UserControllerTest extends BaseControllerTest {
 	

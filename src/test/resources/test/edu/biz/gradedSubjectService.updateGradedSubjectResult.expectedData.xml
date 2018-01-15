@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<dataset>
-	<student_graded_subject_result id="1" graded_subject_id="1" student_id="1"  score="2.0" />
-	<student_graded_subject_result id="2" graded_subject_id="2" student_id="1"  score="13.0" />
-	<student_graded_subject_result id="3" graded_subject_id="3" student_id="1"  score="14.0" />
-</dataset>

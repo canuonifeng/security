@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dataset>
-	<FACULTY id="1" code="jsj" name="计算机系" status="disable"/>
-	<FACULTY id="2" code="tumu" name="土木工程系" status="enable"/>
-</dataset>

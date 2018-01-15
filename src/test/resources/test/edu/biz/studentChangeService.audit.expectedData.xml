@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dataset>
-	<STUDENT id="1" no="jike101" name="测试1" gender="male" admission_time="2013-9" grade="2013" major_id="1" classroom_id="1" status="enable" origin="alone" native_place="杭州" idcard="111" birthday="1993-01-01" nation="HAN" idtype="idcard" seq="0" />
-	<STUDENT id="2" no="jike102" name="测试2" gender="female" admission_time="2013-9" grade="2013" major_id="1" classroom_id="1" status="enable" origin="alone" native_place="杭州1" idcard="1112" birthday="1993-01-01" nation="HAN" idtype="idcard" seq="0" />
-	<STUDENT_CHANGE_LOG id="1" old_status="facultyApproving" new_status="schoolApproving" />
-	<STUDENT_CHANGE_LOG id="2" old_status="schoolApproving" new_status="approved" />
-	<STUDENT_CHANGE id="1" change_type="back" status="approved" old_major_id="1" new_major_id="1" />
-</dataset>

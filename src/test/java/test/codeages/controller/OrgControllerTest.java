@@ -13,8 +13,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import com.codeages.biz.org.entity.Organization;
 import com.codeages.framework.response.ResponseWrapper;
+import com.codeages.security.biz.org.entity.Organization;
 
 public class OrgControllerTest  extends BaseControllerTest{
 
