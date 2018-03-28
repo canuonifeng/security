@@ -6,9 +6,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.codeages.framework.authentication.AuthenticationProvider;
-import com.codeages.framework.config.WebSecurityConfig;
+import com.codeages.framework.config.AuthenticationConfig;
 
-public class SecurityConfig extends WebSecurityConfig {
+public class SecurityConfig extends AuthenticationConfig {
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
