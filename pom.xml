@@ -5,7 +5,7 @@
 	<artifactId>security</artifactId>
 
 	<properties>
-		<start-class>com.codeages.Application</start-class>
+		<start-class>com.codeages.security.Application</start-class>
 	</properties>
 
 	<parent>
