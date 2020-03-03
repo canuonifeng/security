@@ -2,7 +2,6 @@ package com.codeages.security.biz.org.entity;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -17,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Entity
 public class Organization extends BaseEntity {
 	private static final long serialVersionUID = 1L;
-	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+	
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	@JsonView({ CascadeChildren.class, CascadeChildrenAndParent.class })
 	private List<Organization> children;
